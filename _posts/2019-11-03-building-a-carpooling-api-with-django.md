@@ -10,7 +10,7 @@ In this series we are going to create a web API using Django and `django-restfra
 Django is a Python Web framework that allows developers to build websites rapidly and cleanly. It provides developers with a complete suite of tools that make it easy to go from an idea to something working in a very short space of time. There are many sites that are built with Django but the most popular one is Instagram and I believe you've heard about it.
 
 ## What are we going to build?
-We are going to create a web API for an imaginary carpooling system called **KaPool** (I'm very bad at naming things). This is going to be a very minimalistic and simple system and is going to have the following features:
+We are going to create a web API for an imaginary carpooling service called **KaPool** (I'm very bad at naming things). This is going to be a very minimalistic and simple system and is going to have the following features:
 - A user with a car can add a `Trip` from point A to pont B.
 - Users who need a ride can browse available trips.
 - If a user finds a driver they like they will place a reservation which the driver can either accept or deny.
