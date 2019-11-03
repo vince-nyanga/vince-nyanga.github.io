@@ -1,8 +1,9 @@
 ---
-layout: post
 title: Android Architecture Components - Part 2
-published: true
+date: 2017-06-15
+tags: [Android, Architecture]
 ---
+
 Welcome to part 2 of our series on Android Architecture Components. In the [previous post](https://vince-nyanga.github.io/android-architecture-components-part-1/) we introduced the components and created Entities, DAOs and Database class for our task management app. In this post, which is relatively short, we will write tests for our database to make sure everything works as expected before we proceed.
 
 # Testing database
