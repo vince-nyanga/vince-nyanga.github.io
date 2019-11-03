@@ -4,13 +4,13 @@ date: 2018-04-24
 tags: [Python]
 ---
 
-Over the past 18 months I have been doing a lot of Python programming in my side projects as well as at work. In all my projects I always find myself needing to mock certain objects to ensure that my tests are independent of external frameworks or APIs —- something that is almost unavoidable.
+Over the past 18 months I have been doing a lot of Python programming in my side projects as well as at work. In all my projects I always find myself needing to mock certain objects to ensure that my tests are independent of external frameworks or APIs — something that is almost unavoidable.
 
 ### Enter the Mock library
 Since I come from an Android background, mocking objects has been part of my development life with `Mockito`the go-to library. When I started serious Python development I wanted something similar to `Mockito` where I could replace certain parts of my system with mock objects during tests and I found it in the [mock](https://docs.python.org/3/library/unittest.mock.html) library. In this post I will talk about how I have used this library in my projects.
 
 ### What does it do?
-The `mock` library is used to replace parts of a system under test with mock objects and make asserts on how they are used. It helps avoid creating stubs in your test suite —- something that can be a pain and time consuming. With this library you can make assertions about which methods were called and the attributes that they were called with. You can also specify the return values or exceptions to be thrown by certain actions.
+The `mock` library is used to replace parts of a system under test with mock objects and make asserts on how they are used. It helps avoid creating stubs in your test suite — something that can be a pain and time consuming. With this library you can make assertions about which methods were called and the attributes that they were called with. You can also specify the return values or exceptions to be thrown by certain actions.
 This library is available in the Python 3 standard library in the `unittest` module. If you’re using Python 2 you need to install it by running the following command.
 
 ```bash
