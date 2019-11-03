@@ -22,7 +22,7 @@ I'm by no means a pro when it comes to Django and will be learning as well durin
 ## Let's get started
 Before we proceed make sure you have Python 3+ is installed on your machine and you have Pipenv installed as well. Basic understanding of Python is also required to successfully follow along as I'm not going to explain some of the things I consider as basics like classes, functions and inheritance.
 
-In this part of the series we are going to add a `User` model that will contain properties for our users. To start let us create our django project, but first, we need to create the folder that is going to contain our code. I'm gonna put mine in a `desktop/code/kapool`. While you are in your `kapool` folder install django by running the following command:
+In this part of the series we are going to add a `User` model that will contain properties for our user object. To start let us create our django project, but first, we need to create the folder that is going to contain our code. I'm gonna put mine in a `desktop/code/kapool`. While you are in your `kapool` folder install django by running the following command:
 ```bash
 pipenv install django==2.2.5
 ```
