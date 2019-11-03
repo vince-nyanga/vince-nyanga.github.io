@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "A simple task management app using firebase - part 2"
 date: 2016-12-30
 ---
