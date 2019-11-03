@@ -9,7 +9,7 @@ When I was still in university I failed a job interview because I did not know t
 Uncle Bob’s [clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) is one of the architectures that I’ve come across and I fell in love with it. The reason why I like it is that it helps create software that is testable, independent of frameworks, UI or databases. It also enforces a rule that source code dependencies point inwards (see image below). This means that something in the inner layer cannot know about something in the outer layer.
 
 <figure>
-<img src="{{ site.baseurl }}/images/clean-architecure.jpeg" alt="Clean architecture">
+<img src="{{ site.baseurl }}/images/clean-architecture.jpeg" alt="Clean architecture">
 <figcaption>Clean Architecture, courtesy: Uncle Bob</figcaption>
 </figure>
 
@@ -20,7 +20,7 @@ We are going to create a simple .Net console application that shows the weather 
 The application has three layers — domain, data and presentation layers. The image below shows how the layers depend on each other. A layer can only know about a layer below it as shown by the arrows.
 
 <figure>
-<img src="{{ site.baseurl }}/images/clean-architecure-arrows.png" alt="Clean architecture diagram">
+<img src="{{ site.baseurl }}/images/clean-architecture-arrows.png" alt="Clean architecture diagram">
 <figcaption>The three layers used in the weather app</figcaption>
 </figure>
 
