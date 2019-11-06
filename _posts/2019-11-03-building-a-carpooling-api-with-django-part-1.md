@@ -244,6 +244,8 @@ Let's run our server (`python manage.py runserver`), go to `http://localhost:800
 ## What did we do?
 We created our **KaPool** project and added a custom `User` model to replace the one django provides. This enables us to add new properties to our model -- `birth_date` and `gender` in this instance. We are going to add more features to our model as we build the API. We also registered our custom user to the django admin page which enables us to add more users as well as edit users in the admin page.
 
+You can check the source code for the project on [GitHub](https://github.com/vince-nyanga/KaPool).
+
 Once again thanks for taking your time to read. It has been a learning experience for me as well -- there are some things that I did not know how to do that I now know and I hope you learned something too. 
 
 In the next post we are going add some validation to our `User` model as well as unit tests so stay tuned.
