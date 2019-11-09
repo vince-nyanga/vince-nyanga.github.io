@@ -6,7 +6,7 @@ tags: [Django, Python]
 In [part 2]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-2/) of the series we added some validation to our custom `User` model as well as unit tests. In this post we are going to create more models -- `Vehicle`, `Place` and `Trip`. 
 
 ## Vehicle
-Let's start by adding a `Vehicle` model that will hold information about a vehicle such as make, model, image etcetera.  Let's go to our `kapool` directory and activate our virtual environment by running `pipenv shell`. You should see the prefix `(kapool)` on your terminal to indicate that the virtual environment is now active. Let's install [pillow](https://python-pillow.org/) an image processing library that Django uses. Run the following command:
+Let's start by adding a `Vehicle` model that will hold information about a vehicle such as make, model, image etcetera.  Let's go to our `kapool` directory and activate our virtual environment by running `pipenv shell`. You should see the prefix `(kapool)` on your terminal to indicate that the virtual environment is now active. Let's install [pillow](https://python-pillow.org/), an image processing library that Django uses. Run the following command:
 ```
 pipenv install pillow==6.2.0
 ```
@@ -29,7 +29,7 @@ While we are still in the `settings` module we need to tell Django where our med
 MEDIA_URL = '/media/' # new
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # new
 ```
-Now let's go to the `vehicles/models.py` file and create or `Vehicle` model:
+Now let's go to the `vehicles/models.py` file and create our `Vehicle` model:
 ```python
 # vehicles/models.py
 from django.contrib.auth import get_user_model
@@ -101,7 +101,7 @@ class VehicleAdmin(admin.ModelAdmin):
     list_display = ('make', 'model', 'reg_number')
 
 ```
-Now run your server using this command `python manage.py runserver` and go to `http://localhost:8000/admin/`. You will see `Vehicles` section where you can view and add vehicles.
+Now run your server using this command `python manage.py runserver` and go to `http://localhost:8000/admin/`. You will see the `Vehicles` section where you can view and add vehicles.
 
 ## Place
 We need to add a `Place` model that will represent the origin and destination of a `Trip`. Once again let's create a new app called `places` by running this command after we've stopped our server if it was running:
