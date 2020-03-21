@@ -1,5 +1,5 @@
 ---
-title: "OAuth 2.0 And OpenID Connect in ASP.NET Core Using IdentityServer4 - Part 1"
+title: "Build An OAuth 2.0 And OpenID Connect Identity Server With ASP.NET Core And IdentityServer4 - Part 1"
 date: 2020-03-21
 tags: [C#, ASP.NET Core]
 ---
