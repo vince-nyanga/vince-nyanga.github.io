@@ -200,6 +200,4 @@ We are done. Now run both the `Server` and the `MvcClient` projects and inside t
 
 ## Conclusion
 
-In this post we added an MVC client to our project. The client has a protected view that requires a user to be authenticated first. Instead of implementing this functionality inside the MVC app itself, we outsource it to the identity server that we built. When the user navigates to the protected view they will be redirected to the identity server's login page that we created in the previous post. When they have successfully logged in they will be redirected back to view the protected page.
-
-In the next post we are going to add a consent page where a user will agree (or not) to let a client gain access to their details before the sign in process is complete. Once again, thanks so much for reading and I hope and pray that you're safe from the **Covid-19** virus.
+In this post we added an MVC client to our project. The client has a protected view that requires a user to be authenticated first. Instead of implementing this functionality inside the MVC app itself, we outsource it to the identity server that we built. When the user navigates to the protected view they will be redirected to the identity server's login page that we created in the previous post. When they have successfully logged in they will be redirected back to view the protected page. Once again, thanks so much for reading and I hope and pray that you're safe from the **Covid-19** virus.
