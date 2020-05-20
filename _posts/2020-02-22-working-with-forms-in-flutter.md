@@ -1,7 +1,7 @@
 ---
 title: "Working With Forms In Flutter"
 date: 2020-02-22
-tags: [Flutter, Mobile]
+categories: [Flutter, Mobile]
 ---
 
 When developing mobile apps it is almost inevitable that you will want to capture some information from the user using forms. In this post we are going to talk about building and validating forms in Flutter. This is going to be a very short read. We are going to build a simple login form that has some validation. Let's get started.

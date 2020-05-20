@@ -1,7 +1,7 @@
 ---
 title: "A simple task management app using firebase - part 1"
 date: 2016-12-29
-tags: [Firebase, Android]
+categories: [Firebase, Android]
 ---
 
 In this series we are going to create a simple android app for managing tasks using firebase as our backend service. The app should be able to do the following:
@@ -9,18 +9,22 @@ In this series we are going to create a simple android app for managing tasks us
 - Create tasks
 - Edit tasks (mark as complete or edit task details)
 - Authenticate users
-- Share tasks 
+- Share tasks
 
 ## What is Firebase?
+
 According to the [firebase website](https://firebase.google.com/ "Firebase"), Firebase is a mobile platform that helps developers quickly develop high-quality apps using a wide range of features. The features include realtime database, authentication, storage, analytics among others. You can visit the firebase website to see all the features. We will use some of these features in the task management app.
 
 ## Ok, let's get started
-Before we begin I assume that you have Android Studio (2.2 at the time of writing) and the Android sdk installed on your machine.I also assume that you have basic knowledge of Android development. 
+
+Before we begin I assume that you have Android Studio (2.2 at the time of writing) and the Android sdk installed on your machine.I also assume that you have basic knowledge of Android development.
 
 #### 1. Create project.
+
 Create a new android project in Android Studio and name it Task Manager. When the project is created open the app gradle file and add the design support library in your dependencies: `compile 'com.android.support:design:25.1.0'`.
 
 #### 2. Create the layout
+
 Open _**activitymain.xml**_, remove the available code and add the following code:
 
 ```xml
@@ -79,6 +83,7 @@ Create a new layout named _**tasklistitem.xml**_ and add the following code:
 ```
 
 #### 3. Create model
+
 Create a new Java class and name it _**Task.java**_ then add the following code:
 
 ```java
@@ -113,7 +118,6 @@ public class Task {
 ```
 
 #### 4. Create list adapter
-
 
 We are now going to create an adapter that will be repsonsible for loading the tasks from a list and displaying them into the ListView. Create a new class named _**TasksAdapter.java**_ and add the following code:
 
@@ -196,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
 #### 5. Adding tasks
 
-Now that our app's basic functionality is working well let's add the functionality to add a new task. We will create a new screen from which a user will add a new task. First create a new layout called _**newtasklayout.xml**_ and add the following code: 
+Now that our app's basic functionality is working well let's add the functionality to add a new task. We will create a new screen from which a user will add a new task. First create a new layout called _**newtasklayout.xml**_ and add the following code:
 
 ```xml
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -292,9 +296,6 @@ public class MainActivity extends AppCompatActivity implements AddTaskFragment.T
 
 Now run the app and click in the FAB to add new task.
 
-
 ## Conclusion
+
 In this part of the series we created a basic app that can add new tasks and make them as done. However, as might have noticed, the tasks are not being persisted anywhere so when you close the app everything is lost. In the next post we will now start to use firebase to persist our tasks to the realtime database.
-
-
-

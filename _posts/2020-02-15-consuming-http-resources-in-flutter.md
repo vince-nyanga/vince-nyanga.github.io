@@ -1,10 +1,10 @@
 ---
 title: "Consuming HTTP Resources In Flutter"
 date: 2020-02-15
-tags: [Flutter, Mobile]
+categories: [Flutter, Mobile]
 ---
 
-Almost every mobile app consumes HTTP resources one way or the other -- fetching data from a web service, authenticating users and many more examples. In Flutter this is no different -- your app is going to communicate to some service somewhere via HTTP. In this post we are going to talk about a package you can use in your Flutter application to consume HTTP resources -- the [http](https://pub.dev/packages/http) package. 
+Almost every mobile app consumes HTTP resources one way or the other -- fetching data from a web service, authenticating users and many more examples. In Flutter this is no different -- your app is going to communicate to some service somewhere via HTTP. In this post we are going to talk about a package you can use in your Flutter application to consume HTTP resources -- the [http](https://pub.dev/packages/http) package.
 
 The `http` package is an official, platform-independent, `Dart` package that contains a set of high-level functions that make it easy to consume HTTP resources. It is very intuitive and simple to use. Here are examples of how you can use the package to make HTTP requests:
 
@@ -15,7 +15,7 @@ class MyHttpService {
     MyHttpService({this.baseUrl});
 
     final String baseUrl;
-    
+
     // GET
     Future<http.Response> getItems() {
         return http.get('$baseUrl/items/');
@@ -30,7 +30,7 @@ class MyHttpService {
 
     // PUT
     Future<http.Response> updateItem(int id, String name, int price) {
-        return http.put('$baseUrl/items/$id/', 
+        return http.put('$baseUrl/items/$id/',
                           body: {'name': name, 'price': price});
     }
 
@@ -42,13 +42,16 @@ class MyHttpService {
 
 }
 ```
+
 The above examples show how you can make various HTTP calls using the `http` package. As you may have noticed, `http` methods return `Future`s. In Dart, a `Future` object represents a potential value or error that will be available in the future. Since all HTTP calls are asynchronous, we make use of the `Future` class as we await the result that will come at a later stage.
 
 ## Example
+
 Let us now put the `http` package into use by creating a dummy application that utilises it. The application is going to consume resources from the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) service -- a fake online REST API used for testing and prototyping.
 
 ### Posts Repository
-Our example app will use the `http` package to fetch fake posts from the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API and display them in a list. We will focus on the use of the `http` package and the UI. The rest of the code (`BLoC`s etc) can be found on [GitHub](https://github.com/vince-nyanga/flutter_http_tutorial). 
+
+Our example app will use the `http` package to fetch fake posts from the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API and display them in a list. We will focus on the use of the `http` package and the UI. The rest of the code (`BLoC`s etc) can be found on [GitHub](https://github.com/vince-nyanga/flutter_http_tutorial).
 
 Let's create a Flutter application and add the following dependencies to the `pubsec.yaml` file:
 
@@ -63,7 +66,6 @@ dependencies:
   bloc: ^3.0.0
   flutter_bloc: ^3.2.0
   equatable: ^1.1.0
-
 # ...
 ```
 
@@ -132,9 +134,10 @@ class HttpPostRepository extends PostRepository {
 
 ```
 
-The `HttpPostRepository`, which extends an abstract `PostRepository`, fetches posts from our API as JSON, converts them to a `List<Post>` and returns the list. Note that the `getPosts` method returns a `Future` which means it is going to run asynchronously. 
+The `HttpPostRepository`, which extends an abstract `PostRepository`, fetches posts from our API as JSON, converts them to a `List<Post>` and returns the list. Note that the `getPosts` method returns a `Future` which means it is going to run asynchronously.
 
 ### User Interface
+
 Let's now turn our attention to the UI. I have deliberately left out the code that implements the `BLoC` pattern for this app for brevity. Like I said earlier, you may check the complete project on [GitHub](https://github.com/vince-nyanga/flutter_http_tutorial). If you want to learn more about the `BLoC` pattern check out this [post]({{ site.baseurl }}/state-management-in-flutter-bloc-pattern/) and this [post]({{ site.baseurl }}/flutter-authentication-with-bloc-architecture/).
 
 Create a directory called `pages` and add `posts_page.dart`. Inside the `posts_page.dart` file, add the following code:
@@ -287,6 +290,7 @@ class MyApp extends StatelessWidget {
 }
 
 ```
+
 We are done! Run your application and you will see a nice progress indicator showing while the `PostRepository` is still busy fetching posts from our REST API. When it's done fetching the post it will display them in a list like the one below.
 
 <figure>
@@ -295,4 +299,5 @@ We are done! Run your application and you will see a nice progress indicator sho
 </figure>
 
 ## Conclusion
-In this post we spoke about how the [http](https://pub.dev/packages/http) package can be used in Flutter to consume HTTP resources. We also created a sample Flutter app that makes use of the package to fetch posts from a REST API. Not all the code for the app was included in this post -- you may check out the complete project from [GitHub](https://github.com/vince-nyanga/flutter_http_tutorial). Once again thanks so much for reading. 
+
+In this post we spoke about how the [http](https://pub.dev/packages/http) package can be used in Flutter to consume HTTP resources. We also created a sample Flutter app that makes use of the package to fetch posts from a REST API. Not all the code for the app was included in this post -- you may check out the complete project from [GitHub](https://github.com/vince-nyanga/flutter_http_tutorial). Once again thanks so much for reading.

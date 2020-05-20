@@ -1,20 +1,27 @@
 ---
 title: Building a carpool web API with Django (part 3)
 date: 2019-11-09
-tags: [Django, Python]
+categories: [Django, Python]
 ---
-In [part 2]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-2/) of the series we added some validation to our custom `User` model as well as unit tests. In this post we are going to create more models -- `Vehicle`, `Place` and `Trip`. 
+
+In [part 2]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-2/) of the series we added some validation to our custom `User` model as well as unit tests. In this post we are going to create more models -- `Vehicle`, `Place` and `Trip`.
 
 ## Vehicle
-Let's start by adding a `Vehicle` model that will hold information about a vehicle such as make, model, image etcetera.  Let's go to our `kapool` directory and activate our virtual environment by running `pipenv shell`. You should see the prefix `(kapool)` on your terminal to indicate that the virtual environment is now active. Let's install [pillow](https://python-pillow.org/), an image processing library that Django uses. Run the following command:
+
+Let's start by adding a `Vehicle` model that will hold information about a vehicle such as make, model, image etcetera. Let's go to our `kapool` directory and activate our virtual environment by running `pipenv shell`. You should see the prefix `(kapool)` on your terminal to indicate that the virtual environment is now active. Let's install [pillow](https://python-pillow.org/), an image processing library that Django uses. Run the following command:
+
 ```
 pipenv install pillow==6.2.0
 ```
+
 With pillow installed let's create a new app called `vehicles` by running this command:
+
 ```
 python manage.py startapp vehicles
 ```
+
 Before we forget we need to register our `vehicles` app to our project by adding it to the list of `INSTALLED_APPS` in our `kapool_project/settings.py`:
+
 ```python
 # kapool_project/settings.py
 INSTALLED_APPS = [
@@ -22,6 +29,7 @@ INSTALLED_APPS = [
     'vehicles.apps.VehiclesConfig', # new
 ]
 ```
+
 While we are still in the `settings` module we need to tell Django where our media files will be stored. Let's add `MEDIA_ROOT` and `MEDIA_URL` configurations to our settings.
 
 ```python
@@ -29,7 +37,9 @@ While we are still in the `settings` module we need to tell Django where our med
 MEDIA_URL = '/media/' # new
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # new
 ```
+
 Now let's go to the `vehicles/models.py` file and create our `Vehicle` model:
+
 ```python
 # vehicles/models.py
 from django.contrib.auth import get_user_model
@@ -81,15 +91,21 @@ class Vehicle(models.Model):
         verbose_name_plural = _('Vehicles')
 
 ```
+
 Let's make migrations by running the following command:
+
 ```
 python manage.py makemigrations
 ```
+
 And migrate our changes to the database:
+
 ```
 python manage.py migrate
 ```
+
 We now need to register our vehicle model to our admin page:
+
 ```python
 # vehicles/admin.py
 from django.contrib import admin
@@ -101,14 +117,19 @@ class VehicleAdmin(admin.ModelAdmin):
     list_display = ('make', 'model', 'reg_number')
 
 ```
+
 Now run your server using this command `python manage.py runserver` and go to `http://localhost:8000/admin/`. You will see the `Vehicles` section where you can view and add vehicles.
 
 ## Place
+
 We need to add a `Place` model that will represent the origin and destination of a `Trip`. Once again let's create a new app called `places` by running this command after we've stopped our server if it was running:
+
 ```
 python manage.py startapp places
 ```
+
 And add the new app to the `INSTALLED_APPS` list in `kapool_project/settings.py`:
+
 ```python
 # kapool_project/settings.py
 INSTALLED_APPS = [
@@ -116,7 +137,9 @@ INSTALLED_APPS = [
     'places.apps.PlacesConfig', # new
 ]
 ```
+
 Let's now create the `Place` model inside `places/models.py`:
+
 ```python
 # places/models.py
 from django.db import models
@@ -140,12 +163,15 @@ class Place(models.Model):
         verbose_name_plural = _('Places')
 
 ```
+
 Let's migrate our changes to the database:
+
 ```
 python manage.py makemigrations && python manage.py migrate
 ```
 
 Register the model to the admin site:
+
 ```python
 from django.contrib import admin
 from .models import Place
@@ -156,14 +182,19 @@ class PlaceAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 ```
+
 You can run your server and go to the admin page to see if you have a `Places` section.
 
 ## Trip
+
 Let's now add the `Trip` model and like before we first create a new app called `trips`:
+
 ```
 python manage.py startapp trips
 ```
+
 and add it to the list of installed apps:
+
 ```python
 # kapool_project/settings.py
 INSTALLED_APPS = [
@@ -171,7 +202,9 @@ INSTALLED_APPS = [
     'trips.apps.TripsConfig', # new
 ]
 ```
+
 We can now create our `Trip` model in `trips/models.py`:
+
 ```python
 # trips/models.py
 from datetime import date
@@ -246,11 +279,15 @@ class Trip(models.Model):
         verbose_name_plural = _('Trips')
 
 ```
+
 We have added some validation to our model to ensure that `origin` and `destination` cannot be the same and also the trip date cannot be in the past. Now let's migrate our model to the database:
+
 ```
 python manage.py makemigrations && python manage.py migrate
 ```
+
 And finally let's register our model to the admin site:
+
 ```python
 # trips/admin.py
 from django.contrib import admin
@@ -265,4 +302,5 @@ class TripAdmin(admin.ModelAdmin):
 ```
 
 ## What did we do?
-In this post we created three models -- `Vehicle`, `Place` and `Trip` with some validation on the  `Trip` model. Now we have most of the models we need to build our API. In the next post we will start working on our `REST` API. You can check the source code for the project on [GitHub](https://github.com/vince-nyanga/KaPool). Once again, thanks so much for reading.
+
+In this post we created three models -- `Vehicle`, `Place` and `Trip` with some validation on the `Trip` model. Now we have most of the models we need to build our API. In the next post we will start working on our `REST` API. You can check the source code for the project on [GitHub](https://github.com/vince-nyanga/KaPool). Once again, thanks so much for reading.

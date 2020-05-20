@@ -1,15 +1,19 @@
 ---
 title: Android Architecture Components - Part 3
 date: 2017-06-22
-tags: [Android, Architecture]
+categories: [Android, Architecture]
 ---
 
 Welcome to part 3 of our series on Android Architecture Components. In the [previous post](https://vince-nyanga.githubio/android-architecture-components-part-2/) we wrote tests for our database implementation to ensure that our database behaved in the manner we expect of it. In this post we are going to create a `ViewModel` and wire up the UI to add `Task`s to our database and list them.
 
 ## Let's get started
+
 We will start by creating a repository class that will connect and interact with our database. As always get the complete code from [github](https://github.com/vince-nyanga/yo-tasks).
+
 ### Repository
+
 Below is the code for the `Repository.java` class:
+
 ```java
 public class DataRepository {
 
@@ -61,17 +65,20 @@ public class DataRepository {
         });
 
     }
-    
+
 }
 ```
+
 ### TaskListViewModel
+
 Below is the code for the task list `ViewModel`. The `ViewModel` will connect to the database via the `Repository` class to get the list of tasks wrapped in a `LiveData` object and also to add new tasks to the database.
+
 ```java
 public class TaskListViewModel extends ViewModel implements Injectable {
 
     @Inject
     public DataRepository repository;
-    
+
 
     @Override
     public void inject(TasksComponent tasksComponent) {
@@ -90,9 +97,11 @@ public class TaskListViewModel extends ViewModel implements Injectable {
     }
 }
 ```
+
 Now that we are done with the `ViewModel` and `Repository` let's turn our focus to the user interface. The UI will certainly not win best design of the year award but it will help us see how all these components will work together - which is the purpose of this series. We are going to create a `Fragment` that will `Task`s using a `RecyclerView`. Let's first create the view that will hold each `Task` first. Some of the code has been omitted from this post for brevity.
 
 ### Task list item
+
 ```xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -144,8 +153,11 @@ Now that we are done with the `ViewModel` and `Repository` let's turn our focus 
     </RelativeLayout>
 </layout>
 ```
+
 Let's also create the `RecyclerViewAdapter`
+
 ### Adapter
+
 ```java
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskHolder> {
 
@@ -222,8 +234,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskHolder> 
     }
 }
 ```
+
 Then the `Fragment`:
+
 ### Task List Fragment
+
 ```java
 public class TaskListFragment extends LifecycleFragment {
 
@@ -272,16 +287,19 @@ public class TaskListFragment extends LifecycleFragment {
     }
 }
 ```
+
 In our `Fragment` we create our `ViewModel` and hook it up to the lifecycle of the `Fragment` in this line of code:
+
 ```java
 TaskListViewModel viewModel = ViewModelProviders.of(this, new ViewModelFactory(
                 (YoTasksApp)getActivity().getApplication())).get(TaskListViewModel.class);
 ```
+
 Note that the class extends `LifecycleFragment`. `LifecycleFragment` is a `Fragment` that is also a `LifecycleOwner`. This class is a temporary implementation until Lifecycles are integrated in the support library. If you don't want your `Fragment` to extend `LifecycleFragment` you should implement `LifecycleRegistryOwner` like this:
 
 ```java
 public class MyFragment extends Fragment implements LifecycleRegistryOwner {
-    
+
     final LifecycleRegistry registry = new LifecycleRegistry(this);
 
     @Override
@@ -290,7 +308,9 @@ public class MyFragment extends Fragment implements LifecycleRegistryOwner {
     }
 }
 ```
+
 Now we can subscribe to the Task list wrapped around a `LiveData` object:
+
 ```java
 viewModel.getTasks().observe(this, new Observer<List<Task>>() {
             @Override
@@ -300,7 +320,9 @@ viewModel.getTasks().observe(this, new Observer<List<Task>>() {
             }
         });
 ```
+
 Since the Room library works with LiveData seamlessly, when there is any change in the data in our database the UI will get notified and update accordingly.
 
 ## Summary
-In this post we linked our data to the UI using a `ViewModel` class. This is probably the last part in this series unless if something comes up that I will need to talk about. I will however finish the app on github so you may need to keep an eye on it if you are interested in seeing how the app will be put together. The main objective of this series was to introduce the super cool Android Architecture Components. I have learnt a lot about these components (though I don't know it all yet) during this series and I hope you'll be encouraged to look into them further. 
+
+In this post we linked our data to the UI using a `ViewModel` class. This is probably the last part in this series unless if something comes up that I will need to talk about. I will however finish the app on github so you may need to keep an eye on it if you are interested in seeing how the app will be put together. The main objective of this series was to introduce the super cool Android Architecture Components. I have learnt a lot about these components (though I don't know it all yet) during this series and I hope you'll be encouraged to look into them further.

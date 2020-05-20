@@ -1,7 +1,7 @@
 ---
 title: "Building an identity server that supports OAuth 2.0 and OpenID Connect with ASP.NET Core and IdentityServer4 - Part 2"
 date: 2020-03-22
-tags: [C#, ASP.NET Core]
+categories: [C#, ASP.NET Core]
 ---
 
 In the [previous post]({{ site.baseurl}}/identity-server-part-1) we built an identity server that supports OAuth 2.0 and OpenID Connect protocols using the `IdentityServer4` framework. We also registered one API (`dummy_api`) that our identity server is going to protect, and one client (`console_app`) that will connect to the API. See the [Configuration.cs](https://github.com/vince-nyanga/IdentityServerTutorial/blob/master/Server/Configuration.cs) that we created in the previous post. In this post we are going to implement the protected API and the console app client. Let's get started.

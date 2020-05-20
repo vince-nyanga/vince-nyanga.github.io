@@ -1,12 +1,13 @@
 ---
 title: "A simple task management app using firebase - part 3"
 date: 2017-01-04
-tags: [Firebase, Android]
+categories: [Firebase, Android]
 ---
 
 In the [previous post](https://vince-nyanga.github.io/task-management-app-with-firebase-2/) we added the Firebase realtime database to our app and linked it to our ListView using the Firebase UI library. In this post we are going to further improve our app by grouping related tasks. This is better that having a long list of unrelated tasks like we have before. Let's get started.
 
 ### Adding task list model
+
 We are going to create a class that will hold a list of tasks. Create a class `TaskList.java` and edit it to look like the one below.
 
 ```java
@@ -64,9 +65,11 @@ We are going to store all task lists in their own node `taskLists` and tasks in 
     }
 }
 ```
+
 In the `tasks` node we have created a child node `1`, which is the unique key of the task list to which the tasks belong. In our app we will have two activities - one that shows a list of `TaskList`s and the other that show the `Task`s that belong to a given list. This is why I have decided to structure the database this way as this will make it easy to display and manage our data.
 
 ### Creating tasks lists activity
+
 Create an activity called `TasksListsActivity.java` and edit it's layout file to look like this:
 
 ```xml
@@ -108,6 +111,7 @@ Create an activity called `TasksListsActivity.java` and edit it's layout file to
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 </FrameLayout>
 ```
+
 Now create a new layout file called `list_item.xml` and edit it to look like this:
 
 ```xml
@@ -129,7 +133,9 @@ Now create a new layout file called `list_item.xml` and edit it to look like thi
 
 </LinearLayout>
 ```
+
 ### Fragment to add new task list
+
 Create a new layout file and call it `new_task_list_layout.xml`:
 
 ```xml
@@ -153,6 +159,7 @@ Create a new layout file and call it `new_task_list_layout.xml`:
 
 </LinearLayout>
 ```
+
 Create a new class `AddTaskListFragment.java`. This is the fragment that we will use to create a new task list. Edit it to look like the one below:
 
 ```java
@@ -226,6 +233,7 @@ Rename `MainActivity.java` to `TasksActivity.java`. If you don't know how to do 
 
 </manifest>
 ```
+
 ### Edit TasksListsActivity
 
 Open `TasksListsActivity.java` and edit it to look like this:
@@ -309,6 +317,7 @@ public class TasksListsActivity extends AppCompatActivity implements AddTaskList
     }
 }
 ```
+
 ### Edit TasksActivity
 
 Now let's go to `TasksActivity.java` and declare the following variables:
@@ -317,6 +326,7 @@ Now let's go to `TasksActivity.java` and declare the following variables:
  private String listName;
  private String listKey;
 ```
+
 Add the following in the `onCreate()` method:
 
 ```java
@@ -326,8 +336,9 @@ Add the following in the `onCreate()` method:
             this.listName = extras.getString("name");
         }
         getSupportActionBar().setTitle(listName);
-        tasksRef = FirebaseDatabase.getInstance().getReference().child("tasks").child(listKey);   
+        tasksRef = FirebaseDatabase.getInstance().getReference().child("tasks").child(listKey);
 ```
+
 Your `TasksActivity.java` should now look like this:
 
 ```java
@@ -406,8 +417,9 @@ public class TasksActivity extends AppCompatActivity implements AddTaskFragment
     }
 }
 ```
+
 Run the app and see if it works as it should. You should be able to create a new list and add tasks into the list.
 
-
 ## Conclusion
+
 In this post we have added a functionality to group related tasks into task lists. In the next post we will now add user authentication to the application. Once again, thanks for reading.
