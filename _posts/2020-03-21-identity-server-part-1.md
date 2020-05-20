@@ -1,7 +1,7 @@
 ---
 title: "Building an identity server that supports OAuth 2.0 and OpenID Connect with ASP.NET Core and IdentityServer4 - Part 1"
 date: 2020-03-21
-categories: [C#, ASP.NET Core]
+tags: [C#, ASP.NET Core]
 ---
 
 Modern systems comprise of many independent parts linked together -- APIs, web clients, mobile clients and other connected devices. All these layers need to communicate with each other and they should do it in a very secure way. Each layer in the system has to protect its resources by implementing authentication and/or authorization -- often against the same user store. To avoid unnecessary duplication of this function it is therefore advised to outsource security functions to a standalone security token service or identity server. That's where `IdentityServer4` comes in. In this mini series we are going to take a look at how to build a security token service that supports OpenID Connect and OAuth 2.0 protocols using IdentityServer4.

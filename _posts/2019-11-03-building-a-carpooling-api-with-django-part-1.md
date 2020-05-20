@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 1)
 date: 2019-11-03
-categories: [Django, Python]
+tags: [Django, Python]
 ---
 
 In this series we are going to create a web API using Django and `django-restframework`library.

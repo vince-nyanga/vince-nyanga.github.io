@@ -1,7 +1,7 @@
 ---
 title: "Building an identity server that supports OAuth 2.0 and OpenID Connect with ASP.NET Core and IdentityServer4 - Part 4"
 date: 2020-03-28
-categories: [C#, ASP.NET Core]
+tags: [C#, ASP.NET Core]
 ---
 
 In the [previous post]({{ site.baseurl}}/identity-server-part-3) we added support for users to login to our identity server using ASP.NET Core `Identity` and `Entity Framework`. In this post we are going to add a simple MVC client that will make use of our identity server to protect its resources. Let's get started.

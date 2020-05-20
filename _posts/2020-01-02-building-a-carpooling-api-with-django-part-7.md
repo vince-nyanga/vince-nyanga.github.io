@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 7)
 date: 2020-01-02
-categories: [Django, Python]
+tags: [Django, Python]
 ---
 
 Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather's 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fall into muddy pools. Now that the holidays are over we can continue working on our REST API.

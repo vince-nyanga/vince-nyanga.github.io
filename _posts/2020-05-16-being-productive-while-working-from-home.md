@@ -1,7 +1,7 @@
 ---
 title: "Being Productive While Working From Home"
 date: 2020-05-16
-categories: [General]
+tags: [General]
 ---
 
 During this Covid-19 global pandemic many people found themselves having to work from home due to lockdown measures put in place by various governments across the world. For some, this is probably a very big change which requires a lot of adjustments. I have been working from home for a while now and in this post I will share some of the things that help me maximise my productivity while avoiding burn-outs, which were very common when I started working from home.

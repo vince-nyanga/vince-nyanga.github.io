@@ -1,7 +1,7 @@
 ---
 title: "State management in Flutter: The BLoC pattern"
 date: 2020-01-25
-categories: [Flutter, Mobile]
+tags: [Flutter, Mobile]
 ---
 
 In every application state management is one of the most important things you need to deal with as a developer. You need to properly manage state in your application to ensure that your users are not frastrated and also to avoid maintenance headaches. In Flutter the need to have proper state management is no less important. In this post I am going to talk about one of the patterns you can use to manage your application state -- the BLoC pattern. This is going to be an overview of the pattern; in the next post I am going to illustrate how the pattern works buy building a simple authentication flow that uses the pattern.

@@ -1,7 +1,7 @@
 ---
 title: Android Instant Apps - theory
 date: 2017-07-07
-categories: [Android]
+tags: [Android]
 ---
 
 As you may know Android Instant Apps are now open to all developers. This is the news people like me have been waiting for for a very long time. In this post I am going to talk about the theory behind Android Instant Apps as I understand it.

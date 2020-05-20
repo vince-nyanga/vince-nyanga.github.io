@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 6)
 date: 2019-11-26
-categories: [Django, Python]
+tags: [Django, Python]
 ---
 
 In [part 5]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-5/) of our series we added more endpoints to our API. In this very short post we are going to add filtering support to our `trips` endpoint to allow users to filter trips.

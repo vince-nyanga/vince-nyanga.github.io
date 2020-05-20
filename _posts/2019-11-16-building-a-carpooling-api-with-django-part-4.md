@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 4)
 date: 2019-11-16
-categories: [Django, Python]
+tags: [Django, Python]
 ---
 
 In [part 3]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-3/) of our series we added more models to our system. In this post we are going to start working on the REST API. We are going to install the library that we will use as well as serialize our `User` model, create a `ViewSet` for it and add some permissions to it. It is going to be a very short post at the end of which we will have our first REST endpoint for our API.

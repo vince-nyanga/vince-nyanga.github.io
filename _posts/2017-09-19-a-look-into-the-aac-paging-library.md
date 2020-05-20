@@ -1,7 +1,7 @@
 ---
 title: A look into the Android Architecture Components Paging Library
 date: 2017-09-19
-categories: [Android, Architecute, Kotlin]
+tags: [Android, Architecute, Kotlin]
 ---
 
 Imagine you have data set that contains 10 000 items that you need to display in your application. Loading all these items before rendering them on the screen may take time affecting both performance and user experience. Thanks to the **Paging Library** this problem can now be avoided.
