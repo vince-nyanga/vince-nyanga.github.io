@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 8)
 date: 2020-01-10
-tags: [Django, Python]
+categories: [Django, Python]
 ---
 
 In [part 7]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-7/) of our series we looked at writing unit tests for our REST API. In this post we are going to look at making our API usable by non-web clients such as mobile apps and native desktop apps.

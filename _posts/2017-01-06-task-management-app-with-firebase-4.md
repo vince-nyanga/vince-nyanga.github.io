@@ -1,7 +1,7 @@
 ---
 title: A simple task management app using firebase - part 4
 date: 2017-01-06
-tags: [Firebase, Android]
+categories: [Firebase, Android]
 ---
 
 Welcome to part 4 of our series. In the [previous post](https://vince-nyanga.github.io/task-management-app-with-firebase-3/) we remodelled our app to group related tasks in task lists. Today we are going to add user authentication so that we can secure our application. At the moment everyone with the app can see all the task lists and tasks therein which is not an ideal thing. We are going to ensure that a user can only see their tasks. By the end of this session our app will look like this:

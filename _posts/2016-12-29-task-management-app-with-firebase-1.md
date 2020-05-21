@@ -1,7 +1,7 @@
 ---
 title: "A simple task management app using firebase - part 1"
 date: 2016-12-29
-tags: [Firebase, Android]
+categories: [Firebase, Android]
 ---
 
 In this series we are going to create a simple android app for managing tasks using firebase as our backend service. The app should be able to do the following:

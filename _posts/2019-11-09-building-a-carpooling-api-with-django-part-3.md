@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 3)
 date: 2019-11-09
-tags: [Django, Python]
+categories: [Django, Python]
 ---
 
 In [part 2]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-2/) of the series we added some validation to our custom `User` model as well as unit tests. In this post we are going to create more models -- `Vehicle`, `Place` and `Trip`.

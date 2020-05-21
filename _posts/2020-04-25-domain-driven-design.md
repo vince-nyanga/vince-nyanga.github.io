@@ -1,7 +1,7 @@
 ---
 title: "Domain Driven Design : My April Read"
 date: 2020-04-25
-tags: [Design, Architecture]
+categories: [Design, Architecture]
 ---
 
 At the beginning of this month I challenged myself to learn more about Domain Driven Design. I have come across this topic multiple times but had never focused much on it. Instead of reading blog posts and watching courses on Pluralsight (which I eventually did), I decided to first read Eric Evans' [book](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215) in which he introduces the concept. In this post I am going to talk about what I have learnt about Domain Driven Design and how it can help solve complex software problems. I am going to talk about core concepts in Domain Driven Design as I understand them.

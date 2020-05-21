@@ -1,7 +1,7 @@
 ---
 title: "A simple task management app using firebase - part 3"
 date: 2017-01-04
-tags: [Firebase, Android]
+categories: [Firebase, Android]
 ---
 
 In the [previous post](https://vince-nyanga.github.io/task-management-app-with-firebase-2/) we added the Firebase realtime database to our app and linked it to our ListView using the Firebase UI library. In this post we are going to further improve our app by grouping related tasks. This is better that having a long list of unrelated tasks like we have before. Let's get started.

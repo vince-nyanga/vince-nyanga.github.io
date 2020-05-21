@@ -1,7 +1,7 @@
 ---
 title: Android Architecture Components - Part 3
 date: 2017-06-22
-tags: [Android, Architecture]
+categories: [Android, Architecture]
 ---
 
 Welcome to part 3 of our series on Android Architecture Components. In the [previous post](https://vince-nyanga.githubio/android-architecture-components-part-2/) we wrote tests for our database implementation to ensure that our database behaved in the manner we expect of it. In this post we are going to create a `ViewModel` and wire up the UI to add `Task`s to our database and list them.

@@ -1,7 +1,7 @@
 ---
 title: "Consuming HTTP Resources In Flutter"
 date: 2020-02-15
-tags: [Flutter, Mobile]
+categories: [Flutter, Mobile]
 ---
 
 Almost every mobile app consumes HTTP resources one way or the other -- fetching data from a web service, authenticating users and many more examples. In Flutter this is no different -- your app is going to communicate to some service somewhere via HTTP. In this post we are going to talk about a package you can use in your Flutter application to consume HTTP resources -- the [http](https://pub.dev/packages/http) package.

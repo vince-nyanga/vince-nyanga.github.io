@@ -1,7 +1,7 @@
 ---
 title: Mocking objects in Python
 date: 2018-04-24
-categories: [Python]
+categories: [Python, Testing]
 ---
 
 Over the past 18 months I have been doing a lot of Python programming in my side projects as well as at work. In all my projects I always find myself needing to mock certain objects to ensure that my tests are independent of external frameworks or APIs — something that is almost unavoidable.

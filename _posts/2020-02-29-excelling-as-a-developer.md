@@ -1,7 +1,7 @@
 ---
 title: "Excelling As A Software Developer"
 date: 2020-02-29
-tags: [General]
+categories: [General]
 ---
 
 Software development has taken the world by storm in the past couple of years. Every aspect of people's lives the world over depends on software in one way or the other -- route navigation, buying groceries, banking, to name but a few. This software does not fall out of the sky or magically appear out of thin air but it is written by someone, men and women who possess amazing and sometimes out-of-this-world kind of skills. From the day I wrote my first `Hello World` program I was convinced that I needed to be one of those amazing people who change the world through amazing software products. Ten years later I'm proud that my dream of being a software developer came to pass, albeit I'm not yet an expert, neither do I possess out-of-this-world skills yet. However, I believe I have reached that level where I can share my journey with someone else -- talking about the things I have done or am doing to ensure that I excell in this amazing profession that I believe is changing he world. Allow me then to share with you what I believe is the recipe for success as a software developer. It works for me at least but it is by no means the best one out there.

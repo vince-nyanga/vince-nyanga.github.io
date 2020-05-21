@@ -1,7 +1,7 @@
 ---
 title: "A simple task management app using firebase - part 2"
 date: 2016-12-30
-tags: [Firebase, Android]
+categories: [Firebase, Android]
 ---
 
 In the [previous post](https://vince-nyanga.github.io/task-management-app-with-firebase-1/) we created a simple task management application that had the basic functionalities of adding tasks and marking them as completed. However, the tasks were not being persisted anywhere so as soon as the app is closed everything would disappear. In this post we are going to fix that problem. We are going to do the following:

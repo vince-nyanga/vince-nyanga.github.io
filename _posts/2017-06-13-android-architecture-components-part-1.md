@@ -1,7 +1,7 @@
 ---
 title: Android Architecture Components - Part 1
 date: 2017-06-13
-tags: [Android, Architecture]
+categories: [Android, Architecture]
 ---
 
 At Google I/O 2017 Android Architecture Components were introduced. These components are building blocks that work together to implement an app architecture that is easy to maintain and avoids numerous pain points. They help developers:

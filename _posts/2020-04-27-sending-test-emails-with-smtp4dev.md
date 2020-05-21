@@ -1,7 +1,7 @@
 ---
 title: "Sending Test Emails Using smtp4dev"
 date: 2020-04-27
-tags: [General]
+categories: [General]
 ---
 
 Many applications nowadays send emails to their users for a wide range of reasons -- email confirmation, password reset, etc. It is inevitable that as a developer you will have to test that the emails are being sent. Sending emails to real users in development mode may have many implications, from accidentally annoying your clients to incurring huge costs from email API. That it where `smtp4dev` comes in.

@@ -1,7 +1,7 @@
 ---
 title: "Playing (and caching) Online Videos In Flutter"
 date: 2020-05-08
-tags: [Flutter, Mobile]
+categories: [Flutter, Mobile]
 ---
 
 For the past few weekends I have been working on a new feature for my apps that will allow users to watch video tutorials inside the apps. The videos will be stored securely in the cloud which means they will have to be streamed in the apps. This presented a design challenge I had to overcome. About 99% of my users are in South Africa where data costs are relatively high (very high) so I don't want my app to be responsible for their huge data bills. This means I need to download the video just once (or twice as you shall see) from the server and cache it on the device. I also need to save bandwidth costs from my cloud provider. In this post I am going to talk about the design decisions I made and the compromises I had to make in order to achieve my goal.

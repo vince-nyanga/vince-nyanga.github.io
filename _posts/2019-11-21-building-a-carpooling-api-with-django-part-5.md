@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 5)
 date: 2019-11-21
-tags: [Django, Python]
+categories: [Django, Python]
 ---
 
 In [part 4]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-4/) of our series we installed Django Rest Framework to our project and exposed our first API endpoint for the `Users` model. In this post we are going to create endpoints for our other models and have a fairly functional API.

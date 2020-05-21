@@ -1,7 +1,7 @@
 ---
 title: Building a carpool web API with Django (part 2)
 date: 2019-11-06
-tags: [Django, Python]
+categories: [Django, Python]
 ---
 
 In [part 1]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-1/) of the series we created a custom `User` model with which we replaced the default model that Django provides. We also added two custom parameters -- `gender` and `birth_date` to our custom `User`. In this post we are going to add some validation to our model as well as unit tests to ensure that the model works the way we expect it to.

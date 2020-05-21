@@ -1,7 +1,7 @@
 ---
 title: "My Flutter Journey: One Year On"
 date: 2020-01-22
-tags: [Mobile, Flutter]
+categories: [Mobile, Flutter]
 ---
 
 Around August 2018 I came across Flutter, a multi-platform toolkit for building mobile apps, desktop apps as well as web apps. It sounded very interesting and I told myself that I needed to learn it some day. I did a `Hello World` project and forgot about it for months.
