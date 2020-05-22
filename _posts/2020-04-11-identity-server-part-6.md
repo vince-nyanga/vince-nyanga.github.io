@@ -1,7 +1,7 @@
 ---
 title: "Building an identity server that supports OAuth 2.0 and OpenID Connect with ASP.NET Core and IdentityServer4 - Part 6"
 date: 2020-04-11
-categories: [C#, ASP.NET Core]
+tags: [C#, ASP.NET Core]
 ---
 
 In the [previous post]({{ site.baseurl}}/identity-server-part-4) we added user registration to our identity server project. Now that we have most of the functionality working we can now move everything from an in-memory database to a SQL Server database. I relied heavily on the [documentation](http://docs.identityserver.io/en/release/quickstarts/8_entity_framework.html) in this post so I encourage you to check it out for more information. Let's get started.

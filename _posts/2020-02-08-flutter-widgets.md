@@ -1,7 +1,7 @@
 ---
 title: "Widgets: Building Blocks For Flutter Applications"
 date: 2020-02-08
-categories: [Flutter, Mobile]
+tags: [Flutter, Mobile]
 ---
 
 As you may have heard, everything in Flutter is a widget -- from things that you can interact with on screen like buttons and text fields to things that you don't interact with such as padding and margin. I once read an article where someone said after hearing that everything in Flutter is a widget over and over again they started to wonder if they were not a widget as well. In this post we are going to talk about Flutter widgets, the two types of widgets, examples and when you should use them. This is going to be a relatively short read.

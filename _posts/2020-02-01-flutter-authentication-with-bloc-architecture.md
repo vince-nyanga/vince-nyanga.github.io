@@ -1,7 +1,7 @@
 ---
 title: "Building an authentication flow in Flutter using the BLoC pattern"
 date: 2020-02-01
-categories: [Flutter, Mobile]
+tags: [Flutter, Mobile]
 ---
 
 In the [previous post]({{ site.baseurl }}/state-management-in-flutter-bloc-pattern/) we introduced the `BLoC` pattern as one of the state management solutions in Flutter. In this post we are going to put that theory into practice by building a simple authentication flow that utilises the pattern. This is going to be a simple Flutter app that has three screens -- a splash screen, a login screen and a home screen.

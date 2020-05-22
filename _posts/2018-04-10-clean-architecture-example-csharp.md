@@ -1,7 +1,7 @@
 ---
 title: Clean Architecture Example C#
 date: 2018-04-10
-categories: [C#, Architecture]
+tags: [C#, Architecture]
 ---
 
 When I was still in university I failed a job interview because I did not know the architecture I was using in my project (embarrassing). Since that day I decided to learn about different software architectures and use them in all my projects.
