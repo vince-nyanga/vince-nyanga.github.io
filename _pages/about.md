@@ -3,11 +3,9 @@ title: "About"
 permalink: "/about/"
 ---
 
-I'm a software developer based in Johannesburg, South Africa, who enjoys working on anything software related particularly mobile app development, .NET, web development with Django and Flask as well as Machine Learning (still learning).
+I'm a software developer based in Johannesburg, South Africa, who enjoys working on anything software related particularly .NET, mobile apps using Flutter, as well as Machine Learning (still learning).
 
 I believe in being a solid software developer first before specialising in different technologies. This foundation of software development principles gives me the ability to easily work with different technologies and programming languages.
-
-My ambition is to one day become a Machine Learning engineer so these days most of my time is spent building my Machine Learning skillset.
 
 ## Projects
 
@@ -20,3 +18,7 @@ This is a mobile app for [Android](https://play.google.com/store/apps/details?id
 ### 2. RE 1 Made Easy
 
 This is a mobile app for [Android](https://play.google.com/store/apps/details?id=me.vincentnyanga.re1) and [iOS](https://apps.apple.com/app/re-1-made-easy/id1494667167) that helps users prepare for their Regulatory Exam (for Key individuals). The apps were built using Flutter.
+
+### 3. Hones.Kairos.Net
+
+This is an open source client library for the [Kairos](https://www.kairos.com/) API. You may find the source code on [GitHub](https://github.com/vince-nyanga/Kairos.Net) and download the package from [NuGet](https://www.nuget.org/packages/Hones.Kairos.Net).
