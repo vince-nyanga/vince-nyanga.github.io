@@ -1,5 +1,5 @@
 ---
-title: "Building Resilient .NET Core Applications With Polly - Part 1"
+title: "Building Resilient .NET Core Applications With Polly's Retry Policy"
 date: 2020-05-30
 tags: [C#, .NET Core, Polly]
 ---
