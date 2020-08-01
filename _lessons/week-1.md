@@ -3,7 +3,7 @@ title: "Week 1: Aug 1 2020"
 date: 2020-08-01
 ---
 
-This week I learnt a lot of things but I'm just going to talk about the few that stood out for me.
+This week I learnt a lot of things but I'm just going to talk about the few that stood out for me. Here we go:
 
 ## 1. CSS Flexbox
 
