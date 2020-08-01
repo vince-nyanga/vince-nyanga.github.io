@@ -200,6 +200,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
+  - jemoji
   - jekyll-include-cache
 
 # mimic GitHub Pages with --safe
@@ -208,6 +209,7 @@ whitelist:
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
+  - jemoji
   - jekyll-include-cache
 
 # Archives
@@ -245,6 +247,11 @@ compress_html:
   ignore:
     envs: development
 
+collections:
+  lessons:
+    output: true
+    permalink: /:collection/:path/
+
 # Defaults
 defaults:
   # _posts
@@ -266,3 +273,14 @@ defaults:
     values:
       layout: single
       author_profile: true
+
+  # lessons
+  - scope:
+      path: ""
+      type: lessons
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      share: true
+      related: true

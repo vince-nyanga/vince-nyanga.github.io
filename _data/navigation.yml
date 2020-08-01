@@ -2,5 +2,7 @@
 main:
   - title: "Posts"
     url: /year-archive/
+  - title: "Weekly Lessons"
+    url: /weekly-lessons/
   - title: "About"
     url: /about/
