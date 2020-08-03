@@ -16,7 +16,7 @@ After a quick search I stumbled upon CSS Flexbox -- a powerful way of creating f
 
 ## 2. HTTP URL Merging
 
-This is a little bit embarrassing for me since I've worked with the `HttpClient` for a while now. Earlier this week I wanted to make a call to an web service so I did what I always do:
+This is a little bit embarrassing for me since I've worked with the `HttpClient` for a while now. Earlier this week I wanted to make a call to a web service so I did what I always do:
 
 ```csharp
 var client = new HttpClient
@@ -40,7 +40,7 @@ var response = await client.GetAsync("/sub-path/v1/blabla");
 
 But wait, there are instances where I need to make the same call but without the `sub-path` section so the only way to do it is to add it in the base address of my client. I quickly realised that I needed to go back to my first implementation and somehow make sure that `sub-path` wasn't gonna get dropped when I make the call.
 
-I then investigated why my `sub-path` was getting dropped and my investigation led me to the [Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986) RFC page and this [section](https://tools.ietf.org/html/rfc3986#section-5.2.3) in particular. That section explains how merging paths work. To summarise, if your base address has a segment in it like the one in the example, it **must** end with a `/` otherwise the everything after the right-most `/` will be excluded when paths are merged. Eureka!! there was my solution. All I needed to do was add a trailing `/` to my base address and remove the leading `/` from my `GET` call like this:
+I then investigated why my `sub-path` was getting dropped and my investigation led me to the [Uniform Resource Identifier (URI): Generic Syntax](https://tools.ietf.org/html/rfc3986) RFC page and this [section](https://tools.ietf.org/html/rfc3986#section-5.2.3) in particular. That section explains how merging paths work. To summarise, if your base address has a segment in it like the one in the example, it **must** end with a `/` otherwise everything after the right-most `/` will be excluded when paths are merged. Eureka!! there was my solution. All I needed to do was add a trailing `/` to my base address and remove the leading `/` from my `GET` call like this:
 
 ```csharp
 var client = new HttpClient
@@ -51,4 +51,4 @@ var client = new HttpClient
 var response = await client.GetAsync("v1/blabla");
 ```
 
-This is something I did not know because in every instance prior to this week all by base url didn't have an extra segment in them.
+This is something I did not know because in every instance prior to this week all base `URL`s didn't have an extra segment in them.
