@@ -3,6 +3,7 @@ layout: collection
 title: "Weekly Lessons"
 permalink: "/weekly-lessons/"
 collection: lessons
+sort_by: date
 sort_order: reverse
 header:
   overlay_image: /images/learning.jpg
