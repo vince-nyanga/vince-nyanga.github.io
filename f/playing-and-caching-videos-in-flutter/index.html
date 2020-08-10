@@ -1,0 +1,851 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Playing (and caching) Online Videos In Flutter | Vincent (Hones) Nyanga</title>
+<meta name="description" content="For the past few weekends I have been working on a new feature for my apps that will allow users to watch video tutorials inside the apps. The videos will be stored securely in the cloud which means they will have to be streamed in the apps. This presented a design challenge I had to overcome. About 99% of my users are in South Africa where data costs are relatively high (very high) so I don’t want my app to be responsible for their huge data bills. This means I need to download the video just once (or twice as you shall see) from the server and cache it on the device. I also need to save bandwidth costs from my cloud provider. In this post I am going to talk about the design decisions I made and the compromises I had to make in order to achieve my goal.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="Playing (and caching) Online Videos In Flutter">
+<meta property="og:url" content="http://localhost:4000/playing-and-caching-videos-in-flutter/">
+
+
+  <meta property="og:description" content="For the past few weekends I have been working on a new feature for my apps that will allow users to watch video tutorials inside the apps. The videos will be stored securely in the cloud which means they will have to be streamed in the apps. This presented a design challenge I had to overcome. About 99% of my users are in South Africa where data costs are relatively high (very high) so I don’t want my app to be responsible for their huge data bills. This means I need to download the video just once (or twice as you shall see) from the server and cache it on the device. I also need to save bandwidth costs from my cloud provider. In this post I am going to talk about the design decisions I made and the compromises I had to make in order to achieve my goal.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-05-08T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/playing-and-caching-videos-in-flutter/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Playing (and caching) Online Videos In Flutter">
+    <meta itemprop="description" content="For the past few weekends I have been working on a new feature for my apps that will allow users to watch video tutorials inside the apps. The videos will be stored securely in the cloud which means they will have to be streamed in the apps. This presented a design challenge I had to overcome. About 99% of my users are in South Africa where data costs are relatively high (very high) so I don’t want my app to be responsible for their huge data bills. This means I need to download the video just once (or twice as you shall see) from the server and cache it on the device. I also need to save bandwidth costs from my cloud provider. In this post I am going to talk about the design decisions I made and the compromises I had to make in order to achieve my goal.">
+    <meta itemprop="datePublished" content="May 08, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Playing (and caching) Online Videos In Flutter
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  7 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>For the past few weekends I have been working on a new feature for my apps that will allow users to watch video tutorials inside the apps. The videos will be stored securely in the cloud which means they will have to be streamed in the apps. This presented a design challenge I had to overcome. About 99% of my users are in South Africa where data costs are relatively high (very high) so I don’t want my app to be responsible for their huge data bills. This means I need to download the video just once (or twice as you shall see) from the server and cache it on the device. I also need to save bandwidth costs from my cloud provider. In this post I am going to talk about the design decisions I made and the compromises I had to make in order to achieve my goal.</p>
+
+<h2 id="playing-videos">Playing Videos</h2>
+
+<p>Playing videos in Flutter was not the biggest challenge I needed to overcome. I used one of the most popular libraries, <a href="https://pub.dev/packages/chewie">chewie</a>, which is a video player plugin that uses the <a href="https://pub.dev/packages/video_player">video_player</a> package under the hood and wraps it in a Material or Cupertino UI. You can follow the link if you want to learn more about it. You will see how I used it later.</p>
+
+<h2 id="caching-the-videos">Caching The Videos</h2>
+
+<p>This is where I spent most of my time trying to figure out what the best way forward was. I did not want my users to download a video everytime they view it because that was going to be very expensive for the both of us. After a quick google search I came across <a href="https://pub.dev/packages/flutter_cache_manager">flutter_cache_manager</a> – a cache manager that downloads and cache files in the the cache directory of the app. All I needed to do was to put everything together in a nice and maintenable way which is what I’m going to talk about in the example below.</p>
+
+<h2 id="example">Example</h2>
+
+<p>This example is going to be a simple Flutter app that plays and caches a video stored on a server somewhere. I’m going to make it as basic as possible to show how I managed to put everything together but leaving out some of the stuff I think are out of scope for this post. I will also not show all the code in this post. If you want to see the full example you may check it out on <a href="https://github.com/vince-nyanga/flutter_video_player">GitHub</a>. Let’s get started.</p>
+
+<p>Create a new Flutter application and add the following packages to your <code class="highlighter-rouge">pubspec.yaml</code> file:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># pubspec.yaml</span>
+
+<span class="c1"># ...</span>
+
+<span class="na">dependencies</span><span class="pi">:</span>
+  <span class="na">flutter</span><span class="pi">:</span>
+    <span class="na">sdk</span><span class="pi">:</span> <span class="s">flutter</span>
+  <span class="na">cupertino_icons</span><span class="pi">:</span> <span class="s">^0.1.2</span>
+  <span class="na">bloc</span><span class="pi">:</span> <span class="s">^4.0.0</span>
+  <span class="na">flutter_bloc</span><span class="pi">:</span> <span class="s">^4.0.0</span>
+  <span class="na">equatable</span><span class="pi">:</span> <span class="s">^1.1.1</span>
+  <span class="na">video_player</span><span class="pi">:</span> <span class="s">^0.10.8+1</span>
+  <span class="na">chewie</span><span class="pi">:</span> <span class="s">^0.9.10</span>
+  <span class="na">flutter_cache_manager</span><span class="pi">:</span> <span class="s">^1.2.2</span>
+  <span class="na">pedantic</span><span class="pi">:</span> <span class="s">^1.8.0+1</span>
+<span class="c1"># ...</span>
+</code></pre></div></div>
+
+<p>First, let’s create a custom video player widget that will play our video.</p>
+
+<h3 id="video-player-widget">Video Player Widget</h3>
+
+<p>Create <code class="highlighter-rouge">lib/widgets/video_player_widget.dart</code> and add the following code:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">chewie</span><span class="p">/</span><span class="n">chewie</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter</span><span class="p">/</span><span class="n">material</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter</span><span class="p">/</span><span class="n">services</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">video_player</span><span class="p">/</span><span class="n">video_player</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="n">ASPECT_RATIO</span> <span class="p">=</span> <span class="m">3</span> <span class="p">/</span> <span class="m">2</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">VideoPlayerWidget</span> <span class="n">extends</span> <span class="n">StatefulWidget</span> <span class="p">{</span>
+  <span class="n">final</span> <span class="n">VideoPlayerController</span> <span class="n">controller</span><span class="p">;</span>
+  <span class="n">final</span> <span class="n">String</span> <span class="n">videoTitle</span><span class="p">;</span>
+
+  <span class="k">const</span> <span class="nf">VideoPlayerWidget</span><span class="p">({</span>
+    <span class="n">Key</span> <span class="n">key</span><span class="p">,</span>
+    <span class="n">@required</span> <span class="k">this</span><span class="p">.</span><span class="n">controller</span><span class="p">,</span>
+    <span class="n">@required</span> <span class="k">this</span><span class="p">.</span><span class="n">videoTitle</span><span class="p">,</span>
+  <span class="p">})</span>  <span class="p">:</span> <span class="nf">assert</span><span class="p">(</span><span class="n">controller</span> <span class="p">!=</span> <span class="k">null</span><span class="p">),</span>
+        <span class="nf">assert</span><span class="p">(</span><span class="n">videoTitle</span> <span class="p">!=</span> <span class="k">null</span><span class="p">),</span>
+        <span class="nf">super</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="p">);</span>
+
+  <span class="n">@override</span>
+  <span class="n">_VideoPlayerWidgetState</span> <span class="nf">createState</span><span class="p">()</span> <span class="p">=&gt;</span> <span class="nf">_VideoPlayerWidgetState</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">_VideoPlayerWidgetState</span> <span class="n">extends</span> <span class="n">State</span><span class="p">&lt;</span><span class="n">VideoPlayerWidget</span><span class="p">&gt;</span> <span class="p">{</span>
+  <span class="n">ChewieController</span> <span class="n">_chewieController</span><span class="p">;</span>
+
+  <span class="n">@override</span>
+  <span class="k">void</span> <span class="nf">initState</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_chewieController</span> <span class="p">=</span> <span class="nf">ChewieController</span><span class="p">(</span>
+      <span class="n">videoPlayerController</span><span class="p">:</span> <span class="n">widget</span><span class="p">.</span><span class="n">controller</span><span class="p">,</span>
+      <span class="n">aspectRatio</span><span class="p">:</span> <span class="n">ASPECT_RATIO</span><span class="p">,</span>
+      <span class="n">autoInitialize</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+      <span class="n">autoPlay</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+      <span class="n">deviceOrientationsAfterFullScreen</span><span class="p">:</span> <span class="p">[</span><span class="n">DeviceOrientation</span><span class="p">.</span><span class="n">portraitUp</span><span class="p">],</span>
+      <span class="n">materialProgressColors</span><span class="p">:</span> <span class="nf">ChewieProgressColors</span><span class="p">(</span>
+        <span class="n">playedColor</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">purple</span><span class="p">,</span>
+        <span class="n">handleColor</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">purple</span><span class="p">,</span>
+        <span class="n">backgroundColor</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">grey</span><span class="p">,</span>
+        <span class="n">bufferedColor</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">purple</span><span class="p">[</span><span class="m">100</span><span class="p">],</span>
+      <span class="p">),</span>
+      <span class="n">placeholder</span><span class="p">:</span> <span class="nf">Container</span><span class="p">(</span>
+        <span class="n">color</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">grey</span><span class="p">,</span>
+      <span class="p">),</span>
+    <span class="p">);</span>
+    <span class="n">super</span><span class="p">.</span><span class="nf">initState</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="n">@override</span>
+  <span class="n">Widget</span> <span class="nf">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nf">Column</span><span class="p">(</span>
+      <span class="n">crossAxisAlignment</span><span class="p">:</span> <span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span>
+      <span class="n">children</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Widget</span><span class="p">&gt;[</span>
+        <span class="nf">Chewie</span><span class="p">(</span>
+          <span class="n">controller</span><span class="p">:</span> <span class="n">_chewieController</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="nf">Padding</span><span class="p">(</span>
+          <span class="n">padding</span><span class="p">:</span> <span class="k">const</span> <span class="n">EdgeInsets</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="m">16</span><span class="p">),</span>
+          <span class="n">child</span><span class="p">:</span> <span class="nf">Text</span><span class="p">(</span>
+            <span class="n">widget</span><span class="p">.</span><span class="n">videoTitle</span><span class="p">,</span>
+            <span class="n">style</span><span class="p">:</span> <span class="n">Theme</span><span class="p">.</span><span class="nf">of</span><span class="p">(</span><span class="n">context</span><span class="p">).</span><span class="n">textTheme</span><span class="p">.</span><span class="n">title</span>
+                <span class="p">.</span><span class="nf">copyWith</span><span class="p">(</span><span class="n">color</span><span class="p">:</span> <span class="n">Color</span><span class="p">.</span><span class="nf">fromRGBO</span><span class="p">(</span><span class="m">14</span><span class="p">,</span> <span class="m">26</span><span class="p">,</span> <span class="m">92</span><span class="p">,</span> <span class="m">1</span><span class="p">)),</span>
+          <span class="p">),</span>
+        <span class="p">),</span>
+      <span class="p">],</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">@override</span>
+  <span class="k">void</span> <span class="nf">dispose</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">widget</span><span class="p">.</span><span class="n">controller</span><span class="p">.</span><span class="nf">dispose</span><span class="p">();</span>
+    <span class="n">_chewieController</span><span class="p">.</span><span class="nf">dispose</span><span class="p">();</span>
+    <span class="n">super</span><span class="p">.</span><span class="nf">dispose</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This widget’s sole purpose is to play a video using <code class="highlighter-rouge">chewie</code>, nothing more, nothing less. When I was searching for the best way to cache videos in Flutter I came across an example where the caching was done inside the widget that played the video. Even though it works I personally feel like that’s giving the widget too much responsibility and violates the Single Responsibility Principle.</p>
+
+<p>So how did I deal with the caching of the videos, you may ask. I created an abstruct <code class="highlighter-rouge">VideoControllerService</code> that returns a <code class="highlighter-rouge">VideoPlayerController</code> given a <code class="highlighter-rouge">Video</code> model. It is in the implementation of this abstract class that I then make use of the <code class="highlighter-rouge">flutter_cache_manager</code> library to check whether or not the video has already been cached and return an appropriate <code class="highlighter-rouge">VideoPlayerController</code>. Let’s do that now.</p>
+
+<h3 id="video-controller-service">Video Controller Service</h3>
+
+<p>Create <code class="highlighter-rouge">lib/services/video_controller_service.dart</code> and add the following code:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter_cache_manager</span><span class="p">/</span><span class="n">flutter_cache_manager</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">pedantic</span><span class="p">/</span><span class="n">pedantic</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">video_player</span><span class="p">/</span><span class="n">video_player</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="p">../</span><span class="n">models</span><span class="p">/</span><span class="n">models</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">VideoControllerService</span> <span class="p">{</span>
+  <span class="n">Future</span><span class="p">&lt;</span><span class="n">VideoPlayerController</span><span class="p">&gt;</span> <span class="nf">getControllerForVideo</span><span class="p">(</span><span class="n">Video</span> <span class="n">video</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">CachedVideoControllerService</span> <span class="n">extends</span> <span class="n">VideoControllerService</span> <span class="p">{</span>
+  <span class="n">final</span> <span class="n">BaseCacheManager</span> <span class="n">_cacheManager</span><span class="p">;</span>
+
+  <span class="nf">CachedVideoControllerService</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_cacheManager</span><span class="p">)</span> <span class="p">:</span> <span class="nf">assert</span><span class="p">(</span><span class="n">_cacheManager</span> <span class="p">!=</span> <span class="k">null</span><span class="p">);</span>
+
+  <span class="n">@override</span>
+  <span class="n">Future</span><span class="p">&lt;</span><span class="n">VideoPlayerController</span><span class="p">&gt;</span> <span class="nf">getControllerForVideo</span><span class="p">(</span><span class="n">Video</span> <span class="n">video</span><span class="p">)</span> <span class="k">async</span> <span class="p">{</span>
+    <span class="n">final</span> <span class="n">fileInfo</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_cacheManager</span><span class="p">.</span><span class="nf">getFileFromCache</span><span class="p">(</span><span class="n">video</span><span class="p">.</span><span class="n">url</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">fileInfo</span> <span class="p">==</span> <span class="k">null</span> <span class="p">||</span> <span class="n">fileInfo</span><span class="p">.</span><span class="n">file</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nf">print</span><span class="p">(</span><span class="err">'</span><span class="p">[</span><span class="n">VideoControllerService</span><span class="p">]:</span> <span class="n">No</span> <span class="n">video</span> <span class="k">in</span> <span class="n">cache</span><span class="err">'</span><span class="p">);</span>
+
+      <span class="nf">print</span><span class="p">(</span><span class="err">'</span><span class="p">[</span><span class="n">VideoControllerService</span><span class="p">]:</span> <span class="n">Saving</span> <span class="n">video</span> <span class="n">to</span> <span class="n">cache</span><span class="err">'</span><span class="p">);</span>
+      <span class="nf">unawaited</span><span class="p">(</span><span class="n">_cacheManager</span><span class="p">.</span><span class="nf">downloadFile</span><span class="p">(</span><span class="n">video</span><span class="p">.</span><span class="n">url</span><span class="p">));</span>
+
+      <span class="k">return</span> <span class="n">VideoPlayerController</span><span class="p">.</span><span class="nf">network</span><span class="p">(</span><span class="n">video</span><span class="p">.</span><span class="n">url</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nf">print</span><span class="p">(</span><span class="err">'</span><span class="p">[</span><span class="n">VideoControllerService</span><span class="p">]:</span> <span class="n">Loading</span> <span class="n">video</span> <span class="k">from</span> <span class="n">cache</span><span class="err">'</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">VideoPlayerController</span><span class="p">.</span><span class="nf">file</span><span class="p">(</span><span class="n">fileInfo</span><span class="p">.</span><span class="n">file</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">CachedVideoControllerService</code> implements our abstract <code class="highlighter-rouge">VideoControllerService</code>. Inside the <code class="highlighter-rouge">getControllerForVideo</code> method I first try to get the video from the cache. If the video is not in the cache I save it to the cache and stream it simultaneously. As you may have noticed, I am downloading the video twice here – downloading it to save to the cache as well as streaming it using the <code class="highlighter-rouge">VideoPlayerController.network(url)</code>. This is a compromise I was willing to make because the alternative would lead to a bad user experience.</p>
+
+<p>The alternative was to use the cache manager’s <code class="highlighter-rouge">getSingleFile(url)</code> method which would try to get the file from the cache or downloads it if it’s not in the cache. This means if the video is not in the cache the user would have to wait for it to be downloaded and cached first which wouldn’t be a good experience in my opinion. In addition, if the cached file is too old it will have to be downloaded again. This may be the best way to do it but in this project I don’t really need to refresh the cache since my objective is to save users data costs.</p>
+
+<p>Even though the video is downloaded twice it’s a better option that not caching at all. I’m still looking for a better solution but I need to ship to production and I don’t have time at the moment. I follow the <em>Make it Work - Make it Right - Make it Fast</em> approach. When I find a better solution I will come back here and share it.</p>
+
+<h2 id="bloc">BLoC</h2>
+
+<p>I already use the <code class="highlighter-rouge">BLoC</code> pattern inside the app so everything goes through the <code class="highlighter-rouge">BLoC</code>. I am not going to talk about it or add the code here for brevity. I encourage you to check out the complete example on <a href="https://github.com/vince-nyanga/flutter_video_player">GitHub</a>.</p>
+
+<h2 id="the-ui">The UI</h2>
+
+<p>Create <code class="highlighter-rouge">lib/pages/video_page.dart</code> and add the following code:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter</span><span class="p">/</span><span class="n">material</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter_bloc</span><span class="p">/</span><span class="n">flutter_bloc</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter_video_player</span><span class="p">/</span><span class="n">services</span><span class="p">/</span><span class="n">services</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="err">'</span><span class="p">../</span><span class="n">blocs</span><span class="p">/</span><span class="n">blocs</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="p">../</span><span class="n">models</span><span class="p">/</span><span class="n">models</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="p">../</span><span class="n">widgets</span><span class="p">/</span><span class="n">widgets</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">VideoPage</span> <span class="n">extends</span> <span class="n">StatelessWidget</span> <span class="p">{</span>
+  <span class="n">final</span> <span class="n">Video</span> <span class="n">video</span><span class="p">;</span>
+
+  <span class="k">const</span> <span class="nf">VideoPage</span><span class="p">({</span><span class="n">Key</span> <span class="n">key</span><span class="p">,</span> <span class="n">@required</span> <span class="k">this</span><span class="p">.</span><span class="n">video</span><span class="p">})</span> <span class="p">:</span> <span class="nf">super</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="p">);</span>
+
+  <span class="n">@override</span>
+  <span class="n">Widget</span> <span class="nf">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nf">Scaffold</span><span class="p">(</span>
+      <span class="n">body</span><span class="p">:</span> <span class="nf">SafeArea</span><span class="p">(</span>
+        <span class="n">child</span><span class="p">:</span> <span class="nf">_buildVideoPlayer</span><span class="p">(),</span>
+      <span class="p">),</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">Widget</span> <span class="nf">_buildVideoPlayer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">BlocProvider</span><span class="p">&lt;</span><span class="n">VideoPlayerBloc</span><span class="p">&gt;(</span>
+      <span class="n">create</span><span class="p">:</span> <span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="p">=&gt;</span>
+          <span class="nf">VideoPlayerBloc</span><span class="p">(</span><span class="n">RepositoryProvider</span><span class="p">.</span><span class="n">of</span><span class="p">&lt;</span><span class="n">VideoControllerService</span><span class="p">&gt;(</span><span class="n">context</span><span class="p">))..</span><span class="k">add</span><span class="p">(</span><span class="nf">VideoSelectedEvent</span><span class="p">(</span><span class="n">video</span><span class="p">)),</span>
+      <span class="n">child</span><span class="p">:</span> <span class="n">BlocBuilder</span><span class="p">&lt;</span><span class="n">VideoPlayerBloc</span><span class="p">,</span> <span class="n">VideoPlayerState</span><span class="p">&gt;(</span>
+        <span class="n">builder</span><span class="p">:</span> <span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">state</span><span class="p">){</span>
+          <span class="k">return</span> <span class="nf">Column</span><span class="p">(</span>
+            <span class="n">crossAxisAlignment</span><span class="p">:</span> <span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span>
+            <span class="n">children</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Widget</span><span class="p">&gt;[</span>
+              <span class="nf">_getPlayer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="p">],</span>
+          <span class="p">);</span>
+        <span class="p">},</span>
+      <span class="p">),</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">Widget</span> <span class="nf">_getPlayer</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">,</span> <span class="n">VideoPlayerState</span> <span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">state</span> <span class="k">is</span> <span class="n">VideoPlayerStateLoaded</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nf">VideoPlayerWidget</span><span class="p">(</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nf">Key</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">video</span><span class="p">.</span><span class="n">url</span><span class="p">),</span>
+        <span class="n">videoTitle</span><span class="p">:</span> <span class="n">state</span><span class="p">.</span><span class="n">video</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">controller</span><span class="p">:</span> <span class="n">state</span><span class="p">.</span><span class="n">controller</span><span class="p">,</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">final</span> <span class="n">screenWidth</span> <span class="p">=</span> <span class="n">MediaQuery</span><span class="p">.</span><span class="nf">of</span><span class="p">(</span><span class="n">context</span><span class="p">).</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    <span class="n">final</span> <span class="n">containerHeight</span> <span class="p">=</span> <span class="n">screenWidth</span> <span class="p">/</span> <span class="n">ASPECT_RATIO</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">state</span> <span class="k">is</span> <span class="n">VideoPlayerStateError</span><span class="p">){</span>
+      <span class="k">return</span> <span class="nf">Container</span><span class="p">(</span>
+        <span class="n">height</span><span class="p">:</span> <span class="n">containerHeight</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">grey</span><span class="p">,</span>
+        <span class="n">child</span><span class="p">:</span> <span class="nf">Center</span><span class="p">(</span>
+          <span class="n">child</span><span class="p">:</span> <span class="nf">Text</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">message</span><span class="p">),</span>
+        <span class="p">),</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nf">Container</span><span class="p">(</span>
+      <span class="n">height</span><span class="p">:</span> <span class="n">containerHeight</span><span class="p">,</span>
+      <span class="n">color</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">grey</span><span class="p">,</span>
+      <span class="n">child</span><span class="p">:</span> <span class="nf">Center</span><span class="p">(</span>
+        <span class="n">child</span><span class="p">:</span> <span class="nf">Text</span><span class="p">(</span><span class="err">'</span><span class="n">Initialising</span> <span class="n">video</span><span class="p">...</span><span class="err">'</span><span class="p">),</span>
+      <span class="p">),</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s go to <code class="highlighter-rouge">main.dart</code> and hook everything up:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// main.dart</span>
+
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter</span><span class="p">/</span><span class="n">material</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter_bloc</span><span class="p">/</span><span class="n">flutter_bloc</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">package</span><span class="p">:</span><span class="n">flutter_cache_manager</span><span class="p">/</span><span class="n">flutter_cache_manager</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="err">'</span><span class="n">models</span><span class="p">/</span><span class="n">models</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">pages</span><span class="p">/</span><span class="n">pages</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+<span class="n">import</span> <span class="err">'</span><span class="n">services</span><span class="p">/</span><span class="n">services</span><span class="p">.</span><span class="n">dart</span><span class="err">'</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nf">runApp</span><span class="p">(</span><span class="n">RepositoryProvider</span><span class="p">&lt;</span><span class="n">VideoControllerService</span><span class="p">&gt;(</span>
+    <span class="n">create</span><span class="p">:</span> <span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nf">CachedVideoControllerService</span><span class="p">(</span><span class="nf">DefaultCacheManager</span><span class="p">()),</span>
+    <span class="n">child</span><span class="p">:</span> <span class="nf">MyApp</span><span class="p">(),</span>
+  <span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">MyApp</span> <span class="n">extends</span> <span class="n">StatelessWidget</span> <span class="p">{</span>
+  <span class="n">@override</span>
+  <span class="n">Widget</span> <span class="nf">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nf">MaterialApp</span><span class="p">(</span>
+      <span class="n">title</span><span class="p">:</span> <span class="err">'</span><span class="n">Flutter</span> <span class="n">Video</span> <span class="n">Player</span><span class="err">'</span><span class="p">,</span>
+      <span class="n">debugShowCheckedModeBanner</span><span class="p">:</span> <span class="k">false</span><span class="p">,</span>
+      <span class="n">theme</span><span class="p">:</span> <span class="nf">ThemeData</span><span class="p">(</span>
+        <span class="n">primarySwatch</span><span class="p">:</span> <span class="n">Colors</span><span class="p">.</span><span class="n">purple</span><span class="p">,</span>
+      <span class="p">),</span>
+      <span class="n">home</span><span class="p">:</span> <span class="nf">VideoPage</span><span class="p">(</span>
+        <span class="n">video</span><span class="p">:</span> <span class="nf">Video</span><span class="p">(</span>
+          <span class="n">title</span><span class="p">:</span> <span class="err">'</span><span class="n">Fluttering</span> <span class="n">Butterfly</span><span class="err">'</span><span class="p">,</span>
+          <span class="n">url</span><span class="p">:</span> <span class="err">'</span><span class="n">https</span><span class="p">:</span><span class="c1">//flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',</span>
+        <span class="p">),</span>
+      <span class="p">),</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We are done. Checkout the complete project from <a href="https://github.com/vince-nyanga/flutter_video_player">GitHub</a> and run it.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post I spoke about how I managed to play and cache online videos in my apps. I showed a scaled down example of how I did it and hopefully you can take it and build on it in your own app. There are things I’m not quite happy with but for now I think the solution works well even though there is plenty room for improvement. When I improve the solution I will come back and update this post. Thanks so much and stay safe if you’re reading this during the 2020 <strong>Covid-19</strong> pandemic.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#flutter" class="page__taxonomy-item" rel="tag">Flutter</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#mobile" class="page__taxonomy-item" rel="tag">Mobile</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-05-08T00:00:00+02:00">May 08, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Playing+%28and+caching%29+Online+Videos+In+Flutter%20http%3A%2F%2Flocalhost%3A4000%2Fplaying-and-caching-videos-in-flutter%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fplaying-and-caching-videos-in-flutter%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fplaying-and-caching-videos-in-flutter%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/sending-test-emails-with-smtp4dev/" class="pagination--pager" title="Sending Test Emails Using smtp4dev
+">Previous</a>
+    
+    
+      <a href="/being-productive-while-working-from-home/" class="pagination--pager" title="Being Productive While Working From Home
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

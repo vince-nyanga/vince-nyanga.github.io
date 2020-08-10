@@ -1,0 +1,1178 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Building an authentication flow in Flutter using the BLoC pattern | Vincent (Hones) Nyanga</title>
+<meta name="description" content="In the previous post we introduced the BLoC pattern as one of the state management solutions in Flutter. In this post we are going to put that theory into practice by building a simple authentication flow that utilises the pattern. This is going to be a simple Flutter app that has three screens – a splash screen, a login screen and a home screen.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="Building an authentication flow in Flutter using the BLoC pattern">
+<meta property="og:url" content="http://localhost:4000/flutter-authentication-with-bloc-architecture/">
+
+
+  <meta property="og:description" content="In the previous post we introduced the BLoC pattern as one of the state management solutions in Flutter. In this post we are going to put that theory into practice by building a simple authentication flow that utilises the pattern. This is going to be a simple Flutter app that has three screens – a splash screen, a login screen and a home screen.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-02-01T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/flutter-authentication-with-bloc-architecture/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Building an authentication flow in Flutter using the BLoC pattern">
+    <meta itemprop="description" content="In the previous post we introduced the BLoC pattern as one of the state management solutions in Flutter. In this post we are going to put that theory into practice by building a simple authentication flow that utilises the pattern. This is going to be a simple Flutter app that has three screens – a splash screen, a login screen and a home screen.">
+    <meta itemprop="datePublished" content="February 01, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Building an authentication flow in Flutter using the BLoC pattern
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  11 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>In the <a href="/state-management-in-flutter-bloc-pattern/">previous post</a> we introduced the <code class="highlighter-rouge">BLoC</code> pattern as one of the state management solutions in Flutter. In this post we are going to put that theory into practice by building a simple authentication flow that utilises the pattern. This is going to be a simple Flutter app that has three screens – a splash screen, a login screen and a home screen.</p>
+
+<h2 id="app-overview">App Overview</h2>
+
+<p>Before we get into the code let us get a brief overview of how the app is going to behave. This is how the app is going to behave:</p>
+
+<ul>
+  <li>When a user opens then app a splash screen is displayed while the authentication service is checking if user is authenticated.</li>
+  <li>If the user is not authenticated they are redirected to the login screen otherwise they will go to the home screen.</li>
+  <li>If login is successful the user is redirected to the home screen otherwise an error message is displayed.</li>
+</ul>
+
+<h2 id="the-code">The Code</h2>
+
+<p>I am assuming you have Flutter installed on your machine and you know how to create a flutter app. If you do not know then you need to visit the Flutter <a href="https://flutter.dev/">website</a> to get started. We are going to use the <a href="https://pub.dev/packages/flutter_bloc">flutter_bloc</a> library – a library that helps implement the BLoC pattern. Create a new application and add the following dependencies to your <code class="highlighter-rouge">pubsec.yaml</code>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># pubsec.yaml</span>
+<span class="c1"># ...</span>
+<span class="na">dependencies</span><span class="pi">:</span>
+  <span class="na">bloc</span><span class="pi">:</span> <span class="s">^3.0.0</span>
+  <span class="na">flutter_bloc</span><span class="pi">:</span> <span class="s">^3.1.0</span>
+  <span class="na">equatable</span><span class="pi">:</span> <span class="s">^1.0.2</span>
+<span class="c1"># ...</span>
+</code></pre></div></div>
+
+<p>For brevity not all of the code will be included in this post. Things like models and services can be found on <a href="https://github.com/vince-nyanga/flutter_bloc_authentication/tree/master/lib">GitHub</a>. Our focus is going to be on the <code class="highlighter-rouge">BLoC</code> and user interface. Let’s get started.</p>
+
+<h3 id="blocs"><code class="highlighter-rouge">BLoC</code>s</h3>
+
+<p>We are going to have two <code class="highlighter-rouge">BLoC</code>s with their associated events and states – <code class="highlighter-rouge">AuthenticationBloc</code> and <code class="highlighter-rouge">LoginBloc</code>. Create a new directory inside your <code class="highlighter-rouge">lib</code> directory and name it <code class="highlighter-rouge">blocs</code>. Let us start with the <code class="highlighter-rouge">AuthenticationBloc</code>, its events and states.</p>
+
+<h4 id="authentication">Authentication</h4>
+
+<p>Inside the <code class="highlighter-rouge">blocs</code> directory create another directory and name it <code class="highlighter-rouge">authentication</code> then create a new file <code class="highlighter-rouge">authentication_event.dart</code> and add the following code therein:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/blocs/authentication/authentication_event.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">meta</span><span class="o">/</span><span class="n">meta</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">equatable</span><span class="o">/</span><span class="n">equatable</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/../</span><span class="n">models</span><span class="o">/</span><span class="n">models</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AuthenticationEvent</span> <span class="kd">extends</span> <span class="nc">Equatable</span> <span class="o">{</span>
+  <span class="kd">const</span> <span class="nf">AuthenticationEvent</span><span class="o">();</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[];</span>
+<span class="o">}</span>
+
+<span class="c1">// Fired just after the app is launched</span>
+<span class="kd">class</span> <span class="nc">AppLoaded</span> <span class="kd">extends</span> <span class="nc">AuthenticationEvent</span> <span class="o">{}</span>
+
+<span class="c1">// Fired when a user has successfully logged in</span>
+<span class="kd">class</span> <span class="nc">UserLoggedIn</span> <span class="kd">extends</span> <span class="nc">AuthenticationEvent</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span><span class="o">;</span>
+
+  <span class="nc">UserLoggedIn</span><span class="o">({</span><span class="nd">@required</span> <span class="k">this</span><span class="o">.</span><span class="na">user</span><span class="o">});</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">user</span><span class="o">];</span>
+<span class="o">}</span>
+
+<span class="c1">// Fired when the user has logged out</span>
+<span class="kd">class</span> <span class="nc">UserLoggedOut</span> <span class="kd">extends</span> <span class="nc">AuthenticationEvent</span> <span class="o">{}</span>
+
+</code></pre></div></div>
+
+<p>These are the events whose stream the authentication <code class="highlighter-rouge">BLoC</code> will listen to. While you are still in the same directory create another file, <code class="highlighter-rouge">authentication_state.dart</code> and add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/blocs/authentication/authentication_state.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">meta</span><span class="o">/</span><span class="n">meta</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">equatable</span><span class="o">/</span><span class="n">equatable</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/../</span><span class="n">models</span><span class="o">/</span><span class="n">models</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AuthenticationState</span> <span class="kd">extends</span> <span class="nc">Equatable</span> <span class="o">{</span>
+  <span class="kd">const</span> <span class="nf">AuthenticationState</span><span class="o">();</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[];</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">AuthenticationInitial</span> <span class="kd">extends</span> <span class="nc">AuthenticationState</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">AuthenticationLoading</span> <span class="kd">extends</span> <span class="nc">AuthenticationState</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">AuthenticationNotAuthenticated</span> <span class="kd">extends</span> <span class="nc">AuthenticationState</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">AuthenticationAuthenticated</span> <span class="kd">extends</span> <span class="nc">AuthenticationState</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span><span class="o">;</span>
+
+  <span class="nc">AuthenticationAuthenticated</span><span class="o">({</span><span class="nd">@required</span> <span class="k">this</span><span class="o">.</span><span class="na">user</span><span class="o">});</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">user</span><span class="o">];</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">AuthenticationFailure</span> <span class="kd">extends</span> <span class="nc">AuthenticationState</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">String</span> <span class="n">message</span><span class="o">;</span>
+
+  <span class="nc">AuthenticationFailure</span><span class="o">({</span><span class="nd">@required</span> <span class="k">this</span><span class="o">.</span><span class="na">message</span><span class="o">});</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">message</span><span class="o">];</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>The states are self-explanatory so we are not going to discuss them further. Let us now turn our attention to the <code class="highlighter-rouge">BLoC</code>. Create a new file and call it <code class="highlighter-rouge">authentication_bloc.dart</code>. Add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/blocs/authentication/authentication_bloc.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">bloc</span><span class="o">/</span><span class="n">bloc</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">authentication_event.dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">authentication_state.dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/../</span><span class="n">services</span><span class="o">/</span><span class="n">services</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">AuthenticationBloc</span> <span class="kd">extends</span> <span class="nc">Bloc</span><span class="o">&lt;</span><span class="nc">AuthenticationEvent</span><span class="o">,</span> <span class="nc">AuthenticationState</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">AuthenticationService</span> <span class="n">_authenticationService</span><span class="o">;</span>
+
+  <span class="nc">AuthenticationBloc</span><span class="o">(</span><span class="nc">AuthenticationService</span> <span class="n">authenticationService</span><span class="o">)</span>
+      <span class="o">:</span> <span class="k">assert</span><span class="o">(</span><span class="n">authenticationService</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">),</span>
+        <span class="n">_authenticationService</span> <span class="o">=</span> <span class="n">authenticationService</span><span class="o">;</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">AuthenticationState</span> <span class="n">get</span> <span class="n">initialState</span> <span class="o">=&gt;</span> <span class="nc">AuthenticationInitial</span><span class="o">();</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">AuthenticationState</span><span class="o">&gt;</span> <span class="nf">mapEventToState</span><span class="o">(</span><span class="nc">AuthenticationEvent</span> <span class="n">event</span><span class="o">)</span> <span class="n">async</span><span class="o">*</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">event</span> <span class="n">is</span> <span class="nc">AppLoaded</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">yield</span><span class="o">*</span> <span class="n">_mapAppLoadedToState</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">event</span> <span class="n">is</span> <span class="nc">UserLoggedIn</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">yield</span><span class="o">*</span> <span class="n">_mapUserLoggedInToState</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">event</span> <span class="n">is</span> <span class="nc">UserLoggedOut</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">yield</span><span class="o">*</span> <span class="n">_mapUserLoggedOutToState</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">AuthenticationState</span><span class="o">&gt;</span> <span class="nf">_mapAppLoadedToState</span><span class="o">(</span><span class="nc">AppLoaded</span> <span class="n">event</span><span class="o">)</span> <span class="n">async</span><span class="o">*</span> <span class="o">{</span>
+    <span class="n">yield</span> <span class="nf">AuthenticationLoading</span><span class="o">();</span> <span class="c1">// to display splash screen</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">await</span> <span class="nc">Future</span><span class="o">.</span><span class="na">delayed</span><span class="o">(</span><span class="nc">Duration</span><span class="o">(</span><span class="nl">milliseconds:</span> <span class="mi">500</span><span class="o">));</span> <span class="c1">// a simulated delay</span>
+      <span class="kd">final</span> <span class="n">currentUser</span> <span class="o">=</span> <span class="n">await</span> <span class="n">_authenticationService</span><span class="o">.</span><span class="na">getCurrentUser</span><span class="o">();</span>
+
+      <span class="k">if</span> <span class="o">(</span><span class="n">currentUser</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">yield</span> <span class="nf">AuthenticationAuthenticated</span><span class="o">(</span><span class="nl">user:</span> <span class="n">currentUser</span><span class="o">);</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">yield</span> <span class="nf">AuthenticationNotAuthenticated</span><span class="o">();</span>
+      <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">yield</span> <span class="nf">AuthenticationFailure</span><span class="o">(</span><span class="nl">message:</span> <span class="n">e</span><span class="o">.</span><span class="na">message</span> <span class="o">??</span> <span class="err">'</span><span class="nc">An</span> <span class="n">unknown</span> <span class="n">error</span> <span class="n">occurred</span><span class="err">'</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">AuthenticationState</span><span class="o">&gt;</span> <span class="nf">_mapUserLoggedInToState</span><span class="o">(</span><span class="nc">UserLoggedIn</span> <span class="n">event</span><span class="o">)</span> <span class="n">async</span><span class="o">*</span> <span class="o">{</span>
+    <span class="n">yield</span> <span class="nf">AuthenticationAuthenticated</span><span class="o">(</span><span class="nl">user:</span> <span class="n">event</span><span class="o">.</span><span class="na">user</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">AuthenticationState</span><span class="o">&gt;</span> <span class="nf">_mapUserLoggedOutToState</span><span class="o">(</span><span class="nc">UserLoggedOut</span> <span class="n">event</span><span class="o">)</span> <span class="n">async</span><span class="o">*</span> <span class="o">{</span>
+    <span class="n">await</span> <span class="n">_authenticationService</span><span class="o">.</span><span class="na">signOut</span><span class="o">();</span>
+    <span class="n">yield</span> <span class="nf">AuthenticationNotAuthenticated</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>We saw in the previous post that a BLoC is responsible for converting a stream of incoming events into a stream of outgoing states. This is done inside the <code class="highlighter-rouge">mapEventToState</code> method which takes in an <code class="highlighter-rouge">AuthenticationEvent</code> and returns a stream of <code class="highlighter-rouge">AuthenticationState</code>. This method is called every time an <code class="highlighter-rouge">AuthenticationEvent</code> is added to the events stream. Note that the method does not return a new stream each time an event is fired but it <code class="highlighter-rouge">yield</code>s the state into the existing stream. For more information on streams in dart check out <a href="https://dart.dev/tutorials/language/streams">this page</a>.</p>
+
+<p>Inside the <code class="highlighter-rouge">mapEventToState</code> method we check what event type was added to the stream and we map it to a method that does business logic for that specific event. For instance, if <code class="highlighter-rouge">AppLoaded</code> event is received we call <code class="highlighter-rouge">_mapAppLoadedToState</code> which in turn calls the <code class="highlighter-rouge">AuthenticationService</code> to check if there is a currently logged in user. If there is, it will <code class="highlighter-rouge">yield</code> <code class="highlighter-rouge">AuthenticationAuthenticated</code> state otherwise it will <code class="highlighter-rouge">yield</code> <code class="highlighter-rouge">AuthenticationNotAuthenticated</code>.</p>
+
+<h4 id="login">Login</h4>
+
+<p>Now let us write code for the login <code class="highlighter-rouge">BLoC</code>. Like with the authentication <code class="highlighter-rouge">BLoC</code> above we will create a new directory inside <code class="highlighter-rouge">lib/blocs</code> called <code class="highlighter-rouge">login</code> and first create the <code class="highlighter-rouge">login_event.dart</code> file to which we add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/blocs/login/login_event.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">meta</span><span class="o">/</span><span class="n">meta</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">equatable</span><span class="o">/</span><span class="n">equatable</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">LoginEvent</span> <span class="kd">extends</span> <span class="nc">Equatable</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[];</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">LoginInWithEmailButtonPressed</span> <span class="kd">extends</span> <span class="nc">LoginEvent</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">String</span> <span class="n">email</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nc">String</span> <span class="n">password</span><span class="o">;</span>
+
+  <span class="nc">LoginInWithEmailButtonPressed</span><span class="o">({</span><span class="nd">@required</span> <span class="k">this</span><span class="o">.</span><span class="na">email</span><span class="o">,</span> <span class="nd">@required</span> <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">});</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">email</span><span class="o">,</span> <span class="n">password</span><span class="o">];</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>As you can see, we only have one login event which will be fired when a user presses the login button in the UI. Let us now add the login states inside the <code class="highlighter-rouge">login_state.dart</code> file:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/blocs/login/login_state.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">meta</span><span class="o">/</span><span class="n">meta</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">equatable</span><span class="o">/</span><span class="n">equatable</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+
+<span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">LoginState</span> <span class="kd">extends</span> <span class="nc">Equatable</span><span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[];</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">LoginInitial</span> <span class="kd">extends</span> <span class="nc">LoginState</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">LoginLoading</span> <span class="kd">extends</span> <span class="nc">LoginState</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">LoginSuccess</span> <span class="kd">extends</span> <span class="nc">LoginState</span> <span class="o">{}</span>
+
+<span class="kd">class</span> <span class="nc">LoginFailure</span> <span class="kd">extends</span> <span class="nc">LoginState</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">String</span> <span class="n">error</span><span class="o">;</span>
+
+  <span class="nc">LoginFailure</span><span class="o">({</span><span class="nd">@required</span> <span class="k">this</span><span class="o">.</span><span class="na">error</span><span class="o">});</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">get</span> <span class="n">props</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">error</span><span class="o">];</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>Finally, let us go and write the login BLoC which will convert a stream of incoming login events into a stream of outgoing login states.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/blocs/login/login_bloc.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">bloc</span><span class="o">/</span><span class="n">bloc</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">login_event.dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">login_state.dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/</span><span class="n">authentication</span><span class="o">/</span><span class="n">authentication</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/../</span><span class="n">exceptions</span><span class="o">/</span><span class="n">exceptions</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/../</span><span class="n">services</span><span class="o">/</span><span class="n">services</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">LoginBloc</span> <span class="kd">extends</span> <span class="nc">Bloc</span><span class="o">&lt;</span><span class="nc">LoginEvent</span><span class="o">,</span> <span class="nc">LoginState</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">AuthenticationBloc</span> <span class="n">_authenticationBloc</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nc">AuthenticationService</span> <span class="n">_authenticationService</span><span class="o">;</span>
+
+  <span class="nc">LoginBloc</span><span class="o">(</span><span class="nc">AuthenticationBloc</span> <span class="n">authenticationBloc</span><span class="o">,</span> <span class="nc">AuthenticationService</span> <span class="n">authenticationService</span><span class="o">)</span>
+      <span class="o">:</span> <span class="k">assert</span><span class="o">(</span><span class="n">authenticationBloc</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">),</span>
+        <span class="k">assert</span><span class="o">(</span><span class="n">authenticationService</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">),</span>
+        <span class="n">_authenticationBloc</span> <span class="o">=</span> <span class="n">authenticationBloc</span><span class="o">,</span>
+        <span class="n">_authenticationService</span> <span class="o">=</span> <span class="n">authenticationService</span><span class="o">;</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">LoginState</span> <span class="n">get</span> <span class="n">initialState</span> <span class="o">=&gt;</span> <span class="nc">LoginInitial</span><span class="o">();</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">LoginState</span><span class="o">&gt;</span> <span class="nf">mapEventToState</span><span class="o">(</span><span class="nc">LoginEvent</span> <span class="n">event</span><span class="o">)</span> <span class="n">async</span><span class="o">*</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">event</span> <span class="n">is</span> <span class="nc">LoginInWithEmailButtonPressed</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">yield</span><span class="o">*</span> <span class="n">_mapLoginWithEmailToState</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="nc">Stream</span><span class="o">&lt;</span><span class="nc">LoginState</span><span class="o">&gt;</span> <span class="nf">_mapLoginWithEmailToState</span><span class="o">(</span><span class="nc">LoginInWithEmailButtonPressed</span> <span class="n">event</span><span class="o">)</span> <span class="n">async</span><span class="o">*</span> <span class="o">{</span>
+    <span class="n">yield</span> <span class="nf">LoginLoading</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="kd">final</span> <span class="n">user</span> <span class="o">=</span> <span class="n">await</span> <span class="n">_authenticationService</span><span class="o">.</span><span class="na">signInWithEmailAndPassword</span><span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">email</span><span class="o">,</span> <span class="n">event</span><span class="o">.</span><span class="na">password</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">user</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+        <span class="c1">// push new authentication event</span>
+        <span class="n">_authenticationBloc</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="nc">UserLoggedIn</span><span class="o">(</span><span class="nl">user:</span> <span class="n">user</span><span class="o">));</span>
+        <span class="n">yield</span> <span class="nf">LoginSuccess</span><span class="o">();</span>
+        <span class="n">yield</span> <span class="nf">LoginInitial</span><span class="o">();</span>
+      <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+        <span class="n">yield</span> <span class="nf">LoginFailure</span><span class="o">(</span><span class="nl">error:</span> <span class="err">'</span><span class="nc">Something</span> <span class="n">very</span> <span class="n">weird</span> <span class="n">just</span> <span class="n">happened</span><span class="err">'</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">}</span> <span class="n">on</span> <span class="nc">AuthenticationException</span> <span class="nf">catch</span><span class="o">(</span><span class="n">e</span><span class="o">){</span>
+      <span class="n">yield</span> <span class="nf">LoginFailure</span><span class="o">(</span><span class="nl">error:</span> <span class="n">e</span><span class="o">.</span><span class="na">message</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">err</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">yield</span> <span class="nf">LoginFailure</span><span class="o">(</span><span class="nl">error:</span> <span class="n">err</span><span class="o">.</span><span class="na">message</span> <span class="o">??</span> <span class="err">'</span><span class="nc">An</span> <span class="n">unknown</span> <span class="n">error</span> <span class="n">occured</span><span class="err">'</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>As you can see, the <code class="highlighter-rouge">LoginBloc</code> depends on <code class="highlighter-rouge">AuthenticationBloc</code>. This is because after a user has successfully logged in we want to notify the <code class="highlighter-rouge">AuthenticationBloc</code> that a new event (<code class="highlighter-rouge">UserLoggedIn</code>) has occured so the authentication bloc can push out the <code class="highlighter-rouge">AuthenticationAuthenticated</code> state to all listening widgets. This is not the only way to do it but I decided to do it this way.</p>
+
+<h3 id="user-interface">User Interface</h3>
+
+<p>Now that we have finished all the <code class="highlighter-rouge">BLoC</code>s needed for the app let us turn our attention to the UI. We are going to create a directory called <code class="highlighter-rouge">pages</code> where all the pages for our app will reside.</p>
+
+<h4 id="login-page">Login Page</h4>
+
+<p>Inside the <code class="highlighter-rouge">pages</code> directory create a new file called <code class="highlighter-rouge">login_page.dart</code> and add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/pages/login_page.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter</span><span class="o">/</span><span class="n">material</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter_bloc</span><span class="o">/</span><span class="n">flutter_bloc</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/</span><span class="n">blocs</span><span class="o">/</span><span class="n">blocs</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/</span><span class="n">services</span><span class="o">/</span><span class="n">services</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">LoginPage</span> <span class="kd">extends</span> <span class="nc">StatelessWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="nc">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="nc">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nf">Scaffold</span><span class="o">(</span>
+      <span class="nl">appBar:</span> <span class="nc">AppBar</span><span class="o">(</span>
+        <span class="nl">title:</span> <span class="nc">Text</span><span class="o">(</span><span class="err">'</span><span class="nc">Login</span><span class="err">'</span><span class="o">),</span>
+      <span class="o">),</span>
+      <span class="nl">body:</span> <span class="nc">SafeArea</span><span class="o">(</span>
+        <span class="nl">minimum:</span> <span class="kd">const</span> <span class="nc">EdgeInsets</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">16</span><span class="o">),</span>
+        <span class="nl">child:</span> <span class="nc">BlocBuilder</span><span class="o">&lt;</span><span class="nc">AuthenticationBloc</span><span class="o">,</span> <span class="nc">AuthenticationState</span><span class="o">&gt;(</span>
+          <span class="nl">builder:</span> <span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">state</span><span class="o">){</span>
+            <span class="kd">final</span> <span class="n">authBloc</span> <span class="o">=</span> <span class="nc">BlocProvider</span><span class="o">.</span><span class="na">of</span><span class="o">&lt;</span><span class="nc">AuthenticationBloc</span><span class="o">&gt;(</span><span class="n">context</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="n">is</span> <span class="nc">AuthenticationNotAuthenticated</span><span class="o">){</span>
+              <span class="k">return</span> <span class="nf">_AuthForm</span><span class="o">();</span> <span class="c1">// show authentication form</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="n">is</span> <span class="nc">AuthenticationFailure</span><span class="o">)</span> <span class="o">{</span>
+              <span class="c1">// show error message</span>
+              <span class="k">return</span> <span class="nf">Center</span><span class="o">(</span>
+                  <span class="nl">child:</span> <span class="nc">Column</span><span class="o">(</span>
+                    <span class="nl">mainAxisAlignment:</span> <span class="nc">MainAxisAlignment</span><span class="o">.</span><span class="na">center</span><span class="o">,</span>
+                    <span class="nl">crossAxisAlignment:</span> <span class="nc">CrossAxisAlignment</span><span class="o">.</span><span class="na">center</span><span class="o">,</span>
+                    <span class="nl">children:</span> <span class="o">&lt;</span><span class="nc">Widget</span><span class="o">&gt;[</span>
+                      <span class="nf">Text</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">message</span><span class="o">),</span>
+                      <span class="nc">FlatButton</span><span class="o">(</span>
+                        <span class="nl">textColor:</span> <span class="nc">Theme</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">primaryColor</span><span class="o">,</span>
+                        <span class="nl">child:</span> <span class="nc">Text</span><span class="o">(</span><span class="err">'</span><span class="nc">Retry</span><span class="err">'</span><span class="o">),</span>
+                        <span class="nl">onPressed:</span> <span class="o">()</span> <span class="o">{</span>
+                          <span class="n">authBloc</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="nc">AppLoaded</span><span class="o">());</span>
+                        <span class="o">},</span>
+                      <span class="o">)</span>
+                    <span class="o">],</span>
+                  <span class="o">));</span>
+            <span class="o">}</span>
+            <span class="c1">// show splash screen</span>
+            <span class="k">return</span> <span class="nf">Center</span><span class="o">(</span>
+              <span class="nl">child:</span> <span class="nc">CircularProgressIndicator</span><span class="o">(</span>
+                <span class="nl">strokeWidth:</span> <span class="mi">2</span><span class="o">,</span>
+              <span class="o">),</span>
+            <span class="o">);</span>
+          <span class="o">},</span>
+        <span class="o">)</span>
+      <span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">_AuthForm</span> <span class="kd">extends</span> <span class="nc">StatelessWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="nc">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="nc">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">authService</span> <span class="o">=</span> <span class="nc">RepositoryProvider</span><span class="o">.</span><span class="na">of</span><span class="o">&lt;</span><span class="nc">AuthenticationService</span><span class="o">&gt;(</span><span class="n">context</span><span class="o">);</span>
+    <span class="kd">final</span> <span class="n">authBloc</span> <span class="o">=</span> <span class="nc">BlocProvider</span><span class="o">.</span><span class="na">of</span><span class="o">&lt;</span><span class="nc">AuthenticationBloc</span><span class="o">&gt;(</span><span class="n">context</span><span class="o">);</span>
+
+    <span class="k">return</span> <span class="nf">Container</span><span class="o">(</span>
+      <span class="nl">alignment:</span> <span class="nc">Alignment</span><span class="o">.</span><span class="na">center</span><span class="o">,</span>
+      <span class="nl">child:</span> <span class="nc">BlocProvider</span><span class="o">&lt;</span><span class="nc">LoginBloc</span><span class="o">&gt;(</span>
+        <span class="nl">create:</span> <span class="o">(</span><span class="n">context</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">LoginBloc</span><span class="o">(</span><span class="n">authBloc</span><span class="o">,</span> <span class="n">authService</span><span class="o">),</span>
+        <span class="nl">child:</span> <span class="n">_SignInForm</span><span class="o">(),</span>
+      <span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">_SignInForm</span> <span class="kd">extends</span> <span class="nc">StatefulWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="n">__SignInFormState</span> <span class="nf">createState</span><span class="o">()</span> <span class="o">=&gt;</span> <span class="n">__SignInFormState</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">__SignInFormState</span> <span class="kd">extends</span> <span class="nc">State</span><span class="o">&lt;</span><span class="n">_SignInForm</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="kd">final</span> <span class="nc">GlobalKey</span><span class="o">&lt;</span><span class="nc">FormState</span><span class="o">&gt;</span> <span class="n">_key</span> <span class="o">=</span> <span class="nc">GlobalKey</span><span class="o">&lt;</span><span class="nc">FormState</span><span class="o">&gt;();</span>
+  <span class="kd">final</span> <span class="n">_passwordController</span> <span class="o">=</span> <span class="nc">TextEditingController</span><span class="o">();</span>
+  <span class="kd">final</span> <span class="n">_emailController</span> <span class="o">=</span> <span class="nc">TextEditingController</span><span class="o">();</span>
+  <span class="n">bool</span> <span class="n">_autoValidate</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="nc">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">_loginBloc</span> <span class="o">=</span> <span class="nc">BlocProvider</span><span class="o">.</span><span class="na">of</span><span class="o">&lt;</span><span class="nc">LoginBloc</span><span class="o">&gt;(</span><span class="n">context</span><span class="o">);</span>
+
+    <span class="n">_onLoginButtonPressed</span> <span class="o">()</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">_key</span><span class="o">.</span><span class="na">currentState</span><span class="o">.</span><span class="na">validate</span><span class="o">())</span> <span class="o">{</span>
+        <span class="n">_loginBloc</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="nc">LoginInWithEmailButtonPressed</span><span class="o">(</span>
+            <span class="nl">email:</span> <span class="n">_emailController</span><span class="o">.</span><span class="na">text</span><span class="o">,</span>
+            <span class="nl">password:</span> <span class="n">_passwordController</span><span class="o">.</span><span class="na">text</span>
+        <span class="o">));</span>
+      <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+        <span class="n">setState</span><span class="o">(()</span> <span class="o">{</span>
+          <span class="n">_autoValidate</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">});</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="nc">BlocListener</span><span class="o">&lt;</span><span class="nc">LoginBloc</span><span class="o">,</span> <span class="nc">LoginState</span><span class="o">&gt;(</span>
+      <span class="nl">listener:</span> <span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">state</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="n">is</span> <span class="nc">LoginFailure</span><span class="o">){</span>
+          <span class="n">_showError</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">error</span><span class="o">);</span>
+        <span class="o">}</span>
+      <span class="o">},</span>
+      <span class="nl">child:</span> <span class="nc">BlocBuilder</span><span class="o">&lt;</span><span class="nc">LoginBloc</span><span class="o">,</span> <span class="nc">LoginState</span><span class="o">&gt;(</span>
+        <span class="nl">builder:</span> <span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">state</span><span class="o">){</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="n">is</span> <span class="nc">LoginLoading</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">Center</span><span class="o">(</span>
+              <span class="nl">child:</span> <span class="nc">CircularProgressIndicator</span><span class="o">(),</span>
+            <span class="o">);</span>
+          <span class="o">}</span>
+          <span class="k">return</span> <span class="nf">Form</span><span class="o">(</span>
+            <span class="nl">key:</span> <span class="n">_key</span><span class="o">,</span>
+            <span class="nl">autovalidate:</span> <span class="n">_autoValidate</span><span class="o">,</span>
+            <span class="nl">child:</span> <span class="nc">SingleChildScrollView</span><span class="o">(</span>
+              <span class="nl">child:</span> <span class="nc">Column</span><span class="o">(</span>
+                <span class="nl">crossAxisAlignment:</span> <span class="nc">CrossAxisAlignment</span><span class="o">.</span><span class="na">stretch</span><span class="o">,</span>
+                <span class="nl">children:</span> <span class="o">&lt;</span><span class="nc">Widget</span><span class="o">&gt;[</span>
+                  <span class="nf">TextFormField</span><span class="o">(</span>
+                    <span class="nl">decoration:</span> <span class="nc">InputDecoration</span><span class="o">(</span>
+                      <span class="nl">labelText:</span> <span class="err">'</span><span class="nc">Email</span> <span class="n">address</span><span class="err">'</span><span class="o">,</span>
+                      <span class="nl">filled:</span> <span class="kc">true</span><span class="o">,</span>
+                      <span class="nl">isDense:</span> <span class="kc">true</span><span class="o">,</span>
+                    <span class="o">),</span>
+                    <span class="nl">controller:</span> <span class="n">_emailController</span><span class="o">,</span>
+                    <span class="nl">keyboardType:</span> <span class="nc">TextInputType</span><span class="o">.</span><span class="na">emailAddress</span><span class="o">,</span>
+                    <span class="nl">autocorrect:</span> <span class="kc">false</span><span class="o">,</span>
+                    <span class="nl">validator:</span> <span class="o">(</span><span class="n">value</span><span class="o">){</span>
+                      <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                        <span class="k">return</span> <span class="err">'</span><span class="nc">Email</span> <span class="n">is</span> <span class="n">required</span><span class="o">.</span><span class="err">'</span><span class="o">;</span>
+                      <span class="o">}</span>
+                      <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="o">},</span>
+                  <span class="o">),</span>
+                  <span class="nc">SizedBox</span><span class="o">(</span>
+                    <span class="nl">height:</span> <span class="mi">12</span><span class="o">,</span>
+                  <span class="o">),</span>
+                  <span class="nc">TextFormField</span><span class="o">(</span>
+                    <span class="nl">decoration:</span> <span class="nc">InputDecoration</span><span class="o">(</span>
+                      <span class="nl">labelText:</span> <span class="err">'</span><span class="nc">Password</span><span class="err">'</span><span class="o">,</span>
+                      <span class="nl">filled:</span> <span class="kc">true</span><span class="o">,</span>
+                      <span class="nl">isDense:</span> <span class="kc">true</span><span class="o">,</span>
+                    <span class="o">),</span>
+                    <span class="nl">obscureText:</span> <span class="kc">true</span><span class="o">,</span>
+                    <span class="nl">controller:</span> <span class="n">_passwordController</span><span class="o">,</span>
+                    <span class="nl">validator:</span> <span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+                      <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                        <span class="k">return</span> <span class="err">'</span><span class="nc">Password</span> <span class="n">is</span> <span class="n">required</span><span class="o">.</span><span class="err">'</span><span class="o">;</span>
+                      <span class="o">}</span>
+                      <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="o">},</span>
+                  <span class="o">),</span>
+                  <span class="kd">const</span> <span class="nf">SizedBox</span><span class="o">(</span>
+                    <span class="nl">height:</span> <span class="mi">16</span><span class="o">,</span>
+                  <span class="o">),</span>
+                  <span class="nc">RaisedButton</span><span class="o">(</span>
+                    <span class="nl">color:</span> <span class="nc">Theme</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">primaryColor</span><span class="o">,</span>
+                    <span class="nl">textColor:</span> <span class="nc">Colors</span><span class="o">.</span><span class="na">white</span><span class="o">,</span>
+                    <span class="nl">padding:</span> <span class="kd">const</span> <span class="nc">EdgeInsets</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">16</span><span class="o">),</span>
+                    <span class="nl">shape:</span> <span class="k">new</span> <span class="nc">RoundedRectangleBorder</span><span class="o">(</span><span class="nl">borderRadius:</span> <span class="k">new</span> <span class="nc">BorderRadius</span><span class="o">.</span><span class="na">circular</span><span class="o">(</span><span class="mf">8.0</span><span class="o">)),</span>
+                    <span class="nl">child:</span> <span class="nc">Text</span><span class="o">(</span><span class="err">'</span><span class="no">LOG</span> <span class="no">IN</span><span class="err">'</span><span class="o">),</span>
+                    <span class="nl">onPressed:</span> <span class="n">state</span> <span class="n">is</span> <span class="nc">LoginLoading</span> <span class="o">?</span> <span class="o">()</span> <span class="o">{}</span> <span class="o">:</span> <span class="n">_onLoginButtonPressed</span><span class="o">,</span>
+                  <span class="o">)</span>
+                <span class="o">],</span>
+              <span class="o">),</span>
+            <span class="o">),</span>
+          <span class="o">);</span>
+        <span class="o">},</span>
+      <span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kt">void</span> <span class="nf">_showError</span><span class="o">(</span><span class="nc">String</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Scaffold</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">showSnackBar</span><span class="o">(</span>
+      <span class="nc">SnackBar</span><span class="o">(</span>
+        <span class="nl">content:</span> <span class="nc">Text</span><span class="o">(</span><span class="n">error</span><span class="o">),</span>
+        <span class="nl">backgroundColor:</span> <span class="nc">Theme</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">errorColor</span><span class="o">,</span>
+      <span class="o">)</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>Let us talk a little bit about the classes that are provided by the <code class="highlighter-rouge">flutter_bloc</code> library.</p>
+
+<h4 id="1-blocprovider">1. <code class="highlighter-rouge">BlocProvider</code></h4>
+
+<p>This is a widget that is responsible for injecting a <code class="highlighter-rouge">BLoC</code> instance to its children. Inside the <code class="highlighter-rouge">_AuthForm</code> widget we provide the <code class="highlighter-rouge">LoginBloc</code> to the <code class="highlighter-rouge">_SignInForm</code> widget and all its children. This means all the child widgets of <code class="highlighter-rouge">_SignInForm</code> will also have access to the bloc as it is propagated down the widget tree. To access the <code class="highlighter-rouge">BLoC</code> you use the <code class="highlighter-rouge">BlocProvider.of&lt;T&gt;(context)</code> method. For instance, if you want to access the <code class="highlighter-rouge">AuthenticationBloc</code> you call <code class="highlighter-rouge">BlocProvider.of&lt;AuthenticationBloc&gt;(context)</code>.</p>
+
+<h4 id="2-blocbuilder">2. <code class="highlighter-rouge">BlocBuilder</code></h4>
+
+<p>This widget is responsible for rebuilding the UI when the state changes. For instance inside the <code class="highlighter-rouge">LoginPage</code> widget we have a <code class="highlighter-rouge">BlocBuilder</code> that listens to the <code class="highlighter-rouge">AuthenticationState</code> stream. Whenever the state changes the <code class="highlighter-rouge">BlocBuilder</code> will build a new widget: the authentication form, error message or the splash screen depending on the state.</p>
+
+<h4 id="3-bloclistener">3. <code class="highlighter-rouge">BlocListener</code></h4>
+
+<p>This widget also listens to changes in state but unlike the <code class="highlighter-rouge">BlocBuilder</code> it does not rebuild the UI. You can choose whatever you want to do when the state changes – navigate to another screen, show a message, call a service etc. In our example inside the <code class="highlighter-rouge">__SignInFormState</code> widget the <code class="highlighter-rouge">BlocListener</code> listens to changes to <code class="highlighter-rouge">LoginState</code>. When a <code class="highlighter-rouge">LoginFailure</code> is received a toast notification will be displayed notifying the user of the error.</p>
+
+<p>For more indepth information on these widgets check out this <a href="https://bloclibrary.dev/#/flutterbloccoreconcepts">website</a>.</p>
+
+<h3 id="home-page">Home Page</h3>
+
+<p>Let us now create a <code class="highlighter-rouge">home_page.dart</code> file inside the <code class="highlighter-rouge">pages</code> directory and add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/pages/home_page.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter</span><span class="o">/</span><span class="n">material</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter_bloc</span><span class="o">/</span><span class="n">flutter_bloc</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter_bloc_authentication</span><span class="o">/</span><span class="n">blocs</span><span class="o">/</span><span class="n">authentication</span><span class="o">/</span><span class="n">authentication</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">..</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">models</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">HomePage</span> <span class="kd">extends</span> <span class="nc">StatelessWidget</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span><span class="o">;</span>
+
+  <span class="kd">const</span> <span class="nf">HomePage</span><span class="o">({</span><span class="nc">Key</span> <span class="n">key</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">user</span><span class="o">})</span> <span class="o">:</span> <span class="kd">super</span><span class="o">(</span><span class="nl">key:</span> <span class="n">key</span><span class="o">);</span>
+
+  <span class="nd">@override</span>
+  <span class="nc">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="nc">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">authBloc</span> <span class="o">=</span> <span class="nc">BlocProvider</span><span class="o">.</span><span class="na">of</span><span class="o">&lt;</span><span class="nc">AuthenticationBloc</span><span class="o">&gt;(</span><span class="n">context</span><span class="o">);</span>
+    <span class="k">return</span> <span class="nf">Scaffold</span><span class="o">(</span>
+      <span class="nl">appBar:</span> <span class="nc">AppBar</span><span class="o">(</span>
+        <span class="nl">title:</span> <span class="nc">Text</span><span class="o">(</span><span class="err">'</span><span class="nc">Home</span> <span class="nc">Page</span><span class="err">'</span><span class="o">),</span>
+      <span class="o">),</span>
+      <span class="nl">body:</span> <span class="nc">SafeArea</span><span class="o">(</span>
+        <span class="nl">minimum:</span> <span class="kd">const</span> <span class="nc">EdgeInsets</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">16</span><span class="o">),</span>
+        <span class="nl">child:</span> <span class="nc">Center</span><span class="o">(</span>
+          <span class="nl">child:</span> <span class="nc">Column</span><span class="o">(</span>
+            <span class="nl">children:</span> <span class="o">&lt;</span><span class="nc">Widget</span><span class="o">&gt;[</span>
+              <span class="nf">Text</span><span class="o">(</span>
+                <span class="err">'</span><span class="nc">Welcome</span><span class="o">,</span> <span class="err">$</span><span class="o">{</span><span class="n">user</span><span class="o">.</span><span class="na">name</span><span class="o">}</span><span class="err">'</span><span class="o">,</span>
+                <span class="nl">style:</span> <span class="nc">TextStyle</span><span class="o">(</span>
+                  <span class="nl">fontSize:</span> <span class="mi">24</span>
+                <span class="o">),</span>
+              <span class="o">),</span>
+              <span class="kd">const</span> <span class="nf">SizedBox</span><span class="o">(</span>
+                <span class="nl">height:</span> <span class="mi">12</span><span class="o">,</span>
+              <span class="o">),</span>
+              <span class="nc">FlatButton</span><span class="o">(</span>
+                <span class="nl">textColor:</span> <span class="nc">Theme</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">primaryColor</span><span class="o">,</span>
+                <span class="nl">child:</span> <span class="nc">Text</span><span class="o">(</span><span class="err">'</span><span class="nc">Logout</span><span class="err">'</span><span class="o">),</span>
+                <span class="nl">onPressed:</span> <span class="o">(){</span>
+                  <span class="c1">// Add UserLoggedOut to authentication event stream.</span>
+                  <span class="n">authBloc</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="nc">UserLoggedOut</span><span class="o">());</span>
+                <span class="o">},</span>
+              <span class="o">)</span>
+            <span class="o">],</span>
+          <span class="o">),</span>
+        <span class="o">),</span>
+      <span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>This is a simple page that displays the name of the logged in user and has a logout button.</p>
+
+<h4 id="putting-everything-together">Putting everything together</h4>
+
+<p>Let us now go to <code class="highlighter-rouge">main.dart</code> and add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/main.dart</span>
+
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter</span><span class="o">/</span><span class="n">material</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">package</span><span class="o">:</span><span class="n">flutter_bloc</span><span class="o">/</span><span class="n">flutter_bloc</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">blocs</span><span class="o">/</span><span class="n">blocs</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">services</span><span class="o">/</span><span class="n">services</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+<span class="kn">import</span> <span class="err">'</span><span class="nn">pages</span><span class="o">/</span><span class="n">pages</span><span class="o">.</span><span class="na">dart</span><span class="err">'</span><span class="o">;</span>
+
+<span class="kt">void</span> <span class="nf">main</span><span class="o">()</span> <span class="o">=&gt;</span> <span class="n">runApp</span><span class="o">(</span>
+        <span class="c1">// Injects the Authentication service</span>
+        <span class="nc">RepositoryProvider</span><span class="o">&lt;</span><span class="nc">AuthenticationService</span><span class="o">&gt;(</span>
+          <span class="nl">create:</span> <span class="o">(</span><span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">FakeAuthenticationService</span><span class="o">();</span>
+          <span class="o">},</span>
+          <span class="c1">// Injects the Authentication BLoC</span>
+          <span class="nl">child:</span> <span class="nc">BlocProvider</span><span class="o">&lt;</span><span class="nc">AuthenticationBloc</span><span class="o">&gt;(</span>
+            <span class="nl">create:</span> <span class="o">(</span><span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+              <span class="kd">final</span> <span class="n">authService</span> <span class="o">=</span> <span class="nc">RepositoryProvider</span><span class="o">.</span><span class="na">of</span><span class="o">&lt;</span><span class="nc">AuthenticationService</span><span class="o">&gt;(</span><span class="n">context</span><span class="o">);</span>
+              <span class="k">return</span> <span class="nf">AuthenticationBloc</span><span class="o">(</span><span class="n">authService</span><span class="o">)..</span><span class="na">add</span><span class="o">(</span><span class="nc">AppLoaded</span><span class="o">());</span>
+            <span class="o">},</span>
+            <span class="nl">child:</span> <span class="nc">MyApp</span><span class="o">(),</span>
+          <span class="o">),</span>
+    <span class="o">));</span>
+
+<span class="kd">class</span> <span class="nc">MyApp</span> <span class="kd">extends</span> <span class="nc">StatelessWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="nc">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="nc">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nf">MaterialApp</span><span class="o">(</span>
+      <span class="nl">title:</span> <span class="err">'</span><span class="nc">Authentication</span> <span class="nc">Demo</span><span class="err">'</span><span class="o">,</span>
+      <span class="nl">theme:</span> <span class="nc">ThemeData</span><span class="o">(</span>
+        <span class="nl">primarySwatch:</span> <span class="nc">Colors</span><span class="o">.</span><span class="na">teal</span><span class="o">,</span>
+      <span class="o">),</span>
+      <span class="c1">// BlocBuilder will listen to changes in AuthenticationState</span>
+      <span class="c1">// and build an appropriate widget based on the state.</span>
+      <span class="nl">home:</span> <span class="nc">BlocBuilder</span><span class="o">&lt;</span><span class="nc">AuthenticationBloc</span><span class="o">,</span> <span class="nc">AuthenticationState</span><span class="o">&gt;(</span>
+        <span class="nl">builder:</span> <span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">state</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">state</span> <span class="n">is</span> <span class="nc">AuthenticationAuthenticated</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// show home page</span>
+            <span class="k">return</span> <span class="nf">HomePage</span><span class="o">(</span>
+              <span class="nl">user:</span> <span class="n">state</span><span class="o">.</span><span class="na">user</span><span class="o">,</span>
+            <span class="o">);</span>
+          <span class="o">}</span>
+          <span class="c1">// otherwise show login page</span>
+          <span class="k">return</span> <span class="nf">LoginPage</span><span class="o">();</span>
+        <span class="o">},</span>
+      <span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>As you may have noticed there is another widget in the <code class="highlighter-rouge">flutter_bloc</code> library that we have used – <code class="highlighter-rouge">RepositoryProvider</code>. This widget is responsible for injecting repositories (any class that is not a <code class="highlighter-rouge">BLoC</code>) to other widgets down the widget tree. You can also see that it is the first widget in our app followed by the <code class="highlighter-rouge">AuthenticationBloc</code> provider. This is because we want our entire app to have access to the <code class="highlighter-rouge">AuthenticationBloc</code> which in turn needs to have access to the <code class="highlighter-rouge">AuthenticationService</code>. The <code class="highlighter-rouge">AuthenticationService</code> is also a dependency of the <code class="highlighter-rouge">LoginBloc</code>. Repositories are accessed using <code class="highlighter-rouge">RepositoryProvider.of&lt;T&gt;(context)</code>.</p>
+
+<p>We are done! You may run your app it should behave like the GIF below. Like I said earlier not all the code is included here so you will have to check out the complete project on <a href="https://github.com/vince-nyanga/flutter_bloc_authentication/">GitHub</a>.</p>
+
+<figure class="third center">
+<img src="/images/flutter/bloc/app.gif" alt="Flutter app" />
+<figcaption>App showing authentication flow built using the BLoC pattern</figcaption>
+</figure>
+<p>Once again, thank you so much for taking your time to read.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#flutter" class="page__taxonomy-item" rel="tag">Flutter</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#mobile" class="page__taxonomy-item" rel="tag">Mobile</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-02-01T00:00:00+02:00">February 01, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Building+an+authentication+flow+in+Flutter+using+the+BLoC+pattern%20http%3A%2F%2Flocalhost%3A4000%2Fflutter-authentication-with-bloc-architecture%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fflutter-authentication-with-bloc-architecture%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fflutter-authentication-with-bloc-architecture%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/state-management-in-flutter-bloc-pattern/" class="pagination--pager" title="State management in Flutter: The BLoC pattern
+">Previous</a>
+    
+    
+      <a href="/flutter-widgets/" class="pagination--pager" title="Widgets: Building Blocks For Flutter Applications
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,739 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>A simple task management app using firebase - part 4 | Vincent (Hones) Nyanga</title>
+<meta name="description" content="Welcome to part 4 of our series. In the previous post we remodelled our app to group related tasks in task lists. Today we are going to add user authentication so that we can secure our application. At the moment everyone with the app can see all the task lists and tasks therein which is not an ideal thing. We are going to ensure that a user can only see their tasks. By the end of this session our app will look like this:">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="A simple task management app using firebase - part 4">
+<meta property="og:url" content="http://localhost:4000/task-management-app-with-firebase-4/">
+
+
+  <meta property="og:description" content="Welcome to part 4 of our series. In the previous post we remodelled our app to group related tasks in task lists. Today we are going to add user authentication so that we can secure our application. At the moment everyone with the app can see all the task lists and tasks therein which is not an ideal thing. We are going to ensure that a user can only see their tasks. By the end of this session our app will look like this:">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2017-01-06T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/task-management-app-with-firebase-4/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="A simple task management app using firebase - part 4">
+    <meta itemprop="description" content="Welcome to part 4 of our series. In the previous post we remodelled our app to group related tasks in task lists. Today we are going to add user authentication so that we can secure our application. At the moment everyone with the app can see all the task lists and tasks therein which is not an ideal thing. We are going to ensure that a user can only see their tasks. By the end of this session our app will look like this:">
+    <meta itemprop="datePublished" content="January 06, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">A simple task management app using firebase - part 4
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Welcome to part 4 of our series. In the <a href="https://vince-nyanga.github.io/task-management-app-with-firebase-3/">previous post</a> we remodelled our app to group related tasks in task lists. Today we are going to add user authentication so that we can secure our application. At the moment everyone with the app can see all the task lists and tasks therein which is not an ideal thing. We are going to ensure that a user can only see their tasks. By the end of this session our app will look like this:</p>
+
+<p><img src="/images/signin-demo.gif" alt="Sign in demo" /></p>
+
+<p>Ok, let’s get started.</p>
+
+<h3 id="add-firebase-authentication">Add Firebase authentication</h3>
+
+<p>With your project open in Android Studio go to <em><strong>Tools</strong></em> -&gt; <em><strong>Firebase</strong></em> -&gt; <em><strong>Authentication</strong></em> -&gt; <em><strong>Add Firebase authentication to your app</strong></em>. After you get confirmation that the dependencies have been set up correctly add the following dependency to your <code class="highlighter-rouge">app/build.gradle</code>: <code class="highlighter-rouge">compile 'com.google.android.gms:play-services-auth:10.0.1'</code>. Now go to your firebase console and select your project. Go to <em><strong>Authentication</strong></em> and select the <em><strong>Sign-in method</strong></em> tab. Enable <em>Email/Password</em> and <em>Google</em>.</p>
+
+<h3 id="add-firebase-ui-auth-library">Add Firebase UI auth library</h3>
+
+<p>The Firebase UI library also has an auth module that handles user authentication with email and password, Google account, Facebook account, Twitter etc. For more information check it out <a href="https://github.com/firebase/FirebaseUI-Android/tree/master/auth">here</a>. Add the following to your <code class="highlighter-rouge">app/build.gradle</code> file and sync: <code class="highlighter-rouge">compile 'com.firebaseui:firebase-ui-auth:1.0.0'</code> . At the time of writing the build would fail with the following error: <em><strong>Failed to resolve: com.twitter.sdk.android:twitter:2.0.0</strong></em>. To fix this problem add the following in your <code class="highlighter-rouge">app/build.gradle</code> file.</p>
+
+<div class="language-gradle highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">repositories</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+    <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s1">'https://maven.fabric.io/public'</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>When your gradle file has successfully synced then we are good to go.</p>
+
+<h3 id="edit-taskslistsactivity">Edit TasksListsActivity</h3>
+
+<p>Open the <code class="highlighter-rouge">TasksListsActivity.java</code> add do the following:</p>
+
+<h4 id="1-authstatelistener">1. AuthStateListener</h4>
+
+<p>Declare a Firebase AuthStateListener that will listen to authentication events:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">//Will use it during sign in</span>
+ <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">RC_SIGN_IN</span> <span class="o">=</span> <span class="mi">22</span><span class="o">;</span>
+ <span class="kd">private</span> <span class="nc">FirebaseAuth</span><span class="o">.</span><span class="na">AuthStateListener</span> <span class="n">authStateListener</span><span class="o">;</span>
+</code></pre></div></div>
+
+<p>Inside the <code class="highlighter-rouge">onCreate()</code> method, initialize the AuthStateListener:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">authStateListener</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FirebaseAuth</span><span class="o">.</span><span class="na">AuthStateListener</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onAuthStateChanged</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="nc">FirebaseAuth</span> <span class="n">firebaseAuth</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">firebaseAuth</span><span class="o">.</span><span class="na">getCurrentUser</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                    <span class="c1">//When the use is not authenticated launch the authentication UI</span>
+                    <span class="n">startActivityForResult</span><span class="o">(</span>
+                            <span class="nc">AuthUI</span><span class="o">.</span><span class="na">getInstance</span><span class="o">()</span>
+                                    <span class="o">.</span><span class="na">createSignInIntentBuilder</span><span class="o">()</span>
+                                    <span class="o">.</span><span class="na">setProviders</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="k">new</span> <span class="nc">AuthUI</span><span class="o">.</span><span class="na">IdpConfig</span><span class="o">.</span><span class="na">Builder</span><span class="o">(</span><span class="nc">AuthUI</span><span class="o">.</span><span class="na">EMAIL_PROVIDER</span><span class="o">).</span><span class="na">build</span><span class="o">(),</span>
+                                            <span class="k">new</span> <span class="nc">AuthUI</span><span class="o">.</span><span class="na">IdpConfig</span><span class="o">.</span><span class="na">Builder</span><span class="o">(</span><span class="nc">AuthUI</span><span class="o">.</span><span class="na">GOOGLE_PROVIDER</span><span class="o">)</span>
+                                                    <span class="o">.</span><span class="na">build</span><span class="o">()))</span>
+                                    <span class="o">.</span><span class="na">build</span><span class="o">(),</span>
+                            <span class="no">RC_SIGN_IN</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">loadTasks</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+        <span class="nc">FirebaseAuth</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">addAuthStateListener</span><span class="o">(</span><span class="n">authStateListener</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p>Now create a method <code class="highlighter-rouge">loadTasks()</code> and remove the following code from <code class="highlighter-rouge">onCreate()</code> and add it inside <code class="highlighter-rouge">loadTasks()</code>:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">loadTasks</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">taskListsRef</span> <span class="o">=</span> <span class="nc">FirebaseDatabase</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getReference</span><span class="o">().</span><span class="na">child</span><span class="o">(</span><span class="s">"taskLists"</span><span class="o">);</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">FirebaseListAdapter</span><span class="o">&lt;</span><span class="nc">TaskList</span><span class="o">&gt;(</span><span class="nc">TasksListsActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="nc">TaskList</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="no">R</span>
+                <span class="o">.</span><span class="na">layout</span>
+                <span class="o">.</span><span class="na">list_item</span><span class="o">,</span> <span class="n">taskListsRef</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">populateView</span><span class="o">(</span><span class="nc">View</span> <span class="n">view</span><span class="o">,</span> <span class="nc">TaskList</span> <span class="n">taskList</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">TextView</span> <span class="n">name</span> <span class="o">=</span> <span class="o">(</span><span class="nc">TextView</span><span class="o">)</span> <span class="n">view</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="no">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">name</span><span class="o">);</span>
+                <span class="nc">TextView</span> <span class="n">owner</span> <span class="o">=</span> <span class="o">(</span><span class="nc">TextView</span><span class="o">)</span> <span class="n">view</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="no">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">owner</span><span class="o">);</span>
+
+                <span class="n">name</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">taskList</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+                <span class="n">owner</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">"Created by "</span> <span class="o">+</span> <span class="n">taskList</span><span class="o">.</span><span class="na">getOwner</span><span class="o">());</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+
+        <span class="n">taskLists</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">adapter</span><span class="o">);</span>
+        <span class="n">taskLists</span><span class="o">.</span><span class="na">setEmptyView</span><span class="o">(</span><span class="n">findViewById</span><span class="o">(</span><span class="no">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">placeholder_txt</span><span class="o">));</span>
+
+        <span class="n">taskLists</span><span class="o">.</span><span class="na">setOnItemClickListener</span><span class="o">(</span><span class="k">new</span> <span class="nc">AdapterView</span><span class="o">.</span><span class="na">OnItemClickListener</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onItemClick</span><span class="o">(</span><span class="nc">AdapterView</span><span class="o">&lt;?&gt;</span> <span class="n">adapterView</span><span class="o">,</span> <span class="nc">View</span> <span class="n">view</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">,</span> <span class="kt">long</span> <span class="n">l</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">TaskList</span> <span class="n">taskList</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="na">getItem</span><span class="o">(</span><span class="n">position</span><span class="o">);</span>
+                <span class="nc">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="na">getRef</span><span class="o">(</span><span class="n">position</span><span class="o">).</span><span class="na">getKey</span><span class="o">();</span>
+                <span class="n">navigateToDetails</span><span class="o">(</span><span class="n">taskList</span><span class="o">,</span> <span class="n">key</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<p>In order for a user to see only their tasks we need to create a new node in our <code class="highlighter-rouge">taskLists</code> node that will take the user’s uid as its key. To do that, edit the initialization of <code class="highlighter-rouge">tasksListRef</code> to:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">taskListsRef</span> <span class="o">=</span> <span class="nc">FirebaseDatabase</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getReference</span><span class="o">().</span><span class="na">child</span><span class="o">(</span><span class="s">"taskLists"</span><span class="o">).</span><span class="na">child</span>
+                <span class="o">(</span><span class="nc">FirebaseAuth</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getCurrentUser</span><span class="o">().</span><span class="na">getUid</span><span class="o">());</span>
+</code></pre></div></div>
+
+<p>This ensures that a user will be able to access only their tasks.</p>
+
+<h4 id="2-onactivityresult">2. OnActivityResult</h4>
+
+<p>Add the following code:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onActivityResult</span><span class="o">(</span><span class="kt">int</span> <span class="n">requestCode</span><span class="o">,</span> <span class="kt">int</span> <span class="n">resultCode</span><span class="o">,</span> <span class="nc">Intent</span> <span class="n">data</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onActivityResult</span><span class="o">(</span><span class="n">requestCode</span><span class="o">,</span> <span class="n">resultCode</span><span class="o">,</span> <span class="n">data</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">requestCode</span> <span class="o">==</span> <span class="no">RC_SIGN_IN</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="no">RESULT_OK</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="nc">TasksListsActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="s">"Sign in successful"</span><span class="o">,</span> <span class="nc">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">show</span><span class="o">();</span>
+                <span class="n">loadTasks</span><span class="o">();</span>
+                <span class="k">return</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="c1">// Sign in canceled</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="no">RESULT_CANCELED</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="nc">TasksListsActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="s">"Sign in cancelled"</span><span class="o">,</span> <span class="nc">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">show</span><span class="o">();</span>
+                <span class="k">return</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="c1">// No network</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">resultCode</span> <span class="o">==</span> <span class="nc">ResultCodes</span><span class="o">.</span><span class="na">RESULT_NO_NETWORK</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="nc">TasksListsActivity</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="s">"No network connection"</span><span class="o">,</span> <span class="nc">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">show</span><span class="o">();</span>
+                <span class="k">return</span><span class="o">;</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="3-onstop">3. onStop()</h4>
+
+<p>A null pointer exception will be thrown in the <code class="highlighter-rouge">onStop()</code> method so let’s fix that:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onStop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onStop</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">adapter</span><span class="o">.</span><span class="na">cleanup</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">ignore</span><span class="o">){</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="addtasklistfragment">AddTaskListFragment</h3>
+
+<p>In our <code class="highlighter-rouge">AddTaskListFragment.java</code> we need to show the creator of the list. Edit the <code class="highlighter-rouge">addTaskList()</code> method to look like the one below:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">addTaskList</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(!</span><span class="nc">TextUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">())</span> <span class="o">&amp;&amp;</span> <span class="n">getActivity</span><span class="o">()</span> <span class="k">instanceof</span> <span class="nc">TasksListCallbackListener</span><span class="o">){</span>
+            <span class="nc">FirebaseUser</span> <span class="n">user</span>  <span class="o">=</span> <span class="nc">FirebaseAuth</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getCurrentUser</span><span class="o">();</span>
+            <span class="nc">String</span> <span class="n">creator</span> <span class="o">=</span> <span class="n">user</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">?</span> <span class="n">user</span><span class="o">.</span><span class="na">getEmail</span><span class="o">():</span> <span class="s">"Unknown"</span><span class="o">;</span>
+            <span class="nc">TaskList</span> <span class="n">taskList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TaskList</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">(),</span><span class="n">creator</span><span class="o">);</span>
+            <span class="o">((</span><span class="nc">TasksListCallbackListener</span><span class="o">)</span><span class="n">getActivity</span><span class="o">()).</span><span class="na">onTaskListAdded</span><span class="o">(</span><span class="n">taskList</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="database-rules">Database rules</h3>
+
+<p>Remember we changed the database rules in Firebase a couple of posts ago. We had loosened them to allow everyone to read and write to the database. Now that we have added user authentication we can go set them in the Firebase console. Go to the Firebase console and open the database rules tab in the database menu. Edit them to look like this to ensure only authenticated users can access the database:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">".read"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth != null"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">".write"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth != null"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>More rules are going to be added in later posts.</p>
+
+<p>We are done. Run the app and you will be created by a sign in screen asking you to use email or your Google account. Once you’re logged in you can start adding tasks that only you can access :).</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>In this post we added user authentication to our app. We used the Firebase UI library for our sign in flow. In the next post we will add the functionality to share task lists with friends and more database rules to make our app more secure. Thanks for reading.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#android" class="page__taxonomy-item" rel="tag">Android</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#firebase" class="page__taxonomy-item" rel="tag">Firebase</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-01-06T00:00:00+02:00">January 06, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=A+simple+task+management+app+using+firebase+-+part+4%20http%3A%2F%2Flocalhost%3A4000%2Ftask-management-app-with-firebase-4%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftask-management-app-with-firebase-4%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftask-management-app-with-firebase-4%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/task-management-app-with-firebase-3/" class="pagination--pager" title="A simple task management app using firebase - part 3
+">Previous</a>
+    
+    
+      <a href="/android-architecture-components-part-1/" class="pagination--pager" title="Android Architecture Components - Part 1
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

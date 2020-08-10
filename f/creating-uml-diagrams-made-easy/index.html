@@ -1,0 +1,608 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Creating UML Diagrams With Ease Using PlantText | Vincent (Hones) Nyanga</title>
+<meta name="description" content="Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise the architecture, design, and implementation of complex software systems. I get mixed reactions from fellow engineers when I ask whether or not they like (or use) UML. Personally, even though I don’t like to use it as frequently, I have found it very handy in certain instances. I use it mostly in personal projects to keep a snapshot of my design decisions especially since it might be months before I revisit the project.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="Creating UML Diagrams With Ease Using PlantText">
+<meta property="og:url" content="http://localhost:4000/creating-uml-diagrams-made-easy/">
+
+
+  <meta property="og:description" content="Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise the architecture, design, and implementation of complex software systems. I get mixed reactions from fellow engineers when I ask whether or not they like (or use) UML. Personally, even though I don’t like to use it as frequently, I have found it very handy in certain instances. I use it mostly in personal projects to keep a snapshot of my design decisions especially since it might be months before I revisit the project.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-07-25T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/creating-uml-diagrams-made-easy/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Creating UML Diagrams With Ease Using PlantText">
+    <meta itemprop="description" content="Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise the architecture, design, and implementation of complex software systems. I get mixed reactions from fellow engineers when I ask whether or not they like (or use) UML. Personally, even though I don’t like to use it as frequently, I have found it very handy in certain instances. I use it mostly in personal projects to keep a snapshot of my design decisions especially since it might be months before I revisit the project.">
+    <meta itemprop="datePublished" content="July 25, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Creating UML Diagrams With Ease Using PlantText
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise the architecture, design, and implementation of complex software systems. I get mixed reactions from fellow engineers when I ask whether or not they like (or use) UML. Personally, even though I don’t like to use it as frequently, I have found it very handy in certain instances. I use it mostly in personal projects to keep a snapshot of my design decisions especially since it might be months before I revisit the project.</p>
+
+<p>This short post is not about whether or not one should use UML. I want to talk about a tool I bumped into that makes creation of UML diagrams a breeze – <a href="https://www.planttext.com/">PlantText</a>.</p>
+
+<h2 id="what-is-planttext">What Is PlantText?</h2>
+
+<p>PlantText is a tool that helps you create UML diagrams of various types using code. I find it quite handy since I can quickly create a class diagram using something that I understand so well – code. When you’re done creating your diagram you can generate a <code class="highlighter-rouge">PNG</code> or <code class="highlighter-rouge">SVG</code> file, or you can download the code as text.</p>
+
+<p>What makes me like this a lot is that I can version control my designs together with my software project and quickly update them when the need arises.</p>
+
+<h2 id="example">Example</h2>
+
+<p>Let’s create a simple UML class diagram using this amazing tool. Visit the PlantText <a href="https://www.planttext.com/">website</a> and paste the following code in the text editor:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">@startuml</span>
+
+<span class="n">title</span> <span class="n">Example</span> <span class="n">Class</span> <span class="nf">Diagram</span> <span class="p">(</span><span class="n">v1</span><span class="p">)</span>
+
+<span class="k">interface</span> <span class="nc">SuperHero</span><span class="p">{</span>
+ <span class="n">Name</span><span class="p">:</span> <span class="kt">string</span><span class="p">;</span>
+ <span class="nf">DoHeroStuff</span><span class="p">():</span> <span class="k">void</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">SuperMan</span> <span class="n">implements</span> <span class="n">SuperHero</span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">SpiderMan</span> <span class="n">implements</span> <span class="n">SuperHero</span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Vinarah</span> <span class="n">implements</span> <span class="n">SuperHero</span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">VinarahSon</span> <span class="n">extends</span> <span class="n">Vinarah</span><span class="p">{</span>
+ <span class="nf">DoKidStuff</span><span class="p">():</span> <span class="k">void</span>
+<span class="p">}</span>
+
+<span class="n">@enduml</span>
+</code></pre></div></div>
+
+<p>As you can see, we have a simple <code class="highlighter-rouge">SuperHero</code> interface that has three classes implementing it. We also have the <code class="highlighter-rouge">VinarahSon</code> class that inherits from <code class="highlighter-rouge">Vinarah</code>. This is something a software engineer can easily understand. You can now take this code and push it to your version control repository so that you can update it as you go. The bonus for me is the visual image that gets generated as shown below.</p>
+
+<figure>
+<img src="/images/sample-uml.png" alt="UML Diagram" />
+<figcaption>UML class diagram created using PlantText</figcaption>
+</figure>
+
+<p>There you have it – a UML class diagram generated from code.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post I briefly spoke about <a href="https://www.planttext.com/">PlantText</a>, a web tool that allows you to generate UML diagrams of various types – class diagrams, sequence diagrams etcetera, using code. I’ve been using this tool for quite some time and decided to share it with someone who might not have encountered it and is looking for something similar. Like always, thanks so much for taking time to read and, if you’re reading this during the 2020 Covid-19 pandemic, please stay safe.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#general" class="page__taxonomy-item" rel="tag">General</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-07-25T00:00:00+02:00">July 25, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Creating+UML+Diagrams+With+Ease+Using+PlantText%20http%3A%2F%2Flocalhost%3A4000%2Fcreating-uml-diagrams-made-easy%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcreating-uml-diagrams-made-easy%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcreating-uml-diagrams-made-easy%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/building-resilient-applications-with-polly-part-2/" class="pagination--pager" title="Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/being-productive-while-working-from-home/" rel="permalink">Being Productive While Working From Home
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">During this Covid-19 global pandemic many people found themselves having to work from home due to lockdown measures put in place by various governments acros...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

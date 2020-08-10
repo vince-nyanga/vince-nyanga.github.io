@@ -1,0 +1,798 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Building Resilient .NET Core Applications With Polly’s Retry Policy | Vincent (Hones) Nyanga</title>
+<meta name="description" content="In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically over a network, it is important to note that there may be transient failures in some of the services for one reason or another. It’s crucial that your system manages to recover from these impermanent failures when this happens. This is what resilience means. In this post we are going to talk about Polly – an open source .NET library that provides resilience and transient-fault handling capabilities and how you can use it in your .NET Core applications. We are going to focus on the retry capabilities of Polly in this post.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="Building Resilient .NET Core Applications With Polly’s Retry Policy">
+<meta property="og:url" content="http://localhost:4000/building-resilient-applications-with-polly-part-1/">
+
+
+  <meta property="og:description" content="In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically over a network, it is important to note that there may be transient failures in some of the services for one reason or another. It’s crucial that your system manages to recover from these impermanent failures when this happens. This is what resilience means. In this post we are going to talk about Polly – an open source .NET library that provides resilience and transient-fault handling capabilities and how you can use it in your .NET Core applications. We are going to focus on the retry capabilities of Polly in this post.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-05-30T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/building-resilient-applications-with-polly-part-1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Building Resilient .NET Core Applications With Polly’s Retry Policy">
+    <meta itemprop="description" content="In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically over a network, it is important to note that there may be transient failures in some of the services for one reason or another. It’s crucial that your system manages to recover from these impermanent failures when this happens. This is what resilience means. In this post we are going to talk about Polly – an open source .NET library that provides resilience and transient-fault handling capabilities and how you can use it in your .NET Core applications. We are going to focus on the retry capabilities of Polly in this post.">
+    <meta itemprop="datePublished" content="May 30, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically over a network, it is important to note that there may be transient failures in some of the services for one reason or another. It’s crucial that your system manages to recover from these impermanent failures when this happens. This is what resilience means. In this post we are going to talk about <a href="http://www.thepollyproject.org/">Polly</a> – an open source .NET library that provides resilience and transient-fault handling capabilities and how you can use it in your .NET Core applications. We are going to focus on the retry capabilities of Polly in this post.</p>
+
+<h2 id="the-project">The Project</h2>
+
+<p>The sample project for this series, which is hosted on <a href="https://github.com/vince-nyanga/PollyExample">GitHub</a>, comprises of two .NET Core web API projects – the Api and the Client. I am not going to add all the code in this post for brevity, instead, I’m going to summarise and show snippets that I think are important.</p>
+
+<p>The Api project provides a RESTful API that the Client project consumes. Requests to the Api are not always successful by design for the purposes of demonstration purposes. Here is the <code class="highlighter-rouge">WeatherForecastController</code> inside the Api project:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Api.Controllers</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">ApiController</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">Route</span><span class="p">(</span><span class="s">"api/weather"</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">WeatherForecastController</span> <span class="p">:</span> <span class="n">ControllerBase</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">Summaries</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span>
+        <span class="p">{</span>
+            <span class="s">"Freezing"</span><span class="p">,</span> <span class="s">"Bracing"</span><span class="p">,</span> <span class="s">"Chilly"</span><span class="p">,</span> <span class="s">"Cool"</span><span class="p">,</span> <span class="s">"Mild"</span><span class="p">,</span> <span class="s">"Warm"</span><span class="p">,</span> <span class="s">"Balmy"</span><span class="p">,</span> <span class="s">"Hot"</span><span class="p">,</span> <span class="s">"Sweltering"</span><span class="p">,</span> <span class="s">"Scorching"</span>
+        <span class="p">};</span>
+
+        <span class="p">[</span><span class="n">HttpGet</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">ActionResult</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">WeatherForecast</span><span class="p">&gt;&gt;</span> <span class="nf">Get</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">rng</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Random</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">randInt</span> <span class="p">=</span> <span class="n">rng</span><span class="p">.</span><span class="nf">Next</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">randInt</span> <span class="p">%</span> <span class="m">2</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span>
+            <span class="p">{</span>
+
+                <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span>
+                    <span class="n">Enumerable</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">5</span><span class="p">).</span><span class="nf">Select</span><span class="p">(</span><span class="n">index</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="n">WeatherForecast</span>
+                    <span class="p">{</span>
+                        <span class="n">Date</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">.</span><span class="nf">AddDays</span><span class="p">(</span><span class="n">index</span><span class="p">),</span>
+                        <span class="n">TemperatureC</span> <span class="p">=</span> <span class="n">rng</span><span class="p">.</span><span class="nf">Next</span><span class="p">(-</span><span class="m">20</span><span class="p">,</span> <span class="m">55</span><span class="p">),</span>
+                        <span class="n">Summary</span> <span class="p">=</span> <span class="n">Summaries</span><span class="p">[</span><span class="n">rng</span><span class="p">.</span><span class="nf">Next</span><span class="p">(</span><span class="n">Summaries</span><span class="p">.</span><span class="n">Length</span><span class="p">)]</span>
+                    <span class="p">})</span>
+                    <span class="p">.</span><span class="nf">ToArray</span><span class="p">()</span>
+                <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>As you can see, calls to this service are successful 2 out of 3 times on average. Now let’s turn our focus to the Client project.</p>
+
+<p>The Client project is a web API application that depends on the Api project to get weather forecasts. It makes use of an interface – <code class="highlighter-rouge">IWeatherService</code>:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Client.Interfaces</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">interface</span> <span class="nc">IWeatherService</span>
+    <span class="p">{</span>
+        <span class="n">Task</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">WeatherForecast</span><span class="p">&gt;&gt;</span> <span class="nf">GetWeatherForecast</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The interface above is implemented by the <code class="highlighter-rouge">HttpWeatherService</code> that makes REST calls to the Api project to fetch the weather:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Client.Interfaces</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Newtonsoft.Json</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Client.Services</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">HttpWeatherService</span> <span class="p">:</span> <span class="n">IWeatherService</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">HttpClient</span> <span class="n">_client</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">HttpWeatherService</span><span class="p">(</span><span class="n">HttpClient</span> <span class="n">client</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_client</span> <span class="p">=</span> <span class="n">client</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">WeatherForecast</span><span class="p">&gt;&gt;</span> <span class="nf">GetWeatherForecast</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_client</span><span class="p">.</span><span class="nf">GetAsync</span><span class="p">(</span><span class="s">"/api/weather"</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">IsSuccessStatusCode</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">stringContent</span> <span class="p">=</span> <span class="k">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+
+                <span class="k">return</span> <span class="n">JsonConvert</span><span class="p">.</span><span class="n">DeserializeObject</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">WeatherForecast</span><span class="p">&gt;&gt;(</span><span class="n">stringContent</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">IWeatherService</code> interface is then injected into the <code class="highlighter-rouge">WeatherForecastController</code> in the Client project:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Client.Interfaces</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.Extensions.Logging</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Client.Controllers</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">ApiController</span><span class="p">]</span>
+    <span class="p">[</span><span class="nf">Route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)]</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">WeatherForecastController</span> <span class="p">:</span> <span class="n">ControllerBase</span>
+    <span class="p">{</span>
+
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">WeatherForecastController</span><span class="p">&gt;</span> <span class="n">_logger</span><span class="p">;</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">IWeatherService</span> <span class="n">_service</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">WeatherForecastController</span><span class="p">(</span><span class="n">ILogger</span><span class="p">&lt;</span><span class="n">WeatherForecastController</span><span class="p">&gt;</span> <span class="n">logger</span><span class="p">,</span> <span class="n">IWeatherService</span> <span class="n">service</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span> <span class="p">=</span> <span class="n">logger</span><span class="p">;</span>
+            <span class="n">_service</span> <span class="p">=</span> <span class="n">service</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">HttpGet</span><span class="p">]</span>
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">ActionResult</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">WeatherForecast</span><span class="p">&gt;&gt;&gt;</span> <span class="nf">Get</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogInformation</span><span class="p">(</span><span class="s">"Fetching weather from API"</span><span class="p">);</span>
+
+            <span class="kt">var</span> <span class="n">forecast</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_service</span><span class="p">.</span><span class="nf">GetWeatherForecast</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">forecast</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">_logger</span><span class="p">.</span><span class="nf">LogInformation</span><span class="p">(</span><span class="s">"Weather successfully fetched"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="nf">Ok</span><span class="p">(</span><span class="n">forecast</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">_logger</span><span class="p">.</span><span class="nf">LogInformation</span><span class="p">(</span><span class="s">"Failed to fetch weather"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we run both projects, after registering the <code class="highlighter-rouge">IWeatherService</code> interface in the service collection, we will find that we get a successful request every 2/3 times on average. This is a simulated transient fault that we are going to handle using Polly.</p>
+
+<p>First, we need to add Polly to our Client project. Install these NuGet packages:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dotnet add package Polly
+dotnet add package Microsoft.Extensions.Http.Polly
+</code></pre></div></div>
+
+<p>Let’s go to the <code class="highlighter-rouge">Startup.cs</code> file inside the Client project and add the following code:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Net.Http</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Client.Interfaces</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Client.Services</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Builder</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Hosting</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.Extensions.Configuration</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.Extensions.DependencyInjection</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.Extensions.Hosting</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Polly</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Polly.Extensions.Http</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Serilog</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Client</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Startup</span>
+    <span class="p">{</span>
+        <span class="c1">// ...</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">services</span><span class="p">.</span><span class="nf">AddControllers</span><span class="p">();</span>
+
+            <span class="n">services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="p">&lt;</span><span class="n">IWeatherService</span><span class="p">,</span> <span class="n">HttpWeatherService</span><span class="p">&gt;(</span><span class="n">client</span> <span class="p">=&gt;</span>
+            <span class="p">{</span>
+                <span class="n">client</span><span class="p">.</span><span class="n">BaseAddress</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Uri</span><span class="p">(</span><span class="s">"https://localhost:5001/"</span><span class="p">);</span>
+            <span class="p">})</span>
+                <span class="p">.</span><span class="nf">AddPolicyHandler</span><span class="p">(</span><span class="nf">GetRetryPolicy</span><span class="p">());</span> <span class="c1">// Add retry policy</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">static</span> <span class="n">IAsyncPolicy</span><span class="p">&lt;</span><span class="n">HttpResponseMessage</span><span class="p">&gt;</span> <span class="nf">GetRetryPolicy</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Random</span> <span class="n">jitterer</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Random</span><span class="p">();</span>
+            <span class="k">return</span> <span class="n">HttpPolicyExtensions</span>
+                 <span class="p">.</span><span class="nf">HandleTransientHttpError</span><span class="p">()</span>
+                 <span class="p">.</span><span class="nf">OrResult</span><span class="p">(</span><span class="n">res</span> <span class="p">=&gt;</span> <span class="p">!</span><span class="n">res</span><span class="p">.</span><span class="n">IsSuccessStatusCode</span><span class="p">)</span>
+                 <span class="p">.</span><span class="nf">WaitAndRetryAsync</span><span class="p">(</span>
+                      <span class="m">2</span><span class="p">,</span>
+                     <span class="n">retryAttempt</span> <span class="p">=&gt;</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="n">Math</span><span class="p">.</span><span class="nf">Pow</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="n">retryAttempt</span><span class="p">))</span>
+                                                           <span class="p">+</span> <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromMilliseconds</span><span class="p">(</span><span class="n">jitterer</span><span class="p">.</span><span class="nf">Next</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1000</span><span class="p">)),</span>
+                     <span class="n">onRetry</span><span class="p">:</span> <span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">span</span><span class="p">,</span> <span class="n">retryCount</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span> <span class="p">=&gt;</span>
+                     <span class="p">{</span>
+                         <span class="n">Log</span><span class="p">.</span><span class="nf">Information</span><span class="p">(</span><span class="s">"Retry count: {RetryCount}"</span><span class="p">,</span> <span class="n">retryCount</span><span class="p">);</span>
+                     <span class="p">});</span>
+
+        <span class="p">}</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Inside the <code class="highlighter-rouge">ConfigureService</code> method we add our weather service to the service collection using the <code class="highlighter-rouge">AddHttpClient</code> extension method. We then add a Polly retry policy to that <code class="highlighter-rouge">HttpClient</code>. Let’s now talk about the retry policy in detail.</p>
+
+<h2 id="retry-policy">Retry Policy</h2>
+
+<p>The retry policy allows callers to retry operations in the expectation that many faults are transient and may self-correct. If, after a configured number of retries, we still don’t have a successful result, we can return an error to the user. For more information on the retry policy checkout the <a href="https://github.com/App-vNext/Polly/wiki/Retry">wiki</a> for the Polly project on GitHub</p>
+
+<p>This is what we are doing in the example above. Since our Api is successful only 2/3 times we don’t want to return a <code class="highlighter-rouge">404: Not Found</code> to our users as soon as a call fails. Instead, we try again up to 2 times hoping that the initial failure was short-lived. If we still get a failure after 2 retries, we can return the error to the user or handle it in some other way. Below is a flow chart that shows how the retry policy works, courtesy of the Polly documentation:</p>
+
+<figure>
+<img src="/images/polly/retry.png" alt="Retry policy" />
+<figcaption>How the retry policy works. Courtesy: https://github.com/App-vNext/Polly/wiki/Retry </figcaption>
+</figure>
+
+<h3 id="retry-strategies">Retry Strategies</h3>
+
+<p>It is unwise for us to retry immediately when we get a failure as the upstream system may not have recovered from the fault which may overload the system. A well-known strategy called <code class="highlighter-rouge">exponential backoff</code> allows retries to be made initially quickly, but then at progressively longer intervals: for example, after 2, 4, 8, 15, then 30 seconds. This gives the upstream system a chance to recover and avoid overloading it.</p>
+
+<p>The exponential backoff strategy on its own may not be suffient in high throughput systems as it may still overload the system. Instead a random jitter – an extra delay may be added to avoid all clients sending calls simultaneously. This is what we have done in the example above. For more information checkout the <a href="https://github.com/App-vNext/Polly/wiki/Retry-with-jitter">wiki</a>.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post we introduced Polly, an open source .NET resilience and transient-fault-handling library. We also discussed the retry policy and how is can be used to recover from transient upstream faults. This is the first post in a series where we will discuss various policies that Polly provides and how they can be used to make your system even more resilient. You may download the full source code for this post on <a href="https://github.com/vince-nyanga/PollyExample">GitHub</a>. Once again, thank you for taking your time to read and stay safe if you’re reading this during the 2020 Covid-19 pandemic.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#net-core" class="page__taxonomy-item" rel="tag">.NET Core</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#c" class="page__taxonomy-item" rel="tag">C#</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#polly" class="page__taxonomy-item" rel="tag">Polly</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-05-30T00:00:00+02:00">May 30, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Building+Resilient+.NET+Core+Applications+With+Polly%27s+Retry+Policy%20http%3A%2F%2Flocalhost%3A4000%2Fbuilding-resilient-applications-with-polly-part-1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fbuilding-resilient-applications-with-polly-part-1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fbuilding-resilient-applications-with-polly-part-1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/facial-recognition-with-kairos/" class="pagination--pager" title="Facial Recognition In .NET With Kairos
+">Previous</a>
+    
+    
+      <a href="/building-resilient-applications-with-polly-part-2/" class="pagination--pager" title="Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/being-productive-while-working-from-home/" rel="permalink">Being Productive While Working From Home
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">During this Covid-19 global pandemic many people found themselves having to work from home due to lockdown measures put in place by various governments acros...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

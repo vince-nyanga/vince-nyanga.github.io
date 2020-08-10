@@ -1,0 +1,735 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>A look into the Android Architecture Components Paging Library | Vincent (Hones) Nyanga</title>
+<meta name="description" content="Imagine you have data set that contains 10 000 items that you need to display in your application. Loading all these items before rendering them on the screen may take time affecting both performance and user experience. Thanks to the Paging Library this problem can now be avoided.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="A look into the Android Architecture Components Paging Library">
+<meta property="og:url" content="http://localhost:4000/a-look-into-the-aac-paging-library/">
+
+
+  <meta property="og:description" content="Imagine you have data set that contains 10 000 items that you need to display in your application. Loading all these items before rendering them on the screen may take time affecting both performance and user experience. Thanks to the Paging Library this problem can now be avoided.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2017-09-19T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/a-look-into-the-aac-paging-library/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="A look into the Android Architecture Components Paging Library">
+    <meta itemprop="description" content="Imagine you have data set that contains 10 000 items that you need to display in your application. Loading all these items before rendering them on the screen may take time affecting both performance and user experience. Thanks to the Paging Library this problem can now be avoided.">
+    <meta itemprop="datePublished" content="September 19, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">A look into the Android Architecture Components Paging Library
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Imagine you have data set that contains 10 000 items that you need to display in your application. Loading all these items before rendering them on the screen may take time affecting both performance and user experience. Thanks to the <strong>Paging Library</strong> this problem can now be avoided.</p>
+
+<h3 id="what-does-the-paging-library-do">What does the Paging library do?</h3>
+
+<p>The paging library enables the application to gradually load information from a data source without straining the device or waiting for a long time for all the data to be loaded. Information is load in small portions (pages) at a time.</p>
+
+<h3 id="what-does-it-consist-of">What does it consist of?</h3>
+
+<p>The library consists of a couple of the following classes among others:</p>
+
+<h4 id="datasource">DataSource</h4>
+
+<p>This class is used to define a data source you need to pull paged data from. I has the following subclasses one of which you need to extend depending on how you need to access your data:</p>
+
+<ul>
+  <li><strong>KeyedDataSource</strong> is used if you need to use data from item <code class="highlighter-rouge">N</code> to fetch item <code class="highlighter-rouge">N+1</code>.</li>
+  <li><strong>TiledDataSource</strong> is used if you need to fetch pages of data from any location in your data store, for instance getting 50 items starting from location 20.</li>
+</ul>
+
+<p>The Room persistence library can create the DataSource class automatically as shown in the example below.</p>
+
+<h5 id="pagedlist">PagedList</h5>
+
+<p>This is the class that loads from a DataSource and you can configure how much data is loaded at a time and how much should be prefetched:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">val</span> <span class="py">allUsers</span> <span class="p">=</span> <span class="n">userDao</span><span class="p">.</span><span class="nf">getUsers</span><span class="p">()</span>
+            <span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="nc">PagedList</span><span class="p">.</span><span class="nc">Config</span><span class="p">.</span><span class="nc">Builder</span><span class="p">()</span>
+                    <span class="p">.</span><span class="nf">setPageSize</span><span class="p">(</span><span class="nc">PAGE_SIZE</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">setPrefetchDistance</span><span class="p">(</span><span class="nc">PREFETCH_DISTANCE</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">setEnablePlaceholders</span><span class="p">(</span><span class="nc">ENABLE_PLACEHOLDERS</span><span class="p">).</span><span class="nf">build</span><span class="p">())</span>
+</code></pre></div></div>
+
+<h5 id="pagedlistadapter">PagedListAdapter</h5>
+
+<p>This class implements the <code class="highlighter-rouge">RecyclerView.Adapter</code> and is used to present data from a PagedList . When a new page of data is loaded, it signals the <code class="highlighter-rouge">RecyclerView</code> that new data has arrived and the RecyclerView deals with the data accordingly. It uses a background thread to compute changes from one PagedList to the next using <code class="highlighter-rouge">DiffUtil</code>.</p>
+
+<h5 id="livepagedlistprovider">LivePagedListProvider</h5>
+
+<p>This class generates <code class="highlighter-rouge">LiveData&lt;PagedList&gt;</code> from the DataSource . Again, the Room persistence library can generate it for you:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Query</span><span class="p">(</span><span class="s">"SELECT * FROM users ORDER BY name ASC"</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getUsers</span><span class="p">():</span> <span class="nc">LivePagedListProvider</span><span class="p">&lt;</span><span class="nc">Int</span><span class="p">,</span> <span class="nc">User</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example">Example</h3>
+
+<p>Let’s create a simple app that displays a list of users using the Paging library. Check out the project on <a href="https://github.com/vince-nyanga/paging-library-example">github</a> if you want to see the whole project.</p>
+
+<h4 id="add-dependencies">Add dependencies</h4>
+
+<p>Add the following dependencies to your app <code class="highlighter-rouge">build.gradle</code> file:</p>
+
+<div class="language-gradle highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">implementation</span> <span class="err">“</span><span class="n">com</span><span class="o">.</span><span class="na">android</span><span class="o">.</span><span class="na">support</span><span class="o">:</span><span class="n">appcompat</span><span class="o">-</span><span class="nl">v7:</span><span class="mf">26.1</span><span class="o">.</span><span class="mi">0</span><span class="err">”</span>
+<span class="n">implementation</span> <span class="err">“</span><span class="n">android</span><span class="o">.</span><span class="na">arch</span><span class="o">.</span><span class="na">persistence</span><span class="o">.</span><span class="na">room</span><span class="o">:</span><span class="nl">runtime:</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">alpha9</span><span class="err">–</span><span class="mi">1</span><span class="err">”</span>
+<span class="n">implementation</span> <span class="err">“</span><span class="n">android</span><span class="o">.</span><span class="na">arch</span><span class="o">.</span><span class="na">lifecycle</span><span class="o">:</span><span class="nl">runtime:</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">alpha9</span><span class="err">–</span><span class="mi">1</span><span class="err">”</span>
+<span class="n">implementation</span> <span class="err">“</span><span class="n">android</span><span class="o">.</span><span class="na">arch</span><span class="o">.</span><span class="na">lifecycle</span><span class="o">:</span><span class="nl">extensions:</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">alpha9</span><span class="err">–</span><span class="mi">1</span><span class="err">”</span>
+<span class="n">implementation</span> <span class="err">“</span><span class="n">android</span><span class="o">.</span><span class="na">arch</span><span class="o">.</span><span class="na">paging</span><span class="o">:</span><span class="nl">runtime:</span><span class="n">$paging_version</span><span class="err">”</span>
+<span class="n">kapt</span> <span class="err">“</span><span class="n">android</span><span class="o">.</span><span class="na">arch</span><span class="o">.</span><span class="na">persistence</span><span class="o">.</span><span class="na">room</span><span class="o">:</span><span class="nl">compiler:</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">alpha9</span><span class="err">–</span><span class="mi">1</span><span class="err">”</span>
+</code></pre></div></div>
+
+<h4 id="create-the-entity">Create the Entity</h4>
+
+<p>Let’s create our <code class="highlighter-rouge">User</code> entity:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span><span class="p">(</span><span class="n">tableName</span> <span class="p">=</span> <span class="s">"users"</span><span class="p">)</span>
+<span class="kd">data class</span> <span class="nc">User</span><span class="p">(</span>
+        <span class="nd">@PrimaryKey</span><span class="p">(</span><span class="n">autoGenerate</span> <span class="p">=</span> <span class="k">true</span><span class="p">)</span><span class="kd">val</span> <span class="py">id</span><span class="p">:</span> <span class="nc">Int</span><span class="p">,</span>
+        <span class="kd">val</span> <span class="py">name</span><span class="p">:</span> <span class="nc">String</span><span class="p">,</span>
+        <span class="kd">val</span> <span class="py">surname</span><span class="p">:</span> <span class="nc">String</span><span class="p">=</span><span class="s">"Nyanga"</span><span class="p">){</span>
+
+    <span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
+        <span class="kd">val</span> <span class="py">DIFF_CALLBACK</span> <span class="p">=</span> <span class="k">object</span><span class="p">:</span> <span class="nc">DiffCallback</span><span class="p">&lt;</span><span class="nc">User</span><span class="p">&gt;(){</span>
+            <span class="k">override</span> <span class="k">fun</span> <span class="nf">areContentsTheSame</span><span class="p">(</span><span class="n">oldItem</span><span class="p">:</span> <span class="nc">User</span><span class="p">,</span> <span class="n">newItem</span><span class="p">:</span> <span class="nc">User</span><span class="p">):</span> <span class="nc">Boolean</span> <span class="p">=</span> <span class="n">oldItem</span> <span class="p">==</span> <span class="n">newItem</span>
+
+            <span class="k">override</span> <span class="k">fun</span> <span class="nf">areItemsTheSame</span><span class="p">(</span><span class="n">oldItem</span><span class="p">:</span> <span class="nc">User</span><span class="p">,</span> <span class="n">newItem</span><span class="p">:</span> <span class="nc">User</span><span class="p">):</span> <span class="nc">Boolean</span> <span class="p">=</span>  <span class="n">oldItem</span> <span class="p">==</span> <span class="n">newItem</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="userdao">UserDao</h4>
+
+<p>Let’s a data access object for our user entity:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Dao</span>
+<span class="kd">interface</span> <span class="nc">UserDao</span> <span class="p">{</span>
+
+    <span class="nd">@Query</span><span class="p">(</span><span class="s">"SELECT * FROM users ORDER BY name ASC"</span><span class="p">)</span>
+    <span class="k">fun</span> <span class="nf">getUsers</span><span class="p">():</span> <span class="nc">LivePagedListProvider</span><span class="p">&lt;</span><span class="nc">Int</span><span class="p">,</span> <span class="nc">User</span><span class="p">&gt;</span>
+
+    <span class="nd">@Insert</span>
+    <span class="k">fun</span> <span class="nf">insert</span><span class="p">(</span><span class="n">users</span><span class="p">:</span> <span class="nc">List</span><span class="p">&lt;</span><span class="nc">User</span><span class="p">&gt;)</span>
+
+    <span class="nd">@Insert</span>
+    <span class="k">fun</span> <span class="nf">insert</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="nc">User</span><span class="p">)</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>As you can see our <code class="highlighter-rouge">getUsers()</code> function returns LivePagedListProvider. This class generates a <code class="highlighter-rouge">LiveData&lt;PagedList&gt;</code> as explained above.</p>
+
+<h4 id="create-the-user-adapter">Create the User adapter</h4>
+
+<p>Let’s create a <code class="highlighter-rouge">PagedListAdapter</code> that we will use to load our PagedList into the <code class="highlighter-rouge">RecyclerView</code>. Note the <code class="highlighter-rouge">DiffCallback</code>that will be used to compute changes.</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">UserAdapter</span><span class="p">:</span> <span class="nc">PagedListAdapter</span><span class="p">&lt;</span><span class="nc">User</span><span class="p">,</span> <span class="nc">UserAdapter</span><span class="err">.</span><span class="nc">UserViewHolder</span><span class="p">&gt;(</span><span class="nc">User</span><span class="p">.</span><span class="nc">DIFF_CALLBACK</span><span class="p">){</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onBindViewHolder</span><span class="p">(</span><span class="n">holder</span><span class="p">:</span> <span class="nc">UserViewHolder</span><span class="p">?,</span> <span class="n">position</span><span class="p">:</span> <span class="nc">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">holder</span><span class="o">?.</span><span class="nf">bindTo</span><span class="p">(</span><span class="nf">getItem</span><span class="p">(</span><span class="n">position</span><span class="p">))</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">onCreateViewHolder</span><span class="p">(</span><span class="n">parent</span><span class="p">:</span> <span class="nc">ViewGroup</span><span class="p">?,</span> <span class="n">viewType</span><span class="p">:</span> <span class="nc">Int</span><span class="p">):</span> <span class="nc">UserViewHolder</span> <span class="p">=</span>
+            <span class="nc">UserViewHolder</span><span class="p">(</span><span class="nc">LayoutInflater</span><span class="p">.</span><span class="nf">from</span><span class="p">(</span><span class="n">parent</span><span class="o">?.</span><span class="n">context</span><span class="p">).</span><span class="nf">inflate</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">user_item</span><span class="p">,</span><span class="n">parent</span><span class="p">,</span>
+            <span class="k">false</span><span class="p">))</span>
+
+
+    <span class="kd">class</span> <span class="nc">UserViewHolder</span><span class="p">(</span><span class="n">view</span><span class="p">:</span> <span class="nc">View</span><span class="p">):</span> <span class="nc">RecyclerView</span><span class="p">.</span><span class="nc">ViewHolder</span><span class="p">(</span><span class="n">view</span><span class="p">){</span>
+
+        <span class="k">private</span> <span class="kd">val</span> <span class="py">nameTextView</span> <span class="p">=</span> <span class="n">itemView</span><span class="p">.</span><span class="n">findViewById</span><span class="p">&lt;</span><span class="nc">TextView</span><span class="p">&gt;(</span><span class="nc">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">fun</span> <span class="nf">bindTo</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="nc">User</span><span class="p">?){</span>
+            <span class="n">nameTextView</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="p">(</span><span class="s">"${user?.name} ${user?.surname}"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="create-the-viewmodel">Create the ViewModel</h4>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">UserViewModel</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="nc">Application</span><span class="p">):</span> <span class="nc">AndroidViewModel</span><span class="p">(</span><span class="n">app</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">val</span> <span class="py">userDao</span> <span class="p">=</span> <span class="nc">UsersDb</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">app</span><span class="p">).</span><span class="nf">userDao</span><span class="p">()</span>
+    <span class="kd">val</span> <span class="py">allUsers</span> <span class="p">=</span> <span class="n">userDao</span><span class="p">.</span><span class="nf">getUsers</span><span class="p">()</span>
+            <span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="nc">PagedList</span><span class="p">.</span><span class="nc">Config</span><span class="p">.</span><span class="nc">Builder</span><span class="p">()</span>
+                    <span class="p">.</span><span class="nf">setPageSize</span><span class="p">(</span><span class="nc">PAGE_SIZE</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">setPrefetchDistance</span><span class="p">(</span><span class="nc">PREFETCH_DISTANCE</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">setEnablePlaceholders</span><span class="p">(</span><span class="nc">ENABLE_PLACEHOLDERS</span><span class="p">).</span><span class="nf">build</span><span class="p">())</span>
+
+    <span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
+        <span class="k">private</span> <span class="k">const</span> <span class="kd">val</span> <span class="py">PAGE_SIZE</span> <span class="p">=</span> <span class="m">15</span>
+        <span class="k">private</span> <span class="k">const</span> <span class="kd">val</span> <span class="py">PREFETCH_DISTANCE</span> <span class="p">=</span> <span class="m">5</span>
+        <span class="k">private</span> <span class="k">const</span> <span class="kd">val</span> <span class="py">ENABLE_PLACEHOLDERS</span> <span class="p">=</span> <span class="k">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In our <code class="highlighter-rouge">MainActivity</code> we will subscribe to the user list:</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">val</span> <span class="py">adapter</span> <span class="p">=</span> <span class="nc">UserAdapter</span><span class="p">()</span>
+        <span class="kd">val</span> <span class="py">userList</span> <span class="p">=</span> <span class="n">findViewById</span><span class="p">&lt;</span><span class="nc">RecyclerView</span><span class="p">&gt;(</span><span class="nc">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">userList</span><span class="p">)</span>
+        <span class="n">userList</span><span class="p">.</span><span class="n">adapter</span> <span class="p">=</span> <span class="n">adapter</span>
+        <span class="n">viewModel</span><span class="p">.</span><span class="n">allUsers</span><span class="p">.</span><span class="nf">observe</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nc">Observer</span><span class="p">{</span><span class="n">list</span> <span class="p">-&gt;</span>
+            <span class="n">adapter</span><span class="p">.</span><span class="nf">setList</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+        <span class="p">}</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="page-size">Page Size</h4>
+
+<p>When creating a <code class="highlighter-rouge">PagedList</code> you need to set the page size. What size should you use? After playing around the page size in the sample app I found out that if the page size does not fill at least a screen worth of content, say 2, for a brief moment I would see the first two items followed by nulls. So the page size should be a value that fills at least screen worth of content on a large device to avoid the user seeing null items.</p>
+
+<h4 id="placeholders">Placeholders</h4>
+
+<p>If you enable placeholders in your <code class="highlighter-rouge">PagedList</code> it will report the full size of the list with some items as nulls depending on your page size.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>In this post I took a look at the Paging Library, the classes that make up the library and a sample app that uses the library. Once again thanks for taking your time to read.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#android" class="page__taxonomy-item" rel="tag">Android</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#architecute" class="page__taxonomy-item" rel="tag">Architecute</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kotlin" class="page__taxonomy-item" rel="tag">Kotlin</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-09-19T00:00:00+02:00">September 19, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=A+look+into+the+Android+Architecture+Components+Paging+Library%20http%3A%2F%2Flocalhost%3A4000%2Fa-look-into-the-aac-paging-library%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fa-look-into-the-aac-paging-library%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fa-look-into-the-aac-paging-library%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/android-instant-apps-theory/" class="pagination--pager" title="Android Instant Apps - theory
+">Previous</a>
+    
+    
+      <a href="/clean-architecture-example-csharp/" class="pagination--pager" title="Clean Architecture Example C#
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

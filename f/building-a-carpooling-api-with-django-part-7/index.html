@@ -1,0 +1,717 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Building a carpool web API with Django (part 7) | Vincent (Hones) Nyanga</title>
+<meta name="description" content="Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather’s 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fall into muddy pools. Now that the holidays are over we can continue working on our REST API.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="Building a carpool web API with Django (part 7)">
+<meta property="og:url" content="http://localhost:4000/building-a-carpooling-api-with-django-part-7/">
+
+
+  <meta property="og:description" content="Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather’s 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fall into muddy pools. Now that the holidays are over we can continue working on our REST API.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-01-02T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/building-a-carpooling-api-with-django-part-7/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Building a carpool web API with Django (part 7)">
+    <meta itemprop="description" content="Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather’s 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fall into muddy pools. Now that the holidays are over we can continue working on our REST API.">
+    <meta itemprop="datePublished" content="January 02, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Building a carpool web API with Django (part 7)
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather’s 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fall into muddy pools. Now that the holidays are over we can continue working on our REST API.</p>
+
+<p>In <a href="/building-a-carpooling-api-with-django-part-6/">part 6</a> of our series we added filtering support to our <code class="highlighter-rouge">trips</code> endpoint to allow users to filter trips by origin, destination, number of seats and date. In this post we are going to talk about writing unit tests for our REST API. This is going to be a very short read as most of the things are repetitive. We are going to work with the <code class="highlighter-rouge">trips</code> endpoint. For more in-depth information on writing tests with the Django REST Framework visit this <a href="https://www.django-rest-framework.org/api-guide/testing/">link</a>.</p>
+
+<h2 id="tripapitest"><code class="highlighter-rouge">TripApiTest</code></h2>
+
+<p>Inside <code class="highlighter-rouge">trips/tests.py</code> add the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># trips/tests.py
+# ...
+</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APITestCase</span>
+
+<span class="c1"># ...
+</span><span class="k">def</span> <span class="nf">create_data</span><span class="p">():</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s">'vince'</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="s">'vince@test.com'</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s">'testpass123'</span>
+    <span class="p">)</span>
+
+    <span class="n">vehicle</span> <span class="o">=</span> <span class="n">Vehicle</span><span class="p">(</span>
+        <span class="n">make</span><span class="o">=</span><span class="s">'Make'</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="s">'Model'</span><span class="p">,</span>
+        <span class="n">reg_number</span><span class="o">=</span><span class="s">'1234'</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">user</span>
+    <span class="p">)</span>
+    <span class="n">vehicle</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">Place</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Origin'</span><span class="p">)</span>
+    <span class="n">origin</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">Place</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Destination'</span><span class="p">)</span>
+    <span class="n">destination</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="test-get-trips">Test Get Trips</h3>
+
+<p>Let’s create our <code class="highlighter-rouge">TripApiTest</code> class that inherits from <code class="highlighter-rouge">APITestCase</code> and add a test for getting trips:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># trips/tests.py
+</span><span class="k">class</span> <span class="nc">TripApiTest</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_get_trips</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">create_data</span><span class="p">()</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">vehicle</span> <span class="o">=</span> <span class="n">Vehicle</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">Place</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">Place</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">trip</span> <span class="o">=</span> <span class="n">Trip</span><span class="p">(</span>
+            <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
+            <span class="n">destination</span><span class="o">=</span><span class="n">destination</span><span class="p">,</span>
+            <span class="n">vehicle</span><span class="o">=</span><span class="n">vehicle</span><span class="p">,</span>
+            <span class="n">trip_date</span><span class="o">=</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">trip</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/api/v1/trips/'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">),</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s">"url"</span><span class="p">:</span> <span class="s">"http://testserver/api/v1/trips/1/"</span><span class="p">,</span>
+                <span class="s">"trip_date"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span>
+                <span class="s">"num_seats"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s">"origin"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s">"name"</span><span class="p">:</span> <span class="s">"Origin"</span>
+                <span class="p">},</span>
+                <span class="s">"destination"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="s">"name"</span><span class="p">:</span> <span class="s">"Destination"</span>
+                <span class="p">},</span>
+                <span class="s">"vehicle"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s">"url"</span><span class="p">:</span> <span class="s">"http://testserver/api/v1/vehicles/1/"</span><span class="p">,</span>
+                    <span class="s">"make"</span><span class="p">:</span> <span class="s">"Make"</span><span class="p">,</span>
+                    <span class="s">"model"</span><span class="p">:</span> <span class="s">"Model"</span><span class="p">,</span>
+                    <span class="s">"reg_number"</span><span class="p">:</span> <span class="s">"1234"</span><span class="p">,</span>
+                    <span class="s">"image"</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+                    <span class="s">"owner_url"</span><span class="p">:</span> <span class="s">"http://testserver/api/v1/users/1/"</span>
+                <span class="p">},</span>
+                <span class="s">"driver"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"username"</span><span class="p">:</span> <span class="s">"vince"</span><span class="p">,</span>
+                    <span class="s">"email"</span><span class="p">:</span> <span class="s">"vince@test.com"</span><span class="p">,</span>
+                    <span class="s">"first_name"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
+                    <span class="s">"last_name"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
+                    <span class="s">"gender"</span><span class="p">:</span> <span class="s">"wont-say"</span><span class="p">,</span>
+                    <span class="s">"birth_date"</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+                    <span class="s">"url"</span><span class="p">:</span> <span class="s">"http://testserver/api/v1/users/1/"</span><span class="p">,</span>
+                    <span class="s">"profile_pic"</span><span class="p">:</span> <span class="bp">None</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+        <span class="p">])</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">APITestCase</code> class provide a <code class="highlighter-rouge">self.client</code> attribute which is an instance of <code class="highlighter-rouge">APIClient</code>. It gives us the ability to easily call REST methods – <code class="highlighter-rouge">get</code>, <code class="highlighter-rouge">post</code> etc.</p>
+
+<h3 id="adding-authentication-to-tests">Adding authentication to tests</h3>
+
+<p>The <code class="highlighter-rouge">APIClient</code> class provides many ways of authenticating your requests. Below are the different ways of authentication and when they are useful.</p>
+
+<h4 id="login">.login</h4>
+
+<p>The <code class="highlighter-rouge">APIClient</code> class provides a <code class="highlighter-rouge">login</code> method. It allows you to authenticate requests against any views which include <code class="highlighter-rouge">SessionAuthentication</code>. This method is appropriate for testing APIs that use session authentication, for instance websites which include AJAX interaction with the API. Here’s an example of how you can use the <code class="highlighter-rouge">login</code> method:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span> <span class="o">=</span> <span class="n">APIClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">'vince'</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">'testpass1234'</span><span class="p">)</span>
+
+<span class="c1"># log out
+</span><span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="credentials">.credentials</h4>
+
+<p>The <code class="highlighter-rouge">credentials</code> method is used to set headers that will be included in all requests by the test client. This method is appropriate for testing APIs that require authentication headers, such as basic authentication, OAuth and simple token authentication schemes. Here is an example of how you can use the <code class="highlighter-rouge">credentials</code> method:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">rest_framework.authtoken.models</span> <span class="kn">import</span> <span class="n">Token</span>
+<span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APIClient</span>
+
+<span class="n">token</span> <span class="o">=</span> <span class="n">Token</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user__username</span><span class="o">=</span><span class="s">'vince'</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">APIClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="s">'Token '</span> <span class="o">+</span> <span class="n">token</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="force_authenticate">.force_authenticate</h4>
+
+<p>This method is used when you want to bypass authentication entirely and force all requests to be automatically treated as authenticated. This is a very useful shortcut if you don’t want to construct valid authentication credentials. We are going to use this method when we test adding a trip.</p>
+
+<p>Inside the <code class="highlighter-rouge">TripApiTest</code> class add a test for adding a new trip:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_create_trip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">create_data</span><span class="p">()</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">force_authenticate</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span> <span class="c1"># force authentication
+</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'/api/v1/trips/'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">'trip_date'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()),</span>
+            <span class="s">'origin_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s">'destination_id'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s">'vehicle_id'</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span>
+        <span class="n">trip</span> <span class="o">=</span> <span class="n">Trip</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">'Origin'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">destination</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">'Destination'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">trip_date</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>I am not going to add all the tests here. I just wanted to show you how you can write unit tests for your REST API. If you want to see all the tests check them out on <a href="https://github.com/vince-nyanga/KaPool">GitHub</a>. Many thanks for taking your time to read and once again, Happy New Year! I wish you a happy and prosperous 2020.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#django" class="page__taxonomy-item" rel="tag">Django</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#python" class="page__taxonomy-item" rel="tag">Python</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-01-02T00:00:00+02:00">January 02, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Building+a+carpool+web+API+with+Django+%28part+7%29%20http%3A%2F%2Flocalhost%3A4000%2Fbuilding-a-carpooling-api-with-django-part-7%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fbuilding-a-carpooling-api-with-django-part-7%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fbuilding-a-carpooling-api-with-django-part-7%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/building-a-carpooling-api-with-django-part-6/" class="pagination--pager" title="Building a carpool web API with Django (part 6)
+">Previous</a>
+    
+    
+      <a href="/building-a-car-pooling-api-with-django-part-8/" class="pagination--pager" title="Building a carpool web API with Django (part 8)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

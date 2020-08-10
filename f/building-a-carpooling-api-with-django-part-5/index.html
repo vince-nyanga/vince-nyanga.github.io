@@ -1,0 +1,840 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Building a carpool web API with Django (part 5) | Vincent (Hones) Nyanga</title>
+<meta name="description" content="In part 4 of our series we installed Django Rest Framework to our project and exposed our first API endpoint for the Users model. In this post we are going to create endpoints for our other models and have a fairly functional API.">
+
+
+  <meta name="author" content="Vincent Nyanga">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_ZA">
+<meta property="og:site_name" content="Vincent (Hones) Nyanga">
+<meta property="og:title" content="Building a carpool web API with Django (part 5)">
+<meta property="og:url" content="http://localhost:4000/building-a-carpooling-api-with-django-part-5/">
+
+
+  <meta property="og:description" content="In part 4 of our series we installed Django Rest Framework to our project and exposed our first API endpoint for the Users model. In this post we are going to create endpoints for our other models and have a fairly functional API.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2019-11-21T00:00:00+02:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/building-a-carpooling-api-with-django-part-5/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Vincent Nyanga",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Vincent (Hones) Nyanga Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/img/logo.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Vincent (Hones) Nyanga
+          <span class="site-subtitle">Personal blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/year-archive/" >Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/weekly-lessons/" >Weekly Lessons</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://avatars2.githubusercontent.com/u/13013852?v=3&u=0e1bc9da031c3b0fed315dcf2869b3cc38b7e232&s=400" alt="Vincent Nyanga" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Vincent Nyanga</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Software engineer</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Johannesburg, ZA</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Building a carpool web API with Django (part 5)">
+    <meta itemprop="description" content="In part 4 of our series we installed Django Rest Framework to our project and exposed our first API endpoint for the Users model. In this post we are going to create endpoints for our other models and have a fairly functional API.">
+    <meta itemprop="datePublished" content="November 21, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Building a carpool web API with Django (part 5)
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>In <a href="/building-a-carpooling-api-with-django-part-4/">part 4</a> of our series we installed Django Rest Framework to our project and exposed our first API endpoint for the <code class="highlighter-rouge">Users</code> model. In this post we are going to create endpoints for our other models and have a fairly functional API.</p>
+
+<h2 id="update-to-code">Update To Code</h2>
+
+<p>I made some updates to the source code which I think is pretty straight forward and don’t need to be added in the post. Here’s the list of the update made and links to the source code where you can check to ensure your code the same as mine:</p>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">User</code> Model</strong> (<a href="https://github.com/vince-nyanga/KaPool/blob/41ef739fe9fe541cfdc7a62685586059ddd9392a/users/models.py">link</a>): Added <code class="highlighter-rouge">profile_pic</code> field. After adding it you need to run migrations by running the following command:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py makemigrations &amp;&amp; python manage.py migrate
+</code></pre></div>    </div>
+  </li>
+  <li><strong><code class="highlighter-rouge">CustomUserAdmin</code></strong> (<a href="https://github.com/vince-nyanga/KaPool/blob/41ef739fe9fe541cfdc7a62685586059ddd9392a/users/admin.py">link</a>): Updated <code class="highlighter-rouge">add_fieldsets</code> and <code class="highlighter-rouge">fieldsets</code>.</li>
+  <li><strong><code class="highlighter-rouge">UserSerializer</code></strong> (<a href="https://github.com/vince-nyanga/KaPool/blob/41ef739fe9fe541cfdc7a62685586059ddd9392a/users/serializers.py">link</a>): Added <code class="highlighter-rouge">profile_pic</code> to <code class="highlighter-rouge">fields</code> list.</li>
+  <li><strong><code class="highlighter-rouge">Trip</code> Model</strong> (<a href="https://github.com/vince-nyanga/KaPool/blob/41ef739fe9fe541cfdc7a62685586059ddd9392a/trips/models.py">link</a>): Added <code class="highlighter-rouge">num_seats</code> field. Again, migrate your changes to the database using the command above.</li>
+</ul>
+
+<h2 id="add-more-endpoints">Add More Endpoints</h2>
+
+<p>Now that you have made the changes to the models let’s add more endpoints to our API to give it more flesh.</p>
+
+<h3 id="places">Places</h3>
+
+<p>The <code class="highlighter-rouge">places</code> endpoint is going to expose the list of places and is going to be read-only. New places will only be added and updated in the admin interface. First, let’s add a serializer class for our model. Go to the <code class="highlighter-rouge">places/</code> directory and create a new file <code class="highlighter-rouge">serializers.py</code> and add the following code:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># places/serializers.py
+</span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Place</span>
+
+
+<span class="k">class</span> <span class="nc">PlaceSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Place</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">'id'</span><span class="p">,</span>
+            <span class="s">'name'</span><span class="p">,</span>
+        <span class="p">]</span>
+
+</code></pre></div></div>
+
+<p>We now need a <code class="highlighter-rouge">ViewSet</code> for the model so let’s go to <code class="highlighter-rouge">places/views.py</code> and add the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># places/views.py
+</span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Place</span>
+<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">PlaceSerializer</span>
+
+
+<span class="k">class</span> <span class="nc">PlaceViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ReadOnlyModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Place</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">PlaceSerializer</span>
+
+</code></pre></div></div>
+
+<p>All that’s left is to register the <code class="highlighter-rouge">ViewSet</code> to our router inside <code class="highlighter-rouge">kapool_project/api.py</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># kapool_project/api.py
+</span>
+<span class="c1">#...
+</span><span class="kn">from</span> <span class="nn">places.views</span> <span class="kn">import</span> <span class="n">PlaceViewSet</span>
+
+<span class="c1">#...
+</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">'places'</span><span class="p">,</span> <span class="n">PlaceViewSet</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>Our <code class="highlighter-rouge">places</code> endpoint is now up and running. You can run your server (<code class="highlighter-rouge">python manage.py runserver</code>), add places in the admin interface and go to <code class="highlighter-rouge">http://localhost:8000/api/v1/places/</code> to view the list of your places.</p>
+
+<h3 id="new-custom-permission">New Custom Permission</h3>
+
+<p>Before we proceed we need to add another custom permission that we will use in our <code class="highlighter-rouge">ViewSet</code>s. We want this permission to be shared by more than one package so let’s create another package called <code class="highlighter-rouge">shared</code> and add <code class="highlighter-rouge">permissions.py</code> to which we will add our global permissions:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># shared/permissions.py
+</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">permissions</span>
+
+<span class="k">class</span> <span class="nc">IsOwnerOrReadOnly</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+    <span class="s">"""
+    Gives write access only to the owner of the object.
+    """</span>
+    <span class="k">def</span> <span class="nf">has_object_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="n">permissions</span><span class="o">.</span><span class="n">SAFE_METHODS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+
+</code></pre></div></div>
+
+<p>This permission will give write access only to the owner of the object.</p>
+
+<h3 id="vehicle">Vehicle</h3>
+
+<p>Let’s now add an endpoint for our <code class="highlighter-rouge">Vehicle</code> model. Like we did with the <code class="highlighter-rouge">Place</code> model we will create a serializer and a <code class="highlighter-rouge">ViewSet</code> then register the <code class="highlighter-rouge">ViewSet</code> to our router.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># vehicles/serializers.py
+</span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Vehicle</span>
+
+<span class="k">class</span> <span class="nc">VehicleSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
+    <span class="n">owner_url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedRelatedField</span><span class="p">(</span>
+        <span class="n">source</span><span class="o">=</span><span class="s">'user'</span><span class="p">,</span>
+        <span class="n">view_name</span><span class="o">=</span><span class="s">'user-detail'</span><span class="p">,</span>
+        <span class="n">read_only</span><span class="o">=</span><span class="bp">True</span>
+    <span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Vehicle</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">'id'</span><span class="p">,</span>
+            <span class="s">'url'</span><span class="p">,</span>
+            <span class="s">'make'</span><span class="p">,</span>
+            <span class="s">'model'</span><span class="p">,</span>
+            <span class="s">'reg_number'</span><span class="p">,</span>
+            <span class="s">'image'</span><span class="p">,</span>
+            <span class="s">'owner_url'</span><span class="p">,</span>
+        <span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># vehicles/views.py
+</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">permissions</span>
+<span class="kn">from</span> <span class="nn">shared.permissions</span> <span class="kn">import</span> <span class="n">IsOwnerOrReadOnly</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Vehicle</span>
+<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">VehicleSerializer</span>
+
+
+<span class="k">class</span> <span class="nc">VehicleViewSet</span><span class="p">(</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Vehicle</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">VehicleSerializer</span>
+
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">IsOwnerOrReadOnly</span><span class="p">,</span>
+        <span class="n">permissions</span><span class="o">.</span><span class="n">IsAuthenticatedOrReadOnly</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">perform_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">):</span>
+        <span class="c1"># set user to the logged in user
+</span>        <span class="n">serializer</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now register it to the router:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># kapool_project/api.py
+</span>
+<span class="c1"># ...
+</span><span class="kn">from</span> <span class="nn">vehicles.views</span> <span class="kn">import</span> <span class="n">VehicleViewSet</span>
+<span class="c1"># ...
+</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">'vehicles'</span><span class="p">,</span> <span class="n">VehicleViewSet</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="trip">Trip</h3>
+
+<p>Lastly, let’s add an endpoint for our <code class="highlighter-rouge">Trip</code> model. Again, we are going to add a serializer and a <code class="highlighter-rouge">ViewSet</code> then register the <code class="highlighter-rouge">ViewSet</code> to the router:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># trips/serializers.py
+</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+
+<span class="kn">from</span> <span class="nn">vehicles.models</span> <span class="kn">import</span> <span class="n">Vehicle</span>
+<span class="kn">from</span> <span class="nn">vehicles.serializers</span> <span class="kn">import</span> <span class="n">VehicleSerializer</span>
+<span class="kn">from</span> <span class="nn">places.models</span> <span class="kn">import</span> <span class="n">Place</span>
+<span class="kn">from</span> <span class="nn">places.serializers</span> <span class="kn">import</span> <span class="n">PlaceSerializer</span>
+<span class="kn">from</span> <span class="nn">users.serializers</span> <span class="kn">import</span> <span class="n">UserSerializer</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Trip</span>
+
+
+<span class="k">class</span> <span class="nc">UserFilteredPrimaryKeyRelatedField</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">):</span>
+    <span class="s">"""
+    Filters `PrimaryKeyRelatedField` based on the logged in user.
+
+    See  https://stackoverflow.com/questions/27947143
+    """</span>
+
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'request'</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span>
+            <span class="n">UserFilteredPrimaryKeyRelatedField</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">queryset</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TripSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
+    <span class="n">origin_id</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span>
+        <span class="n">queryset</span><span class="o">=</span><span class="n">Place</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">all</span><span class="p">(),</span>
+        <span class="n">source</span><span class="o">=</span><span class="s">'origin'</span><span class="p">,</span>
+        <span class="n">write_only</span><span class="o">=</span><span class="bp">True</span>
+    <span class="p">)</span>
+
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">PlaceSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">destination_id</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span>
+        <span class="n">queryset</span><span class="o">=</span><span class="n">Place</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">all</span><span class="p">(),</span>
+        <span class="n">source</span><span class="o">=</span><span class="s">'destination'</span><span class="p">,</span>
+        <span class="n">write_only</span><span class="o">=</span><span class="bp">True</span>
+
+    <span class="p">)</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">PlaceSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">vehicle_id</span> <span class="o">=</span> <span class="n">UserFilteredPrimaryKeyRelatedField</span><span class="p">(</span>
+        <span class="n">queryset</span><span class="o">=</span><span class="n">Vehicle</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="s">'vehicle'</span><span class="p">,</span>
+        <span class="n">write_only</span><span class="o">=</span><span class="bp">True</span>
+    <span class="p">)</span>
+
+    <span class="n">vehicle</span> <span class="o">=</span> <span class="n">VehicleSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">driver</span> <span class="o">=</span> <span class="n">UserSerializer</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s">'user'</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">validate_trip_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                <span class="s">'Trip date cannot be in the past'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">'origin'</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="s">'destination'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                <span class="s">'Origin and destination cannot be the same'</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Trip</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">'id'</span><span class="p">,</span>
+            <span class="s">'url'</span><span class="p">,</span>
+            <span class="s">'trip_date'</span><span class="p">,</span>
+            <span class="s">'num_seats'</span><span class="p">,</span>
+            <span class="s">'origin_id'</span><span class="p">,</span>
+            <span class="s">'origin'</span><span class="p">,</span>
+            <span class="s">'destination_id'</span><span class="p">,</span>
+            <span class="s">'destination'</span><span class="p">,</span>
+            <span class="s">'vehicle_id'</span><span class="p">,</span>
+            <span class="s">'vehicle'</span><span class="p">,</span>
+            <span class="s">'driver'</span><span class="p">,</span>
+        <span class="p">]</span>
+
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># trips/views.py
+</span>
+<span class="kn">from</span> <span class="nn">rest_framework.viewsets</span> <span class="kn">import</span> <span class="n">ModelViewSet</span>
+<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">IsAuthenticatedOrReadOnly</span>
+<span class="kn">from</span> <span class="nn">shared.permissions</span> <span class="kn">import</span> <span class="n">IsOwnerOrReadOnly</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Trip</span>
+<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">TripSerializer</span>
+
+
+<span class="k">class</span> <span class="nc">TripViewSet</span><span class="p">(</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Trip</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">TripSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">IsOwnerOrReadOnly</span><span class="p">,</span>
+        <span class="n">IsAuthenticatedOrReadOnly</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">perform_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serializer</span><span class="p">):</span>
+        <span class="n">serializer</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>Register it:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># kapool_project/api.py
+</span>
+<span class="c1"># ...
+</span><span class="kn">from</span> <span class="nn">trips.views</span> <span class="kn">import</span> <span class="n">TripViewSet</span>
+<span class="c1">#...
+</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">'trips'</span><span class="p">,</span> <span class="n">TripViewSet</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You can now go to your API root – <code class="highlighter-rouge">http://localhost:8000/api/v1/</code> and see all the endpoints we have created. You can now add new vehicles and trips using the API! Our API is now faily functional but there is still a lot we still need to add to it. Thanks so much for taking your time to read.</p>
+
+<p>You can check the source code for the project on <a href="https://github.com/vince-nyanga/KaPool">GitHub</a>.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#django" class="page__taxonomy-item" rel="tag">Django</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#python" class="page__taxonomy-item" rel="tag">Python</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-11-21T00:00:00+02:00">November 21, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Building+a+carpool+web+API+with+Django+%28part+5%29%20http%3A%2F%2Flocalhost%3A4000%2Fbuilding-a-carpooling-api-with-django-part-5%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fbuilding-a-carpooling-api-with-django-part-5%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fbuilding-a-carpooling-api-with-django-part-5%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/building-a-carpooling-api-with-django-part-4/" class="pagination--pager" title="Building a carpool web API with Django (part 4)
+">Previous</a>
+    
+    
+      <a href="/building-a-carpooling-api-with-django-part-6/" class="pagination--pager" title="Building a carpool web API with Django (part 6)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/creating-uml-diagrams-made-easy/" rel="permalink">Creating UML Diagrams With Ease Using PlantText
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Unified Modeling Language (UML) has been around the software development circles for a fairly long time now. It helps provide a standardised way to visualise...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-2/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Circuit Breaker Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In the previous post we introduced Polly, a .NET resilience and transient-fault-handling library. We spoke about the retry policy that can be used to help yo...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/building-resilient-applications-with-polly-part-1/" rel="permalink">Building Resilient .NET Core Applications With Polly’s Retry Policy
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this age of Service Oriented Architecture (SOA) where small microservices within a system communicate with each other using various protocols, typically o...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/facial-recognition-with-kairos/" rel="permalink">Facial Recognition In .NET With Kairos
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A little over 2 years ago I worked on a project that involved facial recognition. Even though I eventually used Python for the project, I initially wanted to...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://www.linkedin.com/in/vincentnyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://github.com/vince-nyanga/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Vincent Nyanga.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
