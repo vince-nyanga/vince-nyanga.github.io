@@ -6,7 +6,7 @@ header:
   overlay_image: /images/code.webp
   overlay_filter: 0.5
   caption: "Photo credit: [Markus Spiske](https://unsplash.com/@markusspiske?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)"
-excerpt: "An introduction to Terraform"
+excerpt: "An introduction to Terraform - providers and resources"
 ---
 
 Until just a few months ago I had never heard of Terraform, let alone the term `Infrastructure As Code` (I'm a bit ashamed but it is what it is). That, however, is not the case anymore as I now at least know these two and have a rough idea of what they are. For the past few weeks I've been learning about infrastructure as code and Terraform in particular. I've been taking notes in the process and in this post I will share these notes with my fellow novices. If you are not a novice like me when it comes to Terraform this post is not for you I'm afraid. First, let's talk about infrastructure as code.
