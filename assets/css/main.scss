@@ -6,3 +6,11 @@
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
+
+.site-title {
+  color: #1893c8 !important;
+}
+
+.site-subtitle {
+  color: #222831 !important;
+}
