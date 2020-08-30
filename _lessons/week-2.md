@@ -1,5 +1,5 @@
 ---
-title: "Week 2: Aug 8 2020"
+title: "Weekly Lessons - Episode 2"
 date: 2020-08-08
 ---
 
