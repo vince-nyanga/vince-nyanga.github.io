@@ -37,5 +37,8 @@
       "type": "image/png",
       "density": "4.0"
     }
-  ]
+  ],
+  "theme_color": "#1893C8",
+  "display": "standalone",
+  "orientation": "natural"
 }
