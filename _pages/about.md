@@ -7,6 +7,8 @@ I'm a software developer based in Johannesburg, South Africa, who enjoys working
 
 I believe in being a solid software developer first before specialising in different technologies. This foundation of software development principles gives me the ability to easily work with different technologies and programming languages.
 
+**Note**: The views expressed in this blog are mine alone and do not reflect the views of my employer.
+
 ## Projects
 
 Whenever I get time I work on personal projects to try and learn something new and hone my skills as a software developer. Even though most of the projects don't see the light of day, I have a few that are live and doing relatively well out there. Below is a list of those projects were lucky enough to see the light of day.
