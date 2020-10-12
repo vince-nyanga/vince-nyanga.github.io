@@ -6,6 +6,8 @@ tags: [Flutter, Mobile]
 
 In the [previous post]({{ site.baseurl }}/state-management-in-flutter-bloc-pattern/) we introduced the `BLoC` pattern as one of the state management solutions in Flutter. In this post we are going to put that theory into practice by building a simple authentication flow that utilises the pattern. This is going to be a simple Flutter app that has three screens -- a splash screen, a login screen and a home screen.
 
+**Update: 12/10/2020:** Updated to `flutter_bloc: ^6.0.6`
+
 ## App Overview
 
 Before we get into the code let us get a brief overview of how the app is going to behave. This is how the app is going to behave:
@@ -22,8 +24,8 @@ I am assuming you have Flutter installed on your machine and you know how to cre
 # pubsec.yaml
 # ...
 dependencies:
-  bloc: ^3.0.0
-  flutter_bloc: ^3.1.0
+  bloc: ^6.0.3
+  flutter_bloc: ^6.0.6
   equatable: ^1.0.2
 # ...
 ```
@@ -129,10 +131,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   AuthenticationBloc(AuthenticationService authenticationService)
       : assert(authenticationService != null),
-        _authenticationService = authenticationService;
-
-  @override
-  AuthenticationState get initialState => AuthenticationInitial();
+        _authenticationService = authenticationService,
+        super(AuthenticationInitial());
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
@@ -150,7 +150,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   Stream<AuthenticationState> _mapAppLoadedToState(AppLoaded event) async* {
-    yield AuthenticationLoading(); // to display splash screen
+    yield AuthenticationLoading();
     try {
       await Future.delayed(Duration(milliseconds: 500)); // a simulated delay
       final currentUser = await _authenticationService.getCurrentUser();
@@ -174,6 +174,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     yield AuthenticationNotAuthenticated();
   }
 }
+
 
 ```
 
@@ -259,10 +260,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       : assert(authenticationBloc != null),
         assert(authenticationService != null),
         _authenticationBloc = authenticationBloc,
-        _authenticationService = authenticationService;
-
-  @override
-  LoginState get initialState => LoginInitial();
+        _authenticationService = authenticationService,
+        super(LoginInitial());
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
@@ -275,15 +274,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginLoading();
     try {
       final user = await _authenticationService.signInWithEmailAndPassword(event.email, event.password);
-      if (user != null){
-        // push new authentication event
+      if (user != null) {
         _authenticationBloc.add(UserLoggedIn(user: user));
         yield LoginSuccess();
         yield LoginInitial();
-      }else {
+      } else {
         yield LoginFailure(error: 'Something very weird just happened');
       }
-    } on AuthenticationException catch(e){
+    } on AuthenticationException catch (e) {
       yield LoginFailure(error: e.message);
     } catch (err) {
       yield LoginFailure(error: err.message ?? 'An unknown error occured');
