@@ -18,13 +18,13 @@ Here is how you would define and use custom themes:
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Theme Demo',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system, // ThemeMode.system is the default. added here as an example
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(title: 'Flutter Theme Demo'),
+      home: ThemePage(),
     );
   }
 
