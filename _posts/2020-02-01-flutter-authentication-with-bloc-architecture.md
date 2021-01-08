@@ -626,3 +626,7 @@ We are done! You may run your app it should behave like the GIF below. Like I sa
 <figcaption>App showing authentication flow built using the BLoC pattern</figcaption>
 </figure>
 Once again, thank you so much for taking your time to read.
+
+## Further Reading
+
+You may also want to check out this [article]({{ site.baseurl}}/flutter-authentication-flow-with-getx) where I show how to build an authentication flow using the GetX library.
