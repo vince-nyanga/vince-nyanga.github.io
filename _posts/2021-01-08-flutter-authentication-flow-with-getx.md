@@ -16,9 +16,9 @@ In this post I will make use of `GetX`'s state management and dependency injecti
 
 Create a new flutter app and add the following libraries:
 
-```yarn
+```
 get: ^3.24.0
-equatable: ^1.0.2 # this one has nothing to do with GetX
+equatable: ^1.0.2
 ```
 
 Once the packages have been installed create a directory called `features/` where we are going to add all our features for the project. We will put everything that relates to a feature (or module) inside its own feature folder. This helps with organization in my opinion. We will start off with the authentication feature.
