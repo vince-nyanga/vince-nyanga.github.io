@@ -315,12 +315,14 @@ As you can see `MyApp` extends `GetWidget<AuthenticationController>`. This widge
 
 Like in the login page, we are using `Obx` for our `home` property so we can listen to changes on the authentication state and display the respective widgets.
 
-That's it. A simple authentication flow using `GetX` :blush: . The complete source code is available on [GitHub](https://github.com/vince-nyanga/flutter_getx_authentication) if you want to check it out. Here is how it looks:
+That's it. A simple authentication flow using `GetX`. The complete source code is available on [GitHub](https://github.com/vince-nyanga/flutter_getx_authentication) if you want to check it out. Here is how it looks:
 
 <figure class="third center">
 <img src="{{ site.baseurl }}/images/flutter/getx/getx.gif" alt="Authentication flow with GetX">
 <figcaption>Authentication flow with GetX</figcaption>
 </figure>
+
+Thanks so much for taking time to read. I hope you have learned something :blush: .
 
 ## Further Reading
 
