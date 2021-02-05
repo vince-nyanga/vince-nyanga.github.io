@@ -12,7 +12,7 @@ In software development one is presented with two options: specialise in one par
 
 Specialists in a particular area have many advantages. The word says it all really -- you are very good at what you do and you are in the top 10% (just thumb sucking) in that area. This means you are likely to get called upon when an organisation needs answers to a problem for which you have expert knowledge. When working in a team you are the go to guy in that area. Pretty cool, right? Usually organisations are willing to pay you very well because you offer a service that others can not. This also opens up opportunities to become a consultant and have everyone run to you for help when they get stuck.
 
-The other side of the coin also needs to be looked at. We all know that technology is changing at the speed of light nowadays. If you specialise in one technology and you wake up tomorrow and find that it's deprecated then your career is in peril. No one wants to be the top dog today and tomorrow become the opposite (is it bottom dog? :laugh:) so you need to be careful and keep an eye on the direction technology is moving.
+The other side of the coin also needs to be looked at. We all know that technology is changing at the speed of light nowadays. If you specialise in one technology and you wake up tomorrow and find that it's deprecated then your career is in peril. No one wants to be the top dog today and tomorrow become the opposite (is it bottom dog? :laughing:) so you need to be careful and keep an eye on the direction technology is moving.
 
 ## Case For The Generalist
 
