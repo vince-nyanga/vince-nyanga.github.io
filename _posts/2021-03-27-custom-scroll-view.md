@@ -7,7 +7,7 @@ tags: [Flutter, Widgets]
 Have you ever wondered how nice scrolling effects like the collapsible navigation bar can be achieved in Flutter? Well, look no further -- `CustomScrollView` is your answer. In this very short post I am going to show you how you can create a collapsible `Cupertino` navigation bar using the `CustomScrollView` widget. Here is the end result:
 
 <figure class="third center">
-<img src="{{ site.baseurl }}/images/flutter/scroll/custom-scroll.gif" alt="Custom scroll view">
+<img src="{{ site.baseurl }}/images/flutter/custom-scroll.gif" alt="Custom scroll view">
 <figcaption>Figure 1: Collapsible navigation bar</figcaption>
 </figure>
 
@@ -86,4 +86,4 @@ class MyApp extends StatelessWidget {
 
 The same effect can be achieved using `Material` widgets.
 
-Like always, thank you so much for taking your time to read :smile:.
+Like always, thank you so much for taking your time to read :smile:. Stay safe and Gob bless.
