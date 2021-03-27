@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
 }
 ```
 
-I am using `Cupertino` widgets instead of `Material` widgets for a change :smile:. Our `CustomScrollView` contains a [CupertinoSliverNavigationBar](https://api.flutter.dev/flutter/cupertino/CupertinoSliverNavigationBar-class.html) -- an iOS-styled navigation bar with iOS-11-style large titles using slivers and a [SliverList](https://api.flutter.dev/flutter/widgets/SliverList-class.html). As you scroll up the list the navigation bar will shrink and the title size changes (see Figure 1 above). That's it :smile:. A collapsible navigation bar using `CustomScrollView`.
+I am using `Cupertino` widgets instead of `Material` widgets for a change :smile:. Our `CustomScrollView` contains a [CupertinoSliverNavigationBar](https://api.flutter.dev/flutter/cupertino/CupertinoSliverNavigationBar-class.html) -- an iOS-styled navigation bar with iOS-11-style large titles using slivers and a [SliverList](https://api.flutter.dev/flutter/widgets/SliverList-class.html). As you scroll up the list the navigation bar will shrink and the title size changes (see Figure 1 above). That's it! A collapsible navigation bar using `CustomScrollView`.
 
 Now to put everything together add this to your `main.dart`
 
@@ -86,4 +86,4 @@ class MyApp extends StatelessWidget {
 
 The same effect can be achieved using `Material` widgets.
 
-Like always, thank you so much for taking your time to read :smile:. Stay safe and Gob bless.
+Like always, thank you so much for taking your time to read. Stay safe and God bless.
