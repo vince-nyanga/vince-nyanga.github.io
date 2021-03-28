@@ -37,7 +37,7 @@ That is all the setup you need for iOS.
 
 ## Android Setup
 
-First, we need to go and add a permission that will allow us to user fingerprint authentication. Go to your `AndroidManifest.xml` and add the following:
+First, we need to go and add a permission that will allow us to use fingerprint authentication. Go to your `AndroidManifest.xml` and add the following:
 
 ```xml
 <!--android/app/src/main/AndroidManifest.xml-->
@@ -178,7 +178,7 @@ class AuthPage extends GetWidget<AuthController> {
 }
 ```
 
-And to put everything together, go to your `main.dart` and the following code:
+And to put everything together, go to your `main.dart` and add the following code:
 
 ```dart
 // lib/main.dart
@@ -217,7 +217,7 @@ class MyApp extends GetWidget<AuthController> {
 }
 ```
 
-And we are done and here is the end result:
+We are done and here is the end result:
 
 <figure class="third center">
 <img src="{{ site.baseurl }}/images/flutter/local-auth.gif" alt="Biometric authentication">
