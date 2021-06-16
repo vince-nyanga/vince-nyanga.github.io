@@ -34,7 +34,7 @@ What should I do then? It turns out there are battery optimisation settings that
 
 One of the manufacturers apparently has a whitelist of apps that are allowed to run in the background without problems -- The Immortals. How do I get my app into the list? I have no idea.
 
-This whole situation is frustrating the life out of me. I did everything (at least I think I so) the Android documentation says I should do. However, some manufacturers seem to ignore the contract and now I'm faced with an app that's not behaving as it should on certain devices and I have no way of programmatically getting around the problem except for me to nicely ask my users to go change their settings.
+This whole situation is frustrating the life out of me. I did everything (at least I think so) the Android documentation says I should do. However, some manufacturers seem to ignore the contract and now I'm faced with an app that's not behaving as it should on certain devices and I have no way of programmatically getting around the problem except for me to nicely ask my users to go change their settings.
 
 I don't have any words left except to ask them **How dare you kill my foreground service?** when the documentation says it should not be killed that easily.
 
