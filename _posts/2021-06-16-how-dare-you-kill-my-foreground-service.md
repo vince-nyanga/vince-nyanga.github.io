@@ -4,6 +4,8 @@ date: 2021-06-16
 tags: [Android]
 ---
 
+_Edit -- 22 June 2021: After more tests we discovered that the problem devices worked fine when the phone was charging which means we're affected by the [Doze Mode](https://developer.android.com/training/monitoring-device-state/doze-standby). This still leaves me with more questions than answers since nothing seems to work on these devices including changing battery optimisation settings. I have since decided to ping the device from the backend using FCM whenever I discover that I'm no longer getting location from it._
+
 Allow me to express my frustration about a challenge that I'm facing with Android, well some Android device manufacturers actually. I have been consumed by this problem for the past couple of months and no matter what I try I don't seem to be cracking it. In this article I'm going to talk about how certain device manufacturers are allegedly not playing by the rules or have special rules of their own that stock Android doesn't have, making it incredibly hard for developers to be certain that what they write will work on all devices out there.
 
 Let me summarise the problem I'm facing. In my app I want to be able to get the user's location at a fairly regular interval. The location should keep coming whether the app is in the foreground or background. This is a classic case where a [foreground Service](https://developer.android.com/guide/components/foreground-services) shines.
