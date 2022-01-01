@@ -1,5 +1,5 @@
 ---
-title: "Linked List: Basic Implementation"
+title: "LinkedList: Basic Implementation"
 excerpt: "Basic implementation of a doubly-linked list"
 header:
   overlay_image: /images/code.jpeg
