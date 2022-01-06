@@ -11,7 +11,7 @@ In the [previous post]({{ site.baseurl}}/linkedlist-traverse) we spoke about how
 
 ## FindFirst
 
-In this method we are going to start at the head on the list and move forward until we find the first item that matches our criteria. The best case scenario is when the head matches the criteria which means we will have **_O(1)_** complexity. However, **_O(n)_** should be the most common complexity. Here's the implementation:
+In this method we are going to start at the head on the list and move forward until we find the first item that matches our criteria. The best case scenario is when the head matches the criteria which means we will have $$ O(1) $$ complexity. However, $$ O(n) $$ should be the most common complexity. Here's the implementation:
 
 ```csharp
 public Node<T> FindFirst(T value)
@@ -33,9 +33,9 @@ public Node<T> FindFirst(T value)
 
 ## FindLast
 
-To find the last item that matches our search criteria, we start at the tail and then move backwards until we find the first item that matches our criteria. Like `FindFirst()`, the best case scenario is when the tail matches our criteria, of which the time complexity is only **_O(1)_**. The general complexity for this algorithm is **_O(n)_**.
+To find the last item that matches our search criteria, we start at the tail and then move backwards until we find the first item that matches our criteria. Like `FindFirst()`, the best case scenario is when the tail matches our criteria, of which the time complexity is only $$ O(1) $$. The general complexity for this algorithm is $$ O(n) $$.
 
-The other way of going about it is to start at the head and move forward until we find the last item that matches our criteria. This is not very efficient since we will miss the opportunity to get what we want with **_O(1)_** time complexity if the tail matches our criteria. Doing it this way will have a guaranteed **_O(n)_** complexity. I have to admit, that's how I had initially implemented it until I realised while writing this post that there is actually a more efficient way of doing it. Here's the implementation:
+The other way of going about it is to start at the head and move forward until we find the last item that matches our criteria. This is not very efficient since we will miss the opportunity to get what we want with $$ O(1) $$ time complexity if the tail matches our criteria. Doing it this way will have a guaranteed $$ O(n) $$ complexity. I have to admit, that's how I had initially implemented it until I realised while writing this post that there is actually a more efficient way of doing it. Here's the implementation:
 
 ```csharp
 public Node<T> FindLast(T value)

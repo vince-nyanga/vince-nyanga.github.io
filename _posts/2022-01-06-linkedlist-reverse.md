@@ -11,7 +11,7 @@ In the [previous post]({{ site.baseurl}}/linkedlist-insert-sorted) we spoke abou
 
 ## Solution
 
-Reversing a doubly-linked list is simply a matter of swapping the `Next` and `Previous` references for all the nodes. Time complexity for the algorithm is **_O(n)_** and space complexity of **_O(1)_**. Here's the code:
+Reversing a doubly-linked list is simply a matter of swapping the `Next` and `Previous` references for all the nodes. Time complexity for the algorithm is $$ O(n) $$ and space complexity of $$ O(1) $$. Here's the code:
 
 ```csharp
 public void Reverse()
@@ -35,6 +35,6 @@ public void Reverse()
 }
 ```
 
-Another approach is to swap around the values and leave the references unchanged. To achieve this we go through the linked list pushing the values into a stack, and then come back again popping the values from the stack and update the nodes' values. This is not an efficient way of doing it since it has both time and space complexity of **_O(n)_**.
+Another approach is to swap around the values and leave the references unchanged. To achieve this we go through the linked list pushing the values into a stack, and then come back again popping the values from the stack and update the nodes' values. This is not an efficient way of doing it since it has both time and space complexity of $$ O(n) $$.
 
 In the next post we are going to look at removing duplicates from a doubly-linked list. Check out [GitHub](https://github.com/vince-nyanga/data-structures) for the complete code. Till next time, thanks for taking your time to read.

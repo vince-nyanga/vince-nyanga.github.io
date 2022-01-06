@@ -20,7 +20,7 @@ public class HDLinkedList<T> where T: IComparable
 }
 ```
 
-Now that our generic property implements `IComparable`, let's get started on implementing the algorithm to insert a new node while keeping the list sorted. If the list is empty then we just add the item and the list is already sorted (list containing one element is sorted). If the list is not empty then we check if the head's value is greater than the new value. If it is then `AddFirst()` otherwise keep moving until you reach a node whose value is greater than the new value and add before it. The time complexity of this algorithm is **_O(n)_** unless if the list is empty or the head is greater than the new value where the complexity will be **_O(1)_**. Here's the code:
+Now that our generic property implements `IComparable`, let's get started on implementing the algorithm to insert a new node while keeping the list sorted. If the list is empty then we just add the item and the list is already sorted (list containing one element is sorted). If the list is not empty then we check if the head's value is greater than the new value. If it is then `AddFirst()` otherwise keep moving until you reach a node whose value is greater than the new value and add before it. The time complexity of this algorithm is $$ O(n) $$ unless if the list is empty or the head is greater than the new value where the complexity will be $$ O(1) $$. Here's the code:
 
 ```csharp
 public void InsertSorted(T value)

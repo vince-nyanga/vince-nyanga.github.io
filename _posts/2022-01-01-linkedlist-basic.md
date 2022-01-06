@@ -79,6 +79,6 @@ public class HDLinkedList<T>
 }
 ```
 
-As you may have noticed, we are tracking the reference to the first and last node in the list. Tracking the reference for the last node gives us the ability to add a new node to the back of the list with only **_O(1)_** time complexity. Failure to do that would incur **_O(n)_** cost since we would need to traverse the entire list to find the last node.
+As you may have noticed, we are tracking the reference to the first and last node in the list. Tracking the reference for the last node gives us the ability to add a new node to the back of the list with only $$ O(1) $$ time complexity. Failure to do that would incur $$ O(n) $$ cost since we would need to traverse the entire list to find the last node.
 
 That's it for today. I want to keep these posts as succinct as possible for my sake and yours. In the next post we will add one or two things to our linked list implementation. Thanks for taking your time to read and once again, Happy New Year.

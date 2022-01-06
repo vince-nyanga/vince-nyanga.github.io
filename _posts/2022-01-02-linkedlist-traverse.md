@@ -11,7 +11,7 @@ In the [previous post]({{ site.baseurl}}/linkedlist-basic) we implemented a basi
 
 ## Traversing Going Forward
 
-When traversing a doubly-linked list going forward we start at the head and then move to the next node until there is no next node. This has a time complexity of **_O(n)_**.
+When traversing a doubly-linked list going forward we start at the head and then move to the next node until there is no next node. This has a time complexity of $$ O(n) $$.
 
 ```csharp
 public void ListItems()
@@ -27,7 +27,7 @@ public void ListItems()
 
 ## Traversing Going Backwards
 
-To traverse a doubly-linked list going backwards we start at the tail and move to the previous node till we reach the head. Tracking the reference to the tail node makes our lives easy since we already have the starting point. This operation also has **_O(n)_** time complexity. However, had we not tracked the reference to the last node we would incur double that cost because we would have to find the last node first, before traversing going backwards.
+To traverse a doubly-linked list going backwards we start at the tail and move to the previous node till we reach the head. Tracking the reference to the tail node makes our lives easy since we already have the starting point. This operation also has $$ O(n) $$ time complexity. However, had we not tracked the reference to the last node we would incur double that cost because we would have to find the last node first, before traversing going backwards.
 
 ```csharp
 public void ListItemsReverse()
