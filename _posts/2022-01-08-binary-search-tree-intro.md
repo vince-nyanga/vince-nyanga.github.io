@@ -19,7 +19,7 @@ Below is an image of a binary search tree. As you can see, all left subtree node
 <figcaption>Figure 1: Binary Search Tree</figcaption>
 </figure>
 
-Binary search trees are very useful in situations where one needs fast lookup, addition or removal of data items. This is because the time complexity for most (all that I can think of except for traversing the tree) BST operations is $$ O(log_2(n)) $$ or $$ O(log(n)) $$ for simplicity. This is really good :slightly_smiling_face:.
+Binary search trees are very useful in situations where one needs fast lookup, addition or removal of data items. This is because the time complexity for most (all that I can think of except for traversing the tree) BST operations is $$ O(\log_2(n)) $$ or $$ O(\log(n)) $$ for simplicity. This is really good :slightly_smiling_face:.
 
 ## Balanced vs Unbalanced
 
@@ -57,7 +57,7 @@ public class HDBinarySearchTree<T> where T : IComparable
 
 ## Inserting Items
 
-We are going to look at how to insert an item into a binary search tree. Remember the characteristics of a binary search tree mentioned above -- left subtree should be less (or equal) than the parent node and the right subtree should be greater than the parent node. Firstly, we check if the root node is `null`. If it is, then we instantiate it. If it exists then we go through the tree checking if the new value is greater or less than the current node's value. If it's less than or equal we move to the left subtree, otherwise we move to the right subtree until we reach the end (leaf node), then set the `Left` or `Right` reference of the leaf node depending on whether or not it's value is greater or less than the new value. Time complexity of this algorithm is $$ O(log(n)) $$ (if the tree is as balanced as possible) while the space complexity is $$ O(1) $$. Here is the code.
+We are going to look at how to insert an item into a binary search tree. Remember the characteristics of a binary search tree mentioned above -- left subtree should be less (or equal) than the parent node and the right subtree should be greater than the parent node. Firstly, we check if the root node is `null`. If it is, then we instantiate it. If it exists then we go through the tree checking if the new value is greater or less than the current node's value. If it's less than or equal we move to the left subtree, otherwise we move to the right subtree until we reach the end (leaf node), then set the `Left` or `Right` reference of the leaf node depending on whether or not it's value is greater or less than the new value. Time complexity of this algorithm is $$ O(\log(n)) $$ (if the tree is as balanced as possible) while the space complexity is $$ O(1) $$. Here is the code.
 
 ```csharp
 public void Insert(T value)
