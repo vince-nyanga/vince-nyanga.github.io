@@ -11,7 +11,7 @@ In the [previous post]({{ site.baseurl}}/linkedlist-reverse) we spoke about reve
 
 ## Solution
 
-We are going to make use of another data structure in order to achieve our objective. We are going to use a dictionary (hash map in Java). Basically what we are going to do is iterate through the nodes in our linked list, checking if the item exists in our dictionary. If it exists, we remove it from the list by changing the `Next` reference of the node's `Previous` as well as the `Previous` reference of the node's `Next` node. The time complexity of this algorithm is $$ O(n) $$ and the space complexity is also $$ O(n) $$. Here is the code:
+We are going to make use of another data structure in order to achieve our objective. We are going to use a dictionary (hash map in Java). Basically what we are going to do is iterate through the nodes in our linked list, checking if the item exists in our dictionary. If it exists, we remove it from the list by changing the `Next` reference of the node's `Previous` as well as the `Previous` reference of the node's `Next` node. The time complexity of this algorithm is $$ O(n) $$ and the auxillary space complexity is also $$ O(n) $$. Here is the code:
 
 ```csharp
 public void RemoveDuplicates()
