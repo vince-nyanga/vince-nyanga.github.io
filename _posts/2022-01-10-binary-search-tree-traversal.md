@@ -80,6 +80,6 @@ public void PostOrderTraversal(TreeNode<T> node, StringBuilder stringBuilder)
 }
 ```
 
-Time complexity for these algorithms is $$ O(n)$$ while auxillary space complexity is also $$ O(h)$$, where $$ h $$ is the height of the tree. If the tree is balanced then $$ h = \log(n) $$ so the best case scenario of auxillary space complexity is $$ O(\log(n)) $$. A skewed tree, which is worst case scenario will have auxillary space complexity of $$ O(n) $$.
+Time complexity for these algorithms is $$ O(n)$$ while auxiliary space complexity is also $$ O(h)$$, where $$ h $$ is the height of the tree. If the tree is balanced then $$ h = \log(n) $$ so the best case scenario of auxiliary space complexity is $$ O(\log(n)) $$. A skewed tree, which is worst case scenario will have auxiliary space  complexity of $$ O(n) $$.
 
 In this post we spoke about how we can traverse a binary search tree using in-order, pre-order as well as post-order traversal. All code for this post is available on [GitHub](https://github.com/vince-nyanga/data-structures). Feel free to leave a comment if you have a question and/or suggestion. Thanks so much for reading.
