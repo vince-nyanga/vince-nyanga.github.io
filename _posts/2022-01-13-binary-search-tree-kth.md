@@ -1,6 +1,6 @@
 ---
-title: "Lowest Kth Item In A Binary Search Tree"
-excerpt: "In this post we are going to talk about how to find the lowest kth item in a binary search tree."
+title: "Finding The Kth Smallest Item In A Binary Search Tree"
+excerpt: "In this post we are going to talk about how to find the kth smallest item in a binary search tree."
 header:
   overlay_image: /images/code.jpeg
 date: 2022-01-13
