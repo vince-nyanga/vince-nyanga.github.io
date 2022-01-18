@@ -13,7 +13,7 @@ In this post we are going to start a mini series on binary heaps. We will start 
 
 A binary heap is a semi-sorted data structure that takes the form of a binary tree and has the following features:
 
-- It is a complete binary tree, that is, all levels of the tree are filled expect maybe for the last level on the right subtree. This is because a binary heap is filled from left to right.
+- It is a complete binary tree, that is, all levels of the tree are filled expect maybe for the last level.
 - A parent node is either greater than or equal to or less that or equal to its children.
 
 ## Min Heap Vs Max Heap
