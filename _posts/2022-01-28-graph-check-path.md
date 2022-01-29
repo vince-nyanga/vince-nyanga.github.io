@@ -7,7 +7,7 @@ date: 2022-01-28
 tags: [Data Structures, Graph]
 ---
 
-In the [previous post]({{ site.baseurl}}/graph-traversal) we spoke about two different ways to traverse a graph. In this post we are going to talk about how we can check if there is a path between two vertices in a graph.
+In the [previous post]({{ site.baseurl}}/graph-traversal) we spoke about two different ways to traverse a graph. In this post we are going to solve a [LeetCode](https://leetcode.com/problems/find-if-path-exists-in-graph/) problem (slightly edited) that requires us to check if a path exists between two vertices in a graph.
 
 ## Code
 
@@ -45,4 +45,4 @@ public bool HasPath(T source, T destination)
 }
 ```
 
-In this post we implemented an algorithm that checks if a path exists between two vertices in a graph. All the code is available on [GitHub](https://github.com/vince-nyanga/data-structures) if you want to check it out. Thanks for reading and don't hesitate to leave a comment below if you have a question or suggestion.
+In this post we implemented an algorithm that checks if a path exists between two vertices in a graph. All the code is available on [GitHub](https://github.com/vince-nyanga/data-structures) if you want to check it. Thanks for reading and don't hesitate to leave a comment below if you have a question or suggestion.
