@@ -1,6 +1,6 @@
 ---
 title: "Customer Identity And Access Management Using Azure AD B2C - Custom Attributes"
-excerpt: "In this post we are going to talk about how to use custom attributes in Azure AD B2C.."
+excerpt: "In this post we are going to talk about how to use custom attributes in Azure AD B2C..."
 header:
   overlay_image: /images/code.jpeg
 date: 2022-05-15
