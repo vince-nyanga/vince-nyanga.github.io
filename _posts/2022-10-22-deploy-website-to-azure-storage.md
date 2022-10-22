@@ -7,7 +7,7 @@ date: 2022-10-22
 tags: [Azure, GitHub Actions, CI/CD]
 ---
 
-In this very short post I am going to talk about how to deploy an Angular website to an Azure storage account using GitHub actions. A few weeks ago I needed to create a CI/CD pipeline for my personal project. This post is a compilation of what I did to achieve that to save you time in case you have a similar problem.
+In this very short post I am going to talk about how to deploy an Angular website to an Azure storage account using GitHub actions. A few weeks ago I needed to create a CI/CD pipeline for my personal project. This post is a compilation of what I did to achieve that. I hope this will help to save you time in case you have a similar problem.
 
 I am going to assume that you are already familiar with how to host a website in an Azure storage account. If you don't know how, please check out this [link](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website). Let's get started.
 
