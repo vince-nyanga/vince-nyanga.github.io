@@ -63,8 +63,9 @@ staticman:
 reCaptcha:
   siteKey:
   secret:
-atom_feed:
+feed:
   path: # blank (default) uses feed.xml
+  tags: true
 search: true
 search_full_content: # true, false (default)
 search_provider: # lunr (default), algolia, google
@@ -118,6 +119,9 @@ author:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/vince-nyanga/"
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter"
+      url: "https://twitter.com/vincent_nyanga"
 
 # Site Footer
 footer:
@@ -128,6 +132,9 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/vince-nyanga/"
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter"
+      url: "https://twitter.com/vincent_nyanga"
 
 # Reading Files
 include:
