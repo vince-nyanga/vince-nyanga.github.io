@@ -1,8 +1,6 @@
 # main links
 main:
-  - title: "Posts"
+  - title: "Archive"
     url: /year-archive/
-  - title: "Weekly Lessons"
-    url: /weekly-lessons/
   - title: "About"
     url: /about/
