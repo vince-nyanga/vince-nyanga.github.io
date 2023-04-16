@@ -9,7 +9,7 @@ This is the first post in a series: [Azure Functions 101]({{ site.baseurl}}/seri
 
 - Part 1: What Is Azure Functions (this post)
 - Part 2: Anatomy of Azure Functions (coming soon)
-- Part 3: Creating and deploying Azure Function resources using Bicep and GitHub Actions (coming soon)
+- Part 3: Deploying Azure Function Resources Using Bicep and GitHub Actions (coming soon)
 - Part 4: Creating Azure Functions using the Azure Functions Core Tools (coming soon)
 - Part 5: Testing Azure Functions (coming soon)
 - Part 6: Deploying changes to Azure Functions code using GitHub Actions (coming soon)
