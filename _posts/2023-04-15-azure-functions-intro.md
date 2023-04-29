@@ -11,8 +11,7 @@ This is the first post in a series: [Azure Functions 101]({{ site.baseurl}}/seri
 - Part 2: Anatomy of Azure Functions (coming soon)
 - Part 3: Deploying Azure Function Resources Using Bicep and GitHub Actions (coming soon)
 - Part 4: Creating Azure Functions using the Azure Functions Core Tools (coming soon)
-- Part 5: Testing Azure Functions (coming soon)
-- Part 6: Deploying changes to Azure Functions code using GitHub Actions (coming soon)
+- Part 5: Deploying changes to Azure Functions code using GitHub Actions (coming soon)
 
 In this post, I will be introducing Azure Functions, its use cases, benefits, limitations, and pricing. I will also compare Azure Functions with other serverless offerings, such as Azure Logic Apps and Azure Container Apps.
 
