@@ -11,7 +11,7 @@ This is the second post in a series: [Azure Functions 101]({{ site.baseurl}}/ser
 - Part 2: Anatomy of Azure Functions (this post)
 - Part 3: Deploying Azure Function Resources Using Bicep and GitHub Actions (coming soon)
 - Part 4: Creating Azure Functions using the Azure Functions Core Tools (coming soon)
-- Part 5: Deploying changes to Azure Functions code using GitHub Actions (coming soon)
+- Part 5: Publishing Azure Functions Using GitHub Actions (coming soon)
 
 In the [previous article]({{ site.baseurl}}/azure-functions-intro), I introduced Azure Functions -- its use cases, benefits, and limitations. In this post I will be describing the anatomy of Azure Functions.
 

@@ -11,7 +11,7 @@ This is the third post in a series: [Azure Functions 101]({{ site.baseurl}}/seri
 - Part 2: [Anatomy of Azure Functions]({{ site.baseurl}}/azure-functions-anatomy)
 - Part 3: Deploying Azure Function Resources Using Bicep and GitHub Actions (this post)
 - Part 4: Creating Azure Functions using the Azure Functions Core Tools (coming soon)
-- Part 5: Deploying changes to Azure Functions code using GitHub Actions (coming soon)
+- Part 5: Publishing Azure Functions Using GitHub Actions (coming soon)
 
 In this post, I will show you how to deploy Azure Function resources using [Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep) and [GitHub Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions). We will deploy the following Azure resources:
 

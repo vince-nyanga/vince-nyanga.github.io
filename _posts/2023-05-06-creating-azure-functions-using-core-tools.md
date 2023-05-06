@@ -11,7 +11,7 @@ This is the fourth post in a series: [Azure Functions 101]({{ site.baseurl}}/ser
 - Part 2: [Anatomy of Azure Functions]({{ site.baseurl}}/azure-functions-anatomy)
 - Part 3: [Deploying Azure Function Resources Using Bicep and GitHub Actions]({{ site.baseurl}}/deploy-azure-function-resources)
 - Part 4: Creating Azure Functions using the Azure Functions Core Tools (this post)
-- Part 5: Deploying changes to Azure Functions code using GitHub Actions (coming soon)
+- Part 5: Publishing Azure Functions Using GitHub Actions (coming soon)
 
 In this post I am going to show you how you can create and run Azure Functions using the [Azure Function Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local). I am using the Azure Functions Core Tools version 4.0.4736 on a Mac. You can find the instructions to download the Azure Functions Core Tools on your specific OS [here](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local). Let's get started!
 
