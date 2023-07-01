@@ -1,5 +1,5 @@
 ---
-title: "Choose the Best Azure Messaging Service for Your Application"
+title: "Choosing The Best Azure Messaging Service For Your Application"
 excerpt: "In this post, I will introduce some of the messaging services available in Azure."
 date: 2023-07-01
 tags: [Azure, Messaging]
