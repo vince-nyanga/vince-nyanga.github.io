@@ -4,7 +4,7 @@ date: 2020-03-23
 tags: [C#, ASP.NET Core]
 ---
 
-In the [previous post]({{ site.baseurl}}/identity-server-part-2) we implemented a protected REST API and a console application that consumed the API. The console application made use of an access token issued by our identity server to authorize its requests to the API. In this post we are going to add more functionality to our indentity server. We are going to add support for users to login with their usernames and passwords. Let's get started.
+In the [previous post]({{ site.baseurl}}/identity-server-part-2) we implemented a protected REST API and a console application that consumed the API. The console application made use of an access token issued by our identity server to authorize its requests to the API. In this post we are going to add more functionality to our identity server. We are going to add support for users to login with their usernames and passwords. Let's get started.
 
 ## Install Required Packages
 
