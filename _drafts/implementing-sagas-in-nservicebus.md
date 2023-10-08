@@ -7,7 +7,7 @@ header:
 tags: [NServiceBus, Messaging, Microservices, Saga]
 ---
 
-A saga represents a high-level business process that comprises of several low-level requests, each of which updates data within a single service. These requests may take a long time to run and may span multiple microservices. A saga acts as an orchestrator for such requests, ensuring that all they are performed in a given sequence.
+A saga represents a high-level business process that comprises of several low-level requests, each of which updates data within a single service. These requests may take a long time to run and may span multiple services. A saga acts as an orchestrator for such requests, ensuring that all they are performed in a given sequence, and knows how to _roll back_ or compensate.
 
 By the end of this three minute read, you will have basic understanding of how sagas work in NServiceBus as well has how you can implement specific actions such as sending replies to saga callers.
 

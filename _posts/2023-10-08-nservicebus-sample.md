@@ -1,9 +1,9 @@
 ---
 title: "Building A Distributed System Using NServiceBus"
-excerpt: "In this post, I will take you through how to build your first decoupled system using NServiceBus."
+excerpt: "In this post, I will take you through how to build your first distributed system using NServiceBus."
 date: 2023-10-08
 header:
-  overlay_image: /images/nservicebus/nservicebus.png
+  overlay_image: /images/nservicebus/sample-system.png
 tags: [NServiceBus, Messaging, Microservices]
 ---
 
@@ -13,14 +13,19 @@ At the end of the post, you will have created your first distributed system usin
 
 ## System Overview
 
-The demo system consists of 3 microservices -- the _Sender_, the _Receiver_, and the _Spy_. Pardon my poor naming skills :smile:. Figure 1 below shows the overview of the system we're going to build.
+The demo system consists of 3 services -- the _Sender_, the _Receiver_, and the _Spy_. Pardon my poor naming skills :smile:. Figure 1 below shows the overview of the system we're going to build.
 
 <figure>
 <img src="{{ site.baseurl }}/images/nservicebus/sample-system.png" alt="system overview">
 <figcaption>Figure 1: System overview</figcaption>
 </figure>
 
-The _Sender_ sends a command to the _Receiver_. The _Receiver_ handles that command, sends a reply back to the _Sender_, and publishes an event that the _Spy_ will handle. That's the system in a nutshell. We are going to create console apps for the three services.
+The _Sender_ sends a command to the _Receiver_. The _Receiver_ handles that command, sends a reply back to the _Sender_, and publishes an event that the _Spy_ will handle. That's the system in a nutshell. The goal is to bring to life the concepts I introduced in the previous post. We are going to create console apps for the three services. Figure 2 below show the sequence of events I just described.
+
+<figure>
+<img src="{{ site.baseurl }}/images/nservicebus/sequence.png" alt="sequence diagram">
+<figcaption>Figure 2: Sequence diagram</figcaption>
+</figure>
 
 ### Contracts
 
@@ -131,7 +136,7 @@ In this method, we configure routing for our messages, commands to be specific. 
 
 #### `ConfigureMessageConventions`
 
-NServiceBus needs to know which messages are commands and which ones are events. The are two ways to achieve this. The first one is to have you messages implements marker interfaces -- `ICommand`, `IEvent`, or `IMessage`. This can be cumbersome as you will need to remember to add the interfaces to all your messages. The second approach is to use conventions. This way you will tell NServiceBus how it will find each type of message. In this example, I used the namespaces to distinguish between the message types. The advantage of using conventions is that you define it once and as long as your messages are in the correct namespaces, everything will just work.
+NServiceBus needs to know which messages are commands and which ones are events. The are two ways to achieve this. The first one is to have your messages implement marker interfaces -- `ICommand`, `IEvent`, or `IMessage`. This can be cumbersome as you will need to remember to add the interfaces to all your messages. The second approach is to use conventions. This way you will tell NServiceBus how it will find each type of message based on a rule. In this example, I used the namespaces to distinguish between the message types. The advantage of using conventions is that you define it once and as long as your messages meet the rules, everything will just work.
 
 We are now going to create concrete classes in each service:
 
@@ -286,7 +291,7 @@ await Endpoint.Start(endpointConfiguration);
 
 while (true)
 {
-    // to keep application running
+    // to keep application running. Just me being lazy :)
 }
 ```
 
@@ -300,7 +305,7 @@ await Endpoint.Start(endpointConfiguration);
 
 while (true)
 {
-    // to keep application running...
+    // to keep application running... lazy again :)
 }
 ```
 
@@ -309,6 +314,7 @@ while (true)
 All the services (console apps) have `Dockerfile`s defined. You can check them on [GitHub](https://github.com/vince-nyanga/nservicebus-basics). Now we need to create a Docker compose file that will allow us to run our system. I am making assumptions that you are familiar with Docker and Docker compose and you have it installed on your machine. The Docker compose file needs to be added to the root directory. Here is the Docker compose file:
 
 ```docker
+version: "3"
 services:
   sender:
     image: sender
