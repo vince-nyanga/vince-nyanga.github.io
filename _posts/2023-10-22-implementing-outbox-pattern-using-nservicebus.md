@@ -1,6 +1,6 @@
 ---
-title: "Implementing the outbox pattern in NServiceBus"
-excerpt: "In this post, I will show you how you can implement the outbox pattern in NServiceBus"
+title: "Implementing the outbox pattern using NServiceBus"
+excerpt: "In this post, I will show you how you can implement the outbox pattern using NServiceBus."
 date: 2023-10-22
 header:
   overlay_image: /images/nservicebus/nservicebus.png
@@ -11,17 +11,17 @@ In a message based system, it is a common occurrence that messages need to be se
 
 This is where the outbox pattern comes in. The solution is for the service that sends the message to first store the message in the **same** database as part of the transaction that updates the business entities. A separate process then sends the messages to the message broker.
 
-By the end of this post, you will have a deep understanding of how NServiceBus implements the outbox pattern as well as design considerations you need to be aware of when using the feature. Let's get to it.
+At the end of this few minute read, you will have a deep understanding of how NServiceBus implements the outbox pattern as well as design considerations you need to be aware of when using the feature.
 
 ## Outbox pattern in NServiceBus
 
-NServiceBus supports the outbox pattern out of the box. It simulates an atomic transaction, distributed across both the data store used for business data and the message queue used for messaging. The outbox feature guarantees that each message is processed once and only once, using the database transaction used to store business data. The implementation of the outbox pattern in NServiceBus involves two separate phases:
+NServiceBus supports the outbox pattern out-of-the-box. It simulates an atomic transaction, distributed across both the data store used for business data and the message queue used for messaging. The outbox feature also guarantees that each message is processed once and only once. The implementation of the outbox pattern in NServiceBus involves two separate phases:
 
 ### Phase 1
 
 1. Receive the incoming message from the queue.
    - Do not acknowledge receipt of the message yet, so that if it fails, the message will be delivered again.
-2. Check the outbox storage in the database to see if the incoming message has already been processed (_deduplication_).
+2. Check the outbox storage in the database to see if the incoming message has already been processed (_deduplication_). The message ID is used for deduplication.
    - If the message has already been processed, skip to **step 7**.
    - If the message has not yet been processed, continue to **step 3**.
 3. Begin a transaction in the database.
