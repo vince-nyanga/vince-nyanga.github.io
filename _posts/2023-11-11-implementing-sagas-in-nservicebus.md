@@ -1,6 +1,6 @@
 ---
-title: "Implementing the saga pattern in NServiceBus"
-excerpt: "In this post, I will show you how you can implement the saga pattern in NServiceBus"
+title: "Implementing the saga pattern with NServiceBus"
+excerpt: "In this post, I will show you how you can implement the saga pattern with NServiceBus"
 date: 2023-11-11
 header:
   overlay_image: /images/nservicebus/nservicebus.png
