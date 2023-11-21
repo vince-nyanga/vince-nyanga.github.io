@@ -4,7 +4,7 @@ date: 2020-01-02
 tags: [Django, Python]
 ---
 
-Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather's 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fall into muddy pools. Now that the holidays are over we can continue working on our REST API.
+Happy New Year! I hope you had a wonderful time during the December holidays. Myself I had so much fun at my rural home in Zimbabwe where the we were celebrating my grandfather's 80th birthday. I also experienced the effects of climate change first hand. There was a severe shortage of drinking water both for humans and livestock which forces everyday life to revolve around looking for water, digging wells and rescuing animals that fell into muddy pools. Now that the holidays are over we can continue working on our REST API.
 
 In [part 6]({{ site.baseurl }}/building-a-carpooling-api-with-django-part-6/) of our series we added filtering support to our `trips` endpoint to allow users to filter trips by origin, destination, number of seats and date. In this post we are going to talk about writing unit tests for our REST API. This is going to be a very short read as most of the things are repetitive. We are going to work with the `trips` endpoint. For more in-depth information on writing tests with the Django REST Framework visit this [link](https://www.django-rest-framework.org/api-guide/testing/).
 

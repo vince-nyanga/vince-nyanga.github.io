@@ -14,7 +14,7 @@ Django is a Python Web framework that allows developers to build websites rapidl
 
 We are going to create a web API for an imaginary carpooling service called **KaPool** (I'm very bad at naming things). This is going to be a very minimalistic and simple system and is going to have the following features:
 
-- A user with a car can add a `Trip` from point A to pont B.
+- A user with a car can add a `Trip` from point A to point B.
 - Users who need a ride can browse available trips.
 - If a user finds a driver they like they will place a reservation which the driver can either accept or deny.
 - User can view all their trips both as a driver and as a passenger.
@@ -24,7 +24,7 @@ I'm by no means a pro when it comes to Django and will be learning as well durin
 
 ## Let's get started
 
-Before we proceed make sure you have Python 3+ is installed on your machine and you have Pipenv installed as well. Basic understanding of Python is also required to successfully follow along as I'm not going to explain some of the things I consider as basics like classes, functions and inheritance.
+Before we proceed make sure you have Python 3+ is installed on your machine and you have `Pipenv` installed as well. Basic understanding of Python is also required to successfully follow along as I'm not going to explain some of the things I consider as basics like classes, functions and inheritance.
 
 In this part of the series we are going to add a `User` model that will contain properties for our user object. To start let us create our django project, but first, we need to create the folder that is going to contain our code. I'm gonna put mine in a `desktop/code/kapool`. While you are in your `kapool` folder install django by running the following command:
 

@@ -10,7 +10,7 @@ Our API is using session authentication at the moment which means we can only ac
 
 ## Some refactoring
 
-Today when I looked at the project I was not very impressed with the way the code was organised. I then decided to remove the `api.py` module from the `kapool_project` package and created a seperate `api` app. Inside your terminal, with `pipenv` activated, create a new app and call it `api`:
+Today when I looked at the project I was not very impressed with the way the code was organised. I then decided to remove the `api.py` module from the `kapool_project` package and created a separate `api` app. Inside your terminal, with `pipenv` activated, create a new app and call it `api`:
 
 ```
 python manage.py startapp api
@@ -120,7 +120,7 @@ Run migrations in your terminal:
 python manage.py migrate
 ```
 
-Now let's add the endpoints provided py `django-rest-auth`. Go to `api/urls.py` and add the following:
+Now let's add the endpoints provided by `django-rest-auth`. Go to `api/urls.py` and add the following:
 
 ```python
 # api/urls.py
