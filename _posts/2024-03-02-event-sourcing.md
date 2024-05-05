@@ -1,6 +1,6 @@
 ---
 title: "An Introduction To Event Sourcing"
-excerpt: "In this post, I will introduce event sourcing, a different way to manage application state.s"
+excerpt: "In this post, I will introduce event sourcing, a different way to manage application state."
 date: 2024-03-02
 tags: [System Design, Event Sourcing]
 ---
