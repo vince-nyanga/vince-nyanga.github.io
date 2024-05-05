@@ -31,6 +31,10 @@ A projection is a denormalized view of the data stored in the event store. Proje
 
 Projections have the advantage of being optimized for read operations, as they can be precomputed and stored in a format that is easy to query. This allows applications to generate reports, display data on user interfaces, or perform analytics without having to query the event store directly.
 
+### Snapshot
+
+A snapshot is a point-in-time representation of the state of an entity or aggregate. Snapshots are used to optimize the replay of events by reducing the number of events that need to be applied to reconstruct the state. Snapshots are taken periodically or when a certain threshold of events is reached, allowing applications to start the replay from the snapshot instead of the beginning of the event stream.
+
 ## Event Sourcing Workflow
 
 The typical workflow of an event sourcing application involves the following steps:
