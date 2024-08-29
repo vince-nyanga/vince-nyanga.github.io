@@ -69,7 +69,7 @@ Where:
 - $$ p $$ is the false positive rate
 - $$ n $$ is the number of elements in the filter
 - $$ m $$ is the size of the bit array
-- $$ k$ $ is the number of hash functions
+- $$ k $$ is the number of hash functions
 
 By adjusting the values of $$ m $$ and $$ k $$, you can tune the false positive rate to suit your application’s requirements.
 
