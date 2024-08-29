@@ -7,7 +7,7 @@ tags: [Data Structures, Algorithms]
 
 In the world of computer science, data structures are the building blocks that allow us to efficiently store, manage, and retrieve data. From arrays and linked lists, to more complex structures such as trees and graphs, each data structure has its unique strengths and is suited for specific types of tasks. One such specialized data structure is the Bloom filter -- a space-efficient probabilistic data structure that is widely used in various modern computing applications.
 
-In this article, we will explore what Bloom filters are, how they work, the mathematical principles behind them, and their applications in the real world. By the end, you will have a solid understanding of why Bloom filters are so powerful and how they can be utilized in different scenarios.
+In this article, we will explore what Bloom filters are, how they work, the mathematical principles behind them, and their applications in the real world. By the end, you will have a solid understanding of why Bloom filters are so powerful and how they can be utilized in different use cases.
 
 ## What is a Bloom Filter?
 
