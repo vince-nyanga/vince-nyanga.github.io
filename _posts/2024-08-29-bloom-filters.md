@@ -66,10 +66,10 @@ $$ p \approx \left(1 - e^{-\frac{k \times n}{m}}\right)^k $$
 
 Where:
 
-- $p$ is the false positive rate
-- $n$ is the number of elements in the filter
-- $m$ is the size of the bit array
-- $k$ is the number of hash functions
+- $$ p $$ is the false positive rate
+- $$ n $$ is the number of elements in the filter
+- $$ m $$ is the size of the bit array
+- $$ k$ $ is the number of hash functions
 
 By adjusting the values of $$ m $$ and $$ k $$, you can tune the false positive rate to suit your application’s requirements.
 
@@ -80,7 +80,7 @@ The following parameters are crucial when designing a Bloom filter:
 - **Size of the Bit Array ($$ m $$)**: The size of the bit array determines the number of bits available for storing hash values. A larger bit array reduces the probability of false positives but increases memory usage.
 - **Number of Hash Functions ($$ k $$)**: The number of hash functions affects the distribution of bits set in the bit array. More hash functions lead to a more uniform distribution and lower false positive rates. However, too many has functions can lead to increased overlap higher false positive rates.
 
-For a given $$ m $$ and $$ n$ $, the optimal number of hash functions can be calculated as:
+For a given $$ m $$ and $$ n $$, the optimal number of hash functions can be calculated as:
 
 $$ k = \frac{m}{n} \times \ln(2) $$
 
