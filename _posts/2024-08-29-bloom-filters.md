@@ -22,13 +22,13 @@ A Bloom filter is a probabilistic data structure designed to efficiently test wh
 
 ## How Bloom Filters Work
 
-At its core, a Bloom filter consists of a bit array of size $m$, and $k$ independent hash functions. Each of these hash functions takes an input and outputs a position in the bit array.
+At its core, a Bloom filter consists of a bit array of size $$ m $$, and $$ k $$ independent hash functions. Each of these hash functions takes an input and outputs a position in the bit array.
 
 ### Insertion Operation
 
-When inserting an element into a Bloom filter, the element is passed through each of the $k$ hash functions. Each hash function then generates a position in the bit array, and the corresponding bit is set to 1.
+When inserting an element into a Bloom filter, the element is passed through each of the $$ k $$ hash functions. Each hash function then generates a position in the bit array, and the corresponding bit is set to 1.
 
-Suppose we have a Bloom filter with a bit array of size 10 ($m$) and 3 ($k$) hash functions. Here's how the bit array might look after inserting the element `"hello"`:
+Suppose we have a Bloom filter with a bit array of size 10 ($$ m $$) and 3 ($$ k $$) hash functions. Here's how the bit array might look after inserting the element `"hello"`:
 
 | index | 0   | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   |
 | ----- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -38,7 +38,7 @@ In this example, the element `"hello"` has been hashed by three hash functions, 
 
 ### Lookup Operation
 
-To check if an element is in the set, the element is passed through the same $k$ hash functions. If all the corresponding positions in the bit array are set to 1, the element is considered to be in the set. If any of the positions are 0, the element is definitely not in the set.
+To check if an element is in the set, the element is passed through the same $$ k $$ hash functions. If all the corresponding positions in the bit array are set to 1, the element is considered to be in the set. If any of the positions are 0, the element is definitely not in the set.
 
 Using the `"hello"` example from above, if we want to check if `"hello"` is in the set, we hash it with the same three hash functions and get positions 1, 4, and 7. Since all these positions are set to 1, we conclude that `"hello"` _might_ be in the set. If we check for an element that was not inserted, we would find at least one 0 in the corresponding positions, indicating that the element is definitely not in the set.
 
@@ -58,7 +58,7 @@ Below are some of the key mathematical principles behind Bloom filters that help
 
 ### False Positives
 
-A Bloom filter might indicate that an element is in the set even if it’s not, known as a false positive. The probability of false positives increases as more elements are added to the filter. However, by carefully choosing the size of the bit array ($m$) and the number of hash functions ($k$), this probability can be controlled.
+A Bloom filter might indicate that an element is in the set even if it’s not, known as a false positive. The probability of false positives increases as more elements are added to the filter. However, by carefully choosing the size of the bit array ($$ m $$) and the number of hash functions ($$ k $$), this probability can be controlled.
 
 The false positive rate of a Bloom filter can be calculated using the following formula:
 
@@ -71,16 +71,16 @@ Where:
 - $m$ is the size of the bit array
 - $k$ is the number of hash functions
 
-By adjusting the values of $m$ and $k$, you can tune the false positive rate to suit your application’s requirements.
+By adjusting the values of $$ m $$ and $$ k $$, you can tune the false positive rate to suit your application’s requirements.
 
 ### Finding the Optimal Parameters
 
 The following parameters are crucial when designing a Bloom filter:
 
-- **Size of the Bit Array ($m$)**: The size of the bit array determines the number of bits available for storing hash values. A larger bit array reduces the probability of false positives but increases memory usage.
-- **Number of Hash Functions ($k$)**: The number of hash functions affects the distribution of bits set in the bit array. More hash functions lead to a more uniform distribution and lower false positive rates. However, too many has functions can lead to increased overlap higher false positive rates.
+- **Size of the Bit Array ($$ m $$)**: The size of the bit array determines the number of bits available for storing hash values. A larger bit array reduces the probability of false positives but increases memory usage.
+- **Number of Hash Functions ($$ k $$)**: The number of hash functions affects the distribution of bits set in the bit array. More hash functions lead to a more uniform distribution and lower false positive rates. However, too many has functions can lead to increased overlap higher false positive rates.
 
-For a given $m$ and $n$, the optimal number of hash functions can be calculated as:
+For a given $$ m $$ and $$ n$ $, the optimal number of hash functions can be calculated as:
 
 $$ k = \frac{m}{n} \times \ln(2) $$
 
