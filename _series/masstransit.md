@@ -12,7 +12,7 @@ In this series I am going to showcase how to build a distributed system using Ma
 - Part 4: Understanding the MassTransit message pipeline _(coming soon)_
 - Part 5: Implementing outbox pattern with MassTransit _(coming soon)_
 - Part 6: Implementing saga pattern with MassTransit _(coming soon)_
-- Part 7: Writing unit tests for MassTransit _(coming soon)_
+- Part 7: Writing tests for MassTransit _(coming soon)_
 - Part 8: MassTransit vs NServiceBus _(coming soon)_
 
 All the code for this series can be found on [GitHub](https://github.com/vince-nyanga/hones.remit.api). There will be a few branches that you can check out to see the progress. The `main` branch will always have the latest code.
