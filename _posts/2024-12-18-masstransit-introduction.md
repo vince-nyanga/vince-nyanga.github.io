@@ -9,7 +9,7 @@ This is the second post in the series `"Building A Message-Based System Using Ma
 
 - [Part 1]({{ site.baseurl}}/masstransit-prologue): Prologue: Introducing HonesRemit
 - **Part 2**: Introduction to MassTransit _(this post)_
-- **Part 3**: Add MassTransit to HonesRemit _(coming soon)_
+- **Part 3**: Adding MassTransit to HonesRemit _(coming soon)_
 - **Part 4**: Understanding the MassTransit message pipeline _(coming soon)_
 - **Part 5**: Implementing outbox pattern with MassTransit _(coming soon)_
 - **Part 6**: Implementing saga pattern with MassTransit _(coming soon)_
