@@ -184,6 +184,88 @@ Consumed 1
 
 This is a simple example, but it demonstrates how you can use prioritized channels to manage message processing based on priority levels.
 
+### Multiple Readers and Writers
+
+Channels support multiple readers and writers, allowing you to scale your application by distributing workloads across multiple threads. Here's an example of how you can have multiple producers and consumers working on the same channel:
+
+```csharp
+using System.Threading.Channels;
+
+var channel = Channel.CreateUnboundedPrioritized<int>(new UnboundedPrioritizedChannelOptions<int>()
+{
+    Comparer = Comparer<int>.Create((x, y) => y.CompareTo(x)),
+    SingleReader = false
+});
+
+int[] data = [20, 300, 1, 55, 6, 9, 60, 100, 200, 4, 1000];
+var producer = Task.Run(async () =>
+{
+    foreach (var i in data)
+    {
+        await channel.Writer.WriteAsync(i);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Produced {i}");
+        Console.ResetColor();
+        await Task.Delay(100);
+    }
+
+    channel.Writer.Complete();
+});
+
+var consumer = Task.Run(async () =>
+{
+    await foreach (var item in channel.Reader.ReadAllAsync())
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine($"Consumer 1 consumed {item}");
+        Console.ResetColor();
+        await Task.Delay(1000);
+    }
+});
+
+var consumer2 = Task.Run(async () =>
+{
+    await foreach (var item in channel.Reader.ReadAllAsync())
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"Consumer 2 consumed {item}");
+        Console.ResetColor();
+        await Task.Delay(500);
+    }
+});
+
+await Task.WhenAll(producer, consumer, consumer2);
+```
+
+In this example, we have two readers (consumers) reading from the same channel. We have simulated one of the consumers processing messages at a slower rate than the other. The Channels API effortlessly handles multiple readers and writers, ensuring that messages are processed efficiently across different threads. Here's the output:
+
+```bash
+Produced 20
+Consumer 1 consumed 20
+Produced 300
+Consumer 2 consumed 300
+Produced 1
+Produced 55
+Produced 6
+Produced 9
+Consumer 2 consumed 55
+Produced 60
+Produced 100
+Produced 200
+Produced 4
+Consumer 1 consumed 200
+Produced 1000
+Consumer 2 consumed 1000
+Consumer 2 consumed 100
+Consumer 1 consumed 60
+Consumer 2 consumed 9
+Consumer 2 consumed 6
+Consumer 1 consumed 4
+Consumer 2 consumed 1
+```
+
+Most of the messages were consumed by the fast consumer as you can see from the output.
+
 ## Real-World Use Cases
 
 ### 1. **Background Task Processing**
