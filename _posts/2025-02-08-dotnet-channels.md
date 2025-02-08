@@ -42,42 +42,39 @@ Channels ensure smooth coordination between producers and consumers, preventing 
 Let's see a simple producer-consumer example using channels in .NET:
 
 ```csharp
-using System;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 
-class Program
+// Create an unbounded channel
+var channel = Channel.CreateUnbounded<int>();
+
+// Producer
+var producer = Task.Run(async () =>
 {
-    static async Task Main()
+    for (var i = 0; i < 10; i++)
     {
-        // create an unbounded channel, allowing unlimited messages to be stored
-        var channel = Channel.CreateUnbounded<int>();
-
-        // Producer
-        var producer = Task.Run(async () =>
-        {
-            for (int i = 1; i <= 5; i++)
-            {
-                await channel.Writer.WriteAsync(i);
-                Console.WriteLine($"Produced: {i}");
-                await Task.Delay(500); // Simulating work
-            }
-            channel.Writer.Complete(); // Signal no more items will be added
-        });
-
-        // Consumer
-        var consumer = Task.Run(async () =>
-        {
-            await foreach (var item in channel.Reader.ReadAllAsync())
-            {
-                Console.WriteLine($"Consumed: {item}");
-                await Task.Delay(1000); // Simulating processing time
-            }
-        });
-
-        await Task.WhenAll(producer, consumer);
+        await channel.Writer.WriteAsync(i);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Produced {i}");
+        Console.ResetColor();
+        await Task.Delay(500);
     }
-}
+    channel.Writer.Complete();
+});
+
+
+// Consumer
+var consumer = Task.Run(async () =>
+{
+    await foreach (var item in channel.Reader.ReadAllAsync())
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine($"Consumed {item}");
+        Console.ResetColor();
+        await Task.Delay(1000);
+    }
+});
+
+await Task.WhenAll(producer, consumer);
 ```
 
 ### Explanation:
@@ -86,6 +83,106 @@ class Program
 2. The producer adds five numbers into the channel, simulating work with delays.
 3. The consumer processes these numbers at a different rate.
 4. Once done, the producer signals completion, ensuring the consumer stops gracefully.
+
+Here is an example of a bounded channel:
+
+```csharp
+using System.Threading.Channels;
+
+var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(5));
+
+var producer = Task.Run(async () =>
+{
+    for (var i = 0; i < 10; i++)
+    {
+        await channel.Writer.WriteAsync(i);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Produced {i}");
+        Console.ResetColor();
+        await Task.Delay(500);
+    }
+    channel.Writer.Complete();
+});
+
+var consumer = Task.Run(async () =>
+{
+    await foreach (var item in channel.Reader.ReadAllAsync())
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine($"Consumed {item}");
+        Console.ResetColor();
+        await Task.Delay(5000);
+    }
+});
+
+await Task.WhenAll(producer, consumer);
+```
+
+In this example, we create a **bounded** channel with a capacity of 5. The producer writes 10 items to the channel, but the consumer processes them at a slower rate. This demonstrates how bounded channels can help manage backpressure and prevent memory overflows.
+
+### Prioritizing Messages
+
+You can also create a priority channel where messages are consumed based on a given priority. In a notification system, for example, you might want to process high-priority messages before others. Here's an example of how you can achieve this:
+
+```csharp
+using System.Threading.Channels;
+
+var channel = Channel.CreateUnboundedPrioritized<int>(new UnboundedPrioritizedChannelOptions<int>()
+{
+    Comparer = Comparer<int>.Create((x, y) => y.CompareTo(x))
+});
+
+int[] data = [20, 300, 1, 55, 6, 9, 60];
+var producer = Task.Run(async () =>
+{
+    foreach (var i in data)
+    {
+        await channel.Writer.WriteAsync(i);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Produced {i}");
+        Console.ResetColor();
+        await Task.Delay(500);
+    }
+
+    channel.Writer.Complete();
+});
+
+var consumer = Task.Run(async () =>
+{
+    await foreach (var item in channel.Reader.ReadAllAsync())
+    {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine($"Consumed {item}");
+        Console.ResetColor();
+        await Task.Delay(2000);
+    }
+});
+
+await Task.WhenAll(producer, consumer);
+```
+
+In this example, we create an **unbounded prioritized** channel where messages are consumed in descending order of priority. The producer writes a list of numbers to the channel, and the consumer processes them based on their priority. The higher the number, the higher the priority, and the sooner it gets consumed.
+
+Here is the output:
+
+```bash
+Produced 20
+Consumed 20
+Produced 300
+Produced 1
+Produced 55
+Consumed 300
+Produced 6
+Produced 9
+Produced 60
+Consumed 60
+Consumed 55
+Consumed 9
+Consumed 6
+Consumed 1
+```
+
+This is a simple example, but it demonstrates how you can use prioritized channels to manage message processing based on priority levels.
 
 ## Real-World Use Cases
 
