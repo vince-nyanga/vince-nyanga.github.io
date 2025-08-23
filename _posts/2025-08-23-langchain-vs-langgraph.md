@@ -21,14 +21,14 @@ LangChain debuted in late 2022 as a Python library for chaining together LLM ca
 
 #### Key components of the LangChain architecture include:
 
-| Component  | Role                                                                                                                                                                             |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Chains     | Sequential operations that transform inputs through multiple steps. A chain might ask an LLM to summarise text, then call a calculator API and feed the result into another LLM. |
-| Agents     | Decision‑making wrappers that decide which tool or chain to call next. Agents allow LLMs to pick actions and react to outputs during a workflow.                                 |
-| Memory     | Modules that persist conversational context between calls, enabling agents to remember prior exchanges and user preferences.                                                     |
-| Tools      | Integrations with external APIs, databases or local code. Tools enable the LLM to go beyond text generation and perform actions such as web searches or SQL queries.             |
-| Retrievers | Components that fetch relevant documents from external knowledge bases or vector stores for retrieval‑augmented generation (RAG) workflows.                                      |
-| Prompts    | Templates that standardise prompt construction and allow dynamic insertion of variables.                                                                                         |
+| Component      | Role                                                                                                                                                                             |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Chains**     | Sequential operations that transform inputs through multiple steps. A chain might ask an LLM to summarise text, then call a calculator API and feed the result into another LLM. |
+| **Agents**     | Decision‑making wrappers that decide which tool or chain to call next. Agents allow LLMs to pick actions and react to outputs during a workflow.                                 |
+| **Memory**     | Modules that persist conversational context between calls, enabling agents to remember prior exchanges and user preferences.                                                     |
+| **Tools**      | Integrations with external APIs, databases or local code. Tools enable the LLM to go beyond text generation and perform actions such as web searches or SQL queries.             |
+| **Retrievers** | Components that fetch relevant documents from external knowledge bases or vector stores for retrieval‑augmented generation (RAG) workflows.                                      |
+| **Prompts**    | Templates that standardise prompt construction and allow dynamic insertion of variables.                                                                                         |
 
 ### 2.2. Strengths and use‑cases
 
